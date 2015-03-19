@@ -6,29 +6,28 @@ import java.util.ArrayList;
 public class ArticuloCientifico {
 	
 	private ArrayList<String> listaAutores;
-	private LocalDate fecha;
+	private LocalDate fechaRecepcion;
+	private LocalDate fechaAprobacion;
 	private int volumen;
 	private int numero;
 	private String titulo;
-	private String tituloIngles;
 	private String resumen;
-	private String resumenIngles;
 	private ArrayList<String> listaReferencias;
 	private ArrayList<String> palabrasClave;
-	private ArrayList<String> palabrasClaveIngles;
 	private ArrayList<String> contenidoCapitulos;
+	
+	public ArticuloCientifico() {
+		listaAutores = new ArrayList<String>();
+		listaReferencias = new ArrayList<String>();
+		palabrasClave = new ArrayList<String>();
+		contenidoCapitulos = new ArrayList<String>();
+	}
 	
 	public ArrayList<String> getListaAutores() {
 		return listaAutores;
 	}
 	public void setListaAutores(ArrayList<String> listaAutores) {
 		this.listaAutores = listaAutores;
-	}
-	public LocalDate getFecha() {
-		return fecha;
-	}
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
 	}
 	public int getVolumen() {
 		return volumen;
@@ -54,12 +53,6 @@ public class ArticuloCientifico {
 	public void setResumen(String resumen) {
 		this.resumen = resumen;
 	}
-	public String getResumenIngles() {
-		return resumenIngles;
-	}
-	public void setResumenIngles(String resumenIngles) {
-		this.resumenIngles = resumenIngles;
-	}
 	public ArrayList<String> getListaReferencias() {
 		return listaReferencias;
 	}
@@ -72,22 +65,22 @@ public class ArticuloCientifico {
 	public void setPalabrasClave(ArrayList<String> palabrasClave) {
 		this.palabrasClave = palabrasClave;
 	}
-	public ArrayList<String> getPalabrasClaveIngles() {
-		return palabrasClaveIngles;
-	}
-	public void setPalabrasClaveIngles(ArrayList<String> palabrasClaveIngles) {
-		this.palabrasClaveIngles = palabrasClaveIngles;
-	}
 	public ArrayList<String> getContenidoCapitulos() {
 		return contenidoCapitulos;
 	}
 	public void setContenidoCapitulos(ArrayList<String> contenidoCapitulos) {
 		this.contenidoCapitulos = contenidoCapitulos;
 	}
-	public String getTituloIngles() {
-		return tituloIngles;
+	public LocalDate getFechaRecepcion() {
+		return fechaRecepcion;
 	}
-	public void setTituloIngles(String tituloIngles) {
-		this.tituloIngles = tituloIngles;
+	public void setFechaRecepcion(LocalDate fechaRecepcion) {
+		this.fechaRecepcion = fechaRecepcion;
+	}
+	public LocalDate getFechaAprobacion() {
+		return fechaAprobacion;
+	}
+	public void setFechaAprobacion(LocalDate fechaAprobacion) {
+		this.fechaAprobacion = fechaAprobacion;
 	}
 }

@@ -26,18 +26,19 @@ public class LectorWebArticulo {
 		} catch (IOException e) {
 			return ERROR_CARGAR;
 		}
-		String linea;
+		String linea = "";
+		String texto = "";
 		try {
 			while ((linea = entrada.readLine()) != null)
-				linea += linea;
+				texto += linea + "\n";
 		} catch (IOException e) {
 			return ERROR_LECTURA;
 		}
 		try {
 			entrada.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			return ERROR_CERRAR;
 		}
-		return linea;
+		return texto;
 	}
 }
