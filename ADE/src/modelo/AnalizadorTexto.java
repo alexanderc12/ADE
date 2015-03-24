@@ -29,7 +29,8 @@ public class AnalizadorTexto {
 	private static final String VALOR_VOLUMEN = "citation_volume";
 	private static final String VALOR_NUMERO = "citation_issue";
 	private static final String VALOR_AUTOR = "citation_author";
-	private static final String INICIO_CABECERA = "<meta xmlns=\"\" name=\"citation_title\"";
+	private static final String VALOR_REVISTA = "citation_journal_title";
+	private static final String INICIO_CABECERA = "<meta xmlns=\"\" name=\"citation_journal_title\"";
 	private static final String FIN_CABECERA = "<meta xmlns=\"\" name=\"citation_firstpage\"";
 	private static final String INICIO_CONTENIDO = "id=\"doi\"";
 	private static final String FIN_CONTENIDO = "<div class=\"footer\">";
@@ -44,6 +45,7 @@ public class AnalizadorTexto {
 	private static final String EXP_REG_NO_HTML = "\\<[^>]*>";
 	private static final String EXP_REG_NO_ESPACIOS = "\\s+";
 
+
 	public AnalizadorTexto(String archivo) {
 		articulo = new ArticuloCientifico(archivo);
 		texto = LectorWebArticulo.leerArticulo(archivo);
@@ -52,7 +54,6 @@ public class AnalizadorTexto {
 		extraerListaContenidos();
 		extraerContenidoCapitulos();
 		extraerReferencias();
-		System.out.println(articulo);
 	}
 
 	private void extraerTextoArticulo(String textoInicio, String textoFin) {
@@ -69,6 +70,8 @@ public class AnalizadorTexto {
 	 */
 	private void extraerMetadatosCabacera() {
 		extraerTextoArticulo(INICIO_CABECERA, FIN_CABECERA);
+		articulo.setRevista(documento.getElementsByAttributeValue(ATRIBUTO_NOMBRE, VALOR_REVISTA).attr(
+				ATRIBUTO_CONTENIDO));
 		articulo.setTitulo(documento.getElementsByAttributeValue(ATRIBUTO_NOMBRE, VALOR_TITULO)
 				.attr(ATRIBUTO_CONTENIDO));
 		articulo.setVolumen(Integer.parseInt(documento.getElementsByAttributeValue(ATRIBUTO_NOMBRE, VALOR_VOLUMEN)
@@ -145,4 +148,7 @@ public class AnalizadorTexto {
 		}
 	}
 
+	public ArticuloCientifico getArticulo() {
+		return articulo;
+	}
 }

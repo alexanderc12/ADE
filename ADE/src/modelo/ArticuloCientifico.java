@@ -9,12 +9,13 @@ import javax.swing.JOptionPane;
 
 /**
  * Representa la estructura de un articulo cientifico
- * 
+ *
  * @author Alexander Castro
  *
  */
 public class ArticuloCientifico {
 
+	private String revista;
 	private LocalDate fechaRecepcion;
 	private LocalDate fechaAprobacion;
 	private int volumen;
@@ -139,12 +140,21 @@ public class ArticuloCientifico {
 	@Override
 	public String toString() {
 		StringBuilder articulo = new StringBuilder();
-		articulo.append("Titulo: ").append(titulo).append("\nURL: ").append(url).append("\nAutores: ")
+		articulo.append("Revista").append(revista).append("Titulo: ").append(titulo).append("\nURL: ").append(url)
+				.append("\nAutores: ")
 		.append(listaAutores).append("\nResumen: ").append(resumen).append("\nPalabras clave:")
 		.append(listaPalabrasClave).append("\nVolumen: ").append(volumen).append("\nNumero: ").append(numero)
 		.append("\nFecha recepción: ").append(fechaRecepcion).append("\nFecha aprobación: ")
 		.append("\nLista capitulos: ").append(listaCapitulos).append("\nLista contenidos: ")
 		.append(listaContenidoCapitulos).append("\nLista referencias: ").append(listaReferencias);
 		return articulo.toString();
+	}
+
+	public String getRevista() {
+		return revista;
+	}
+
+	public void setRevista(String revista) {
+		this.revista = revista;
 	}
 }
