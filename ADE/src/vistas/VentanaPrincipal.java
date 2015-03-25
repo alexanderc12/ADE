@@ -1,10 +1,14 @@
 package vistas;
 
-import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.net.URL;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -18,15 +22,15 @@ public class VentanaPrincipal extends JFrame {
 
 	public static final String E_CARGAR_WEB = "CARGAR_WEB";
 
-	public static final String T_TITULO = "ADE";
+	private static final String T_TITULO = "ADE";
+	private static final String T_MENU_ARCHIVO = "Archivo";
+	private static final String T_MENU_AYUDA = "Ayuda";
+	private static final String RUTA_ICONO = "/images/icon.png";
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 500;
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
-	private ControladorEventos controladorEventos;
 	private JTextPane panelArticulo;
+	private PanelResultados panelResultados;
 	private StyledDocument documento;
 	private SimpleAttributeSet estiloSimple;
 	private SimpleAttributeSet estiloTitulo;
@@ -34,17 +38,73 @@ public class VentanaPrincipal extends JFrame {
 	public static final String ESTILO_NORMAL = "NORMAL";
 	public static final String ESTILO_TITULO = "TITULO";
 	public static final String ESTILO_TITULO_CAPITULO = "TITULO_CAPITULO";
+	private static final String T_ITEM_CREAR_ARTICULO = "Crear Articulo";
+	private static final String T_ITEM_CARGAR_ARTICULO_WEB = "Cargar Articulo Web";
+	private static final String T_ITEM_CARGAR_ARTICULO_ADE = "Cargar Articulo ADE";
+	private static final String T_ITEM_ACERCA_DE = "Acerca de";
+	private static final String T_MENU_HERRAMIENTAS = "Herramientas";
+	private static final String T_ITEM_VERIFICAR_PALABRAS_CLAVE = "Verificar Palabras Clave";
+	private static final String T_PANEL_ARTICULO = "Articulo:";
+	
+	private JMenuBar jMenuBar;
+	private JMenu menuArchivo;
+	private JMenuItem itemCargarArticuloWeb;
+	private JMenuItem itemCrearArticulo;
+	private JMenuItem itemCargarArticuloADE;
+	private JMenu menuHerramientas;
+	private JMenu menuAyuda;
+	private JMenuItem itemAcercaDe;
+	private JMenuItem itemVerificarPalabrasClave;
+
+	private ControladorEventos controladorEventos;
 
 	public VentanaPrincipal(ControladorEventos controladorEventos) {
 		this.controladorEventos = controladorEventos;
 		setTitle(T_TITULO);
 		setSize(WIDTH, HEIGHT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLayout(new BorderLayout());
-		setIconImage(createImageIcon("/img/icon.png", "").getImage());
+		setLayout(new GridLayout(1, 2));
+		setIconImage(createImageIcon(RUTA_ICONO).getImage());
+		setLocationRelativeTo(null);
+		
+		jMenuBar = new JMenuBar();
+		
+		menuArchivo = new JMenu(T_MENU_ARCHIVO);
+		
+		itemCrearArticulo = new JMenuItem(T_ITEM_CREAR_ARTICULO);
+		itemCrearArticulo.addActionListener(controladorEventos);
+		menuArchivo.add(itemCrearArticulo);
+		
+		itemCargarArticuloWeb = new JMenuItem(T_ITEM_CARGAR_ARTICULO_WEB);
+		itemCargarArticuloWeb.addActionListener(controladorEventos);
+		menuArchivo.add(itemCargarArticuloWeb);
+		
+		itemCargarArticuloADE = new JMenuItem(T_ITEM_CARGAR_ARTICULO_ADE);
+		itemCargarArticuloADE.addActionListener(controladorEventos);
+		menuArchivo.add(itemCargarArticuloADE);
+
+		jMenuBar.add(menuArchivo);
+		
+		menuHerramientas = new JMenu(T_MENU_HERRAMIENTAS);
+		itemVerificarPalabrasClave = new JMenuItem(
+				T_ITEM_VERIFICAR_PALABRAS_CLAVE);
+		itemVerificarPalabrasClave.addActionListener(controladorEventos);
+		menuHerramientas.add(itemVerificarPalabrasClave);
+		jMenuBar.add(menuHerramientas);
+
+		menuAyuda = new JMenu(T_MENU_AYUDA);
+		
+		itemAcercaDe = new JMenuItem(T_ITEM_ACERCA_DE);
+		itemAcercaDe.addActionListener(controladorEventos);
+		menuAyuda.add(itemAcercaDe);
+
+		jMenuBar.add(menuAyuda);
+		
+		setJMenuBar(jMenuBar);
 
 		panelArticulo = new JTextPane();
 		JScrollPane panel = new JScrollPane(panelArticulo);
+		panel.setBorder(BorderFactory.createTitledBorder(T_PANEL_ARTICULO));
 		panelArticulo.setEditable(false);
 		documento = panelArticulo.getStyledDocument();
 
@@ -54,7 +114,7 @@ public class VentanaPrincipal extends JFrame {
 
 		estiloTitulo = new SimpleAttributeSet();
 		estiloTitulo.addAttribute(StyleConstants.Alignment, StyleConstants.ALIGN_CENTER);
-		estiloTitulo.addAttribute(StyleConstants.FontSize, 15);
+		estiloTitulo.addAttribute(StyleConstants.FontSize, 20);
 		estiloTitulo.addAttribute(StyleConstants.FontFamily, "Arial");
 		estiloTitulo.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
 
@@ -64,7 +124,10 @@ public class VentanaPrincipal extends JFrame {
 		estiloTituloCapitulo.addAttribute(StyleConstants.FontFamily, "Arial");
 		estiloTituloCapitulo.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
 
-		add(panel, BorderLayout.CENTER);
+		add(panel);
+		
+		panelResultados = new PanelResultados();
+		add(panelResultados);
 
 		setVisible(true);
 	}
@@ -82,21 +145,23 @@ public class VentanaPrincipal extends JFrame {
 			estiloTexto = estiloTituloCapitulo;
 			break;
 		}
-
 		try {
 			documento.insertString(documento.getLength(), texto, estiloTexto);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-
 	}
 
-	protected ImageIcon createImageIcon(String path, String description) {
+	protected ImageIcon createImageIcon(String path) {
 		URL imgURL = getClass().getResource(path);
 		if (imgURL != null) {
-			return new ImageIcon(imgURL, description);
+			return new ImageIcon(imgURL, "");
 		} else {
 			return null;
 		}
+	}
+	
+	public PanelResultados getPanelResultados() {
+		return panelResultados;
 	}
 }

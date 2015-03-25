@@ -92,8 +92,8 @@ public class AnalizadorTexto {
 	private void extraerMetadatosTexto() {
 		extraerTextoArticulo(INICIO_CONTENIDO, FIN_CONTENIDO);
 		String textofechas = documento.getElementsContainingOwnText(INDICE_FECHAS).first().text();
-		articulo.setFechaRecepcion(LocalDate.parse(textofechas.substring(20, 30), DateTimeFormatter.ISO_DATE));
-		articulo.setFechaAprobacion(LocalDate.parse(textofechas.substring(52, 62), DateTimeFormatter.ISO_DATE));
+		articulo.setFechaRecepcion(LocalDate.parse(textofechas.substring(20, 30).trim(), DateTimeFormatter.ISO_DATE));
+		articulo.setFechaAprobacion(LocalDate.parse(textofechas.substring(52, 62).trim(), DateTimeFormatter.ISO_DATE));
 		Element resumen = documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().parent().nextElementSibling();
 		articulo.setResumen(resumen.ownText());
 		Element palabrasClaves = resumen.nextElementSibling();
