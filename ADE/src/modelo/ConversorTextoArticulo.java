@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
  * @author Alexander Castro
  *
  */
-public class AnalizadorTexto {
+public class ConversorTextoArticulo {
 
 	private ArticuloCientifico articulo;
 	private String texto;
@@ -46,7 +46,7 @@ public class AnalizadorTexto {
 	private static final String EXP_REG_NO_ESPACIOS = "\\s+";
 
 
-	public AnalizadorTexto(String archivo) {
+	public ConversorTextoArticulo(String archivo) {
 		articulo = new ArticuloCientifico(archivo);
 		texto = LectorWebArticulo.leerArticulo(archivo);
 		extraerMetadatosCabacera();

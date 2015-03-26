@@ -128,13 +128,19 @@ public class ArticuloCientifico {
 	public void setListaCapitulos(ArrayList<String> listaCapitulos) {
 		this.listaCapitulos = listaCapitulos;
 	}
-
 	public URL getUlr() {
 		return url;
 	}
-
 	public void setUlr(URL ulr) {
 		this.url = ulr;
+	}
+	
+	public String getRevista() {
+		return revista;
+	}
+	
+	public void setRevista(String revista) {
+		this.revista = revista;
 	}
 
 	@Override
@@ -150,11 +156,5 @@ public class ArticuloCientifico {
 		return articulo.toString();
 	}
 
-	public String getRevista() {
-		return revista;
-	}
 
-	public void setRevista(String revista) {
-		this.revista = revista;
-	}
 }

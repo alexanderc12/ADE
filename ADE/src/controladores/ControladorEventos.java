@@ -3,19 +3,19 @@ package controladores;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import modelo.AnalizadorTexto;
+import modelo.ConversorTextoArticulo;
 import modelo.ArticuloCientifico;
 import vistas.VentanaPrincipal;
 
 public class ControladorEventos implements ActionListener {
 
 	private VentanaPrincipal ventanaPrincipal;
-	private AnalizadorTexto analizadorTexto;
+	private ConversorTextoArticulo analizadorTexto;
 	private ArticuloCientifico articulo;
 
 	public ControladorEventos() {
 
-		analizadorTexto = new AnalizadorTexto("http://ref.scielo.org/j39xws");
+		analizadorTexto = new ConversorTextoArticulo("http://ref.scielo.org/j39xws");
 		articulo = analizadorTexto.getArticulo();
 	}
 
