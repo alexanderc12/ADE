@@ -3,8 +3,8 @@ package modelo;
 public class ParteArticulo {
 	
 	private ZonaArticulo zonaArticulo;
-	private int maximoElementos;
-	private int valorElemento;
+	private long maximoElementos;
+	private long valorElemento;
 	private String texto;
 	
 	public ParteArticulo(ZonaArticulo zonaArticulo, String texto) {
@@ -15,31 +15,24 @@ public class ParteArticulo {
 	public ZonaArticulo getZonaArticulo() {
 		return zonaArticulo;
 	}
-	
 	public void setZonaArticulo(ZonaArticulo zonaArticulo) {
 		this.zonaArticulo = zonaArticulo;
 	}
-	
-	public int getMaximoElementos() {
+	public long getMaximoElementos() {
 		return maximoElementos;
 	}
-	
-	public void setMaximoElementos(int maximoElementos) {
+	public void setMaximoElementos(long maximoElementos) {
 		this.maximoElementos = maximoElementos;
 	}
-	
-	public int getValorElemento() {
+	public long getValorElemento() {
 		return valorElemento;
 	}
-	
-	public void setValorElemento(int valorElemento) {
+	public void setValorElemento(long valorElemento) {
 		this.valorElemento = valorElemento;
 	}
-	
 	public String getTexto() {
 		return texto;
 	}
-	
 	public void setTexto(String texto) {
 		this.texto = texto;
 	}

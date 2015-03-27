@@ -102,7 +102,8 @@ public class ConversorTextoArticulo {
 		for (int i = 1; i < listaPalabras.length - 1; i++) {
 			articulo.agregarPalabraClave(listaPalabras[i].substring(1));
 		}
-		articulo.agregarPalabraClave(listaPalabras[listaPalabras.length - 1].replace(".", ""));
+		articulo.agregarPalabraClave(listaPalabras[listaPalabras.length - 1]
+				.replace(".", "").substring(1));
 	}
 
 	/**

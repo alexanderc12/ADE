@@ -16,7 +16,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import controladores.ControladorEventos;
+import controladores.Controlador;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -26,7 +26,7 @@ public class VentanaPrincipal extends JFrame {
 	private static final String T_MENU_ARCHIVO = "Archivo";
 	private static final String T_MENU_AYUDA = "Ayuda";
 	private static final String RUTA_ICONO = "/images/icon.png";
-	private static final int WIDTH = 800;
+	private static final int WIDTH = 900;
 	private static final int HEIGHT = 500;
 	private static final long serialVersionUID = 1L;
 	private JTextPane panelArticulo;
@@ -56,31 +56,23 @@ public class VentanaPrincipal extends JFrame {
 	private JMenuItem itemAcercaDe;
 	private JMenuItem itemVerificarPalabrasClave;
 
-	private ControladorEventos controladorEventos;
-
-	public VentanaPrincipal(ControladorEventos controladorEventos) {
-		this.controladorEventos = controladorEventos;
-		setTitle(T_TITULO);
-		setSize(WIDTH, HEIGHT);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLayout(new GridLayout(1, 2));
-		setIconImage(createImageIcon(RUTA_ICONO).getImage());
-		setLocationRelativeTo(null);
-		
+	private Controlador controlador;
+	
+	public void init() {
 		jMenuBar = new JMenuBar();
 		
 		menuArchivo = new JMenu(T_MENU_ARCHIVO);
 		
 		itemCrearArticulo = new JMenuItem(T_ITEM_CREAR_ARTICULO);
-		itemCrearArticulo.addActionListener(controladorEventos);
+		itemCrearArticulo.addActionListener(controlador);
 		menuArchivo.add(itemCrearArticulo);
 		
 		itemCargarArticuloWeb = new JMenuItem(T_ITEM_CARGAR_ARTICULO_WEB);
-		itemCargarArticuloWeb.addActionListener(controladorEventos);
+		itemCargarArticuloWeb.addActionListener(controlador);
 		menuArchivo.add(itemCargarArticuloWeb);
 		
 		itemCargarArticuloADE = new JMenuItem(T_ITEM_CARGAR_ARTICULO_ADE);
-		itemCargarArticuloADE.addActionListener(controladorEventos);
+		itemCargarArticuloADE.addActionListener(controlador);
 		menuArchivo.add(itemCargarArticuloADE);
 
 		jMenuBar.add(menuArchivo);
@@ -88,14 +80,16 @@ public class VentanaPrincipal extends JFrame {
 		menuHerramientas = new JMenu(T_MENU_HERRAMIENTAS);
 		itemVerificarPalabrasClave = new JMenuItem(
 				T_ITEM_VERIFICAR_PALABRAS_CLAVE);
-		itemVerificarPalabrasClave.addActionListener(controladorEventos);
+		itemVerificarPalabrasClave
+				.setActionCommand(Controlador.A_VERIFICAR_PALABRAS_CLAVE);
+		itemVerificarPalabrasClave.addActionListener(controlador);
 		menuHerramientas.add(itemVerificarPalabrasClave);
 		jMenuBar.add(menuHerramientas);
 
 		menuAyuda = new JMenu(T_MENU_AYUDA);
 		
 		itemAcercaDe = new JMenuItem(T_ITEM_ACERCA_DE);
-		itemAcercaDe.addActionListener(controladorEventos);
+		itemAcercaDe.addActionListener(controlador);
 		menuAyuda.add(itemAcercaDe);
 
 		jMenuBar.add(menuAyuda);
@@ -128,6 +122,15 @@ public class VentanaPrincipal extends JFrame {
 		
 		panelResultados = new PanelResultados();
 		add(panelResultados);
+	}
+
+	public VentanaPrincipal() {
+		setTitle(T_TITULO);
+		setSize(WIDTH, HEIGHT);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLayout(new GridLayout(1, 2));
+		setIconImage(createImageIcon(RUTA_ICONO).getImage());
+		setLocationRelativeTo(null);
 
 		setVisible(true);
 	}
@@ -161,6 +164,10 @@ public class VentanaPrincipal extends JFrame {
 		}
 	}
 	
+	public void setControlador(Controlador controlador) {
+		this.controlador = controlador;
+	}
+
 	public PanelResultados getPanelResultados() {
 		return panelResultados;
 	}

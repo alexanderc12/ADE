@@ -12,7 +12,6 @@ import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 
@@ -22,7 +21,7 @@ public class VerificadorPalabrasClave {
 	private ParteArticulo[] lista;
 	private Directory directory;
 	private ConversorTextoArticulo conversorTextoArticulo;
-	
+
 	public VerificadorPalabrasClave() {
 		conversorTextoArticulo = new ConversorTextoArticulo(
 				"http://ref.scielo.org/rnxd37");
@@ -75,12 +74,10 @@ public class VerificadorPalabrasClave {
 
 		Document doc = new Document();
 		FieldType tipo = crearTipoCampo();
-		
 		for (ParteArticulo parte : lista) {
 			doc.add(new Field(parte.getZonaArticulo().name(), parte.getTexto(),
 					tipo));
 		}
-
 		try {
 			iwriter.addDocument(doc);
 		} catch (IOException e) {
@@ -93,24 +90,44 @@ public class VerificadorPalabrasClave {
 		}
 	}
 	
-	public void contarPalabras(String palabra) throws ParseException,
-			IOException {
+	public void contarPalabras(String palabra) {
+		
+		DirectoryReader ireader = null;
+		try {
+			ireader = DirectoryReader.open(directory);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		long numeroPalabras = 0;
+		for (ParteArticulo parteArticulo : lista) {
+			Term term = new Term(parteArticulo.getZonaArticulo().name(),
+					palabra.toLowerCase());
+			try {
+				numeroPalabras = ireader.totalTermFreq(term);
+				parteArticulo.setValorElemento(numeroPalabras);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println(numeroPalabras);
+		}
 
-		DirectoryReader ireader = DirectoryReader.open(directory);
-		Term term = new Term(ZonaArticulo.CONCLUSIONES.name(), palabra);
-		long numOccurances = ireader.totalTermFreq(term);
-		System.out.println(numOccurances);
-		ireader.close();
+		try {
+			ireader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ConversorTextoArticulo getConversorTextoArticulo() {
+		return conversorTextoArticulo;
+	}
+	
+	public ParteArticulo[] getLista() {
+		return lista;
 	}
 	
 	public static void main(String[] args) {
-		VerificadorPalabrasClave verificador = new VerificadorPalabrasClave();
-		try {
-			verificador.contarPalabras("comida");
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		VerificadorPalabrasClave v = new VerificadorPalabrasClave();
+		v.contarPalabras("sólidos");
 	}
 }

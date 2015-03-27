@@ -3,24 +3,30 @@ package controladores;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import modelo.ConversorTextoArticulo;
 import modelo.ArticuloCientifico;
+import modelo.ParteArticulo;
+import modelo.VerificadorPalabrasClave;
 import vistas.VentanaPrincipal;
 
-public class ControladorEventos implements ActionListener {
+public class Controlador implements ActionListener {
 
 	private VentanaPrincipal ventanaPrincipal;
-	private ConversorTextoArticulo analizadorTexto;
+	private VerificadorPalabrasClave verificadorPalabrasClave;
 	private ArticuloCientifico articulo;
+	
+	public static final String A_VERIFICAR_PALABRAS_CLAVE = "VERIFICAR_PALABRAS_CLAVE";
 
-	public ControladorEventos() {
+	public Controlador() {
 
-		analizadorTexto = new ConversorTextoArticulo("http://ref.scielo.org/j39xws");
-		articulo = analizadorTexto.getArticulo();
+		verificadorPalabrasClave = new VerificadorPalabrasClave();
+		articulo = verificadorPalabrasClave.getConversorTextoArticulo()
+				.getArticulo();
 	}
 
 	public void iniciar() {
-		this.ventanaPrincipal = new VentanaPrincipal(this);
+		this.ventanaPrincipal = new VentanaPrincipal();
+		ventanaPrincipal.setControlador(this);
+		ventanaPrincipal.init();
 		cargarArticulo();
 		cargarPalabrasClave();
 	}
@@ -28,8 +34,8 @@ public class ControladorEventos implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
-			case VentanaPrincipal.E_CARGAR_WEB:
-				
+			case A_VERIFICAR_PALABRAS_CLAVE:
+				analizarPalabraClave();
 				break;
 		}
 	}
@@ -74,8 +80,21 @@ public class ControladorEventos implements ActionListener {
 			ventanaPrincipal.getPanelResultados().agregarPalabraClave(palabra);
 		}
 	}
+	
+	public void analizarPalabraClave(){
+		String palabra = ventanaPrincipal.getPanelResultados()
+				.obtenerPalabraSelecionada();
+		System.out.println(palabra);
+		verificadorPalabrasClave.contarPalabras(palabra);
+		for (ParteArticulo parteArticulo : verificadorPalabrasClave.getLista()) {
+			ventanaPrincipal.getPanelResultados().agregarResultado(
+					parteArticulo.getZonaArticulo().name(),
+					Long.toString(parteArticulo.getValorElemento()),
+					Long.toString(parteArticulo.getMaximoElementos()), "0");
+		}
+	}
 	public static void main(String[] args) {
-		ControladorEventos c = new ControladorEventos();
+		Controlador c = new Controlador();
 		c.iniciar();
 	}
 }
