@@ -2,7 +2,6 @@ package modelo;
 
 import java.io.IOException;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -12,6 +11,10 @@ import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TotalHitCountCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 
@@ -21,6 +24,8 @@ public class VerificadorPalabrasClave {
 	private ParteArticulo[] lista;
 	private Directory directory;
 	private ConversorTextoArticulo conversorTextoArticulo;
+	private StandardAnalyzer analyzer;
+	private Document doc;
 
 	public VerificadorPalabrasClave() {
 		conversorTextoArticulo = new ConversorTextoArticulo(
@@ -63,7 +68,7 @@ public class VerificadorPalabrasClave {
 	}
 
 	public void crearDocumento() {
-		Analyzer analyzer = new StandardAnalyzer();
+		analyzer = new StandardAnalyzer();
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		IndexWriter iwriter = null;
 		try {
@@ -72,7 +77,7 @@ public class VerificadorPalabrasClave {
 			e.printStackTrace();
 		}
 
-		Document doc = new Document();
+		doc = new Document();
 		FieldType tipo = crearTipoCampo();
 		for (ParteArticulo parte : lista) {
 			doc.add(new Field(parte.getZonaArticulo().name(), parte.getTexto(),
@@ -99,12 +104,20 @@ public class VerificadorPalabrasClave {
 			e.printStackTrace();
 		}
 		long numeroPalabras = 0;
+		
 		for (ParteArticulo parteArticulo : lista) {
 			Term term = new Term(parteArticulo.getZonaArticulo().name(),
 					palabra.toLowerCase());
 			try {
 				numeroPalabras = ireader.totalTermFreq(term);
 				parteArticulo.setValorElemento(numeroPalabras);
+
+				IndexSearcher searcher = new IndexSearcher(ireader);
+				Query query = new TermQuery(term);
+				TotalHitCountCollector collector = new TotalHitCountCollector();
+				searcher.search(query, collector);
+				System.out.println("R" + collector.getTotalHits());
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -128,6 +141,6 @@ public class VerificadorPalabrasClave {
 	
 	public static void main(String[] args) {
 		VerificadorPalabrasClave v = new VerificadorPalabrasClave();
-		v.contarPalabras("sólidos");
+		v.contarPalabras("residuos");
 	}
 }
