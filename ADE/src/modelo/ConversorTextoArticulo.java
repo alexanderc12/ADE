@@ -8,6 +8,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import persistencia.LectorWeb;
+
 /**
  * Usando la liberia jsoup y algunos metodos de la clase String, analiza el
  * texto para extraer los metadatos y la informacion de un articulo cientifico
@@ -48,7 +50,7 @@ public class ConversorTextoArticulo {
 
 	public ConversorTextoArticulo(String archivo) {
 		articulo = new ArticuloCientifico(archivo);
-		texto = LectorWebArticulo.leerArticulo(archivo);
+		texto = LectorWeb.leerArticulo(archivo);
 		extraerMetadatosCabacera();
 		extraerMetadatosTexto();
 		extraerListaContenidos();

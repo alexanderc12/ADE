@@ -2,7 +2,7 @@ package modelo;
 
 import java.io.IOException;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.shingle.ShingleAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
@@ -11,31 +11,27 @@ import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TotalHitCountCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 
 public class VerificadorPalabrasClave {
-	
+
 	private static final int NUMERO_PARTES = 7;
 	private ParteArticulo[] lista;
 	private Directory directory;
-	private ConversorTextoArticulo conversorTextoArticulo;
-	private StandardAnalyzer analyzer;
+	private ArticuloCientifico articulo;
+	private ShingleAnalyzerWrapper analyzer;
 	private Document doc;
 
-	public VerificadorPalabrasClave() {
-		conversorTextoArticulo = new ConversorTextoArticulo(
-				"http://ref.scielo.org/rnxd37");
+	public VerificadorPalabrasClave(String ruta) {
+		ConversorTextoArticulo conversorTextoArticulo = new ConversorTextoArticulo(ruta);
 		lista = new ParteArticulo[NUMERO_PARTES];
 		directory = new RAMDirectory();
-		cargarArticulo(conversorTextoArticulo.getArticulo());
+		articulo = conversorTextoArticulo.getArticulo();
+		cargarArticulo(articulo);
 		crearDocumento();
 	}
-	
+
 	public void cargarArticulo(ArticuloCientifico articulo) {
 		lista[0] = new ParteArticulo(ZonaArticulo.TITULO, articulo.getTitulo());
 		lista[1] = new ParteArticulo(ZonaArticulo.RESUMEN,
@@ -56,19 +52,16 @@ public class VerificadorPalabrasClave {
 				Util.pasarListaToString(articulo.getListaReferencias()));
 		Util.pasarListaAMinusculas(lista);
 	}
-	
+
 
 	private FieldType crearTipoCampo() {
 		FieldType tipo = new FieldType();
-		tipo.setStoreTermVectors(true);
-		tipo.setTokenized(true);
-		tipo.setStoreTermVectorPositions(true);
-		tipo.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+		tipo.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
 		return tipo;
 	}
 
 	public void crearDocumento() {
-		analyzer = new StandardAnalyzer();
+		analyzer = new ShingleAnalyzerWrapper(2, 4);
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		IndexWriter iwriter = null;
 		try {
@@ -94,9 +87,8 @@ public class VerificadorPalabrasClave {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void contarPalabras(String palabra) {
-		
 		DirectoryReader ireader = null;
 		try {
 			ireader = DirectoryReader.open(directory);
@@ -104,43 +96,32 @@ public class VerificadorPalabrasClave {
 			e.printStackTrace();
 		}
 		long numeroPalabras = 0;
-		
 		for (ParteArticulo parteArticulo : lista) {
 			Term term = new Term(parteArticulo.getZonaArticulo().name(),
 					palabra.toLowerCase());
 			try {
 				numeroPalabras = ireader.totalTermFreq(term);
 				parteArticulo.setValorElemento(numeroPalabras);
-
-				IndexSearcher searcher = new IndexSearcher(ireader);
-				Query query = new TermQuery(term);
-				TotalHitCountCollector collector = new TotalHitCountCollector();
-				searcher.search(query, collector);
-				System.out.println("R" + collector.getTotalHits());
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println(numeroPalabras);
 		}
-
 		try {
 			ireader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public ConversorTextoArticulo getConversorTextoArticulo() {
-		return conversorTextoArticulo;
-	}
-	
+
 	public ParteArticulo[] getLista() {
 		return lista;
 	}
-	
-	public static void main(String[] args) {
-		VerificadorPalabrasClave v = new VerificadorPalabrasClave();
-		v.contarPalabras("residuos");
+
+	public ArticuloCientifico getArticulo() {
+		return articulo;
+	}
+
+	public void setArticulo(ArticuloCientifico articulo) {
+		this.articulo = articulo;
 	}
 }

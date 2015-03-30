@@ -22,7 +22,7 @@ public class VentanaPrincipal extends JFrame {
 
 	public static final String E_CARGAR_WEB = "CARGAR_WEB";
 
-	private static final String T_TITULO = "ADE";
+	private static final String T_TITULO = "ADE - ANALIZADOR DE ETIQUETAS";
 	private static final String T_MENU_ARCHIVO = "Archivo";
 	private static final String T_MENU_AYUDA = "Ayuda";
 	private static final String RUTA_ICONO = "/images/icon.png";
@@ -45,7 +45,7 @@ public class VentanaPrincipal extends JFrame {
 	private static final String T_MENU_HERRAMIENTAS = "Herramientas";
 	private static final String T_ITEM_VERIFICAR_PALABRAS_CLAVE = "Verificar Palabras Clave";
 	private static final String T_PANEL_ARTICULO = "Articulo:";
-	
+
 	private JMenuBar jMenuBar;
 	private JMenu menuArchivo;
 	private JMenuItem itemCargarArticuloWeb;
@@ -57,43 +57,46 @@ public class VentanaPrincipal extends JFrame {
 	private JMenuItem itemVerificarPalabrasClave;
 
 	private Controlador controlador;
-	
+
 	public void init() {
 		jMenuBar = new JMenuBar();
-		
+
 		menuArchivo = new JMenu(T_MENU_ARCHIVO);
-		
+
 		itemCrearArticulo = new JMenuItem(T_ITEM_CREAR_ARTICULO);
 		itemCrearArticulo.addActionListener(controlador);
+		itemCrearArticulo.setActionCommand(Controlador.A_CREAR_ARCHIVO);
 		menuArchivo.add(itemCrearArticulo);
-		
+
 		itemCargarArticuloWeb = new JMenuItem(T_ITEM_CARGAR_ARTICULO_WEB);
 		itemCargarArticuloWeb.addActionListener(controlador);
+		itemCargarArticuloWeb.setActionCommand(Controlador.A_CARGAR_ARCHIVO_WEB);
 		menuArchivo.add(itemCargarArticuloWeb);
-		
+
 		itemCargarArticuloADE = new JMenuItem(T_ITEM_CARGAR_ARTICULO_ADE);
 		itemCargarArticuloADE.addActionListener(controlador);
+		itemCargarArticuloADE.setActionCommand(Controlador.A_CARGAR_ARCHIVO_WEB);
 		menuArchivo.add(itemCargarArticuloADE);
 
 		jMenuBar.add(menuArchivo);
-		
+
 		menuHerramientas = new JMenu(T_MENU_HERRAMIENTAS);
 		itemVerificarPalabrasClave = new JMenuItem(
 				T_ITEM_VERIFICAR_PALABRAS_CLAVE);
 		itemVerificarPalabrasClave
-				.setActionCommand(Controlador.A_VERIFICAR_PALABRAS_CLAVE);
+		.setActionCommand(Controlador.A_VERIFICAR_PALABRAS_CLAVE);
 		itemVerificarPalabrasClave.addActionListener(controlador);
 		menuHerramientas.add(itemVerificarPalabrasClave);
 		jMenuBar.add(menuHerramientas);
 
 		menuAyuda = new JMenu(T_MENU_AYUDA);
-		
+
 		itemAcercaDe = new JMenuItem(T_ITEM_ACERCA_DE);
 		itemAcercaDe.addActionListener(controlador);
 		menuAyuda.add(itemAcercaDe);
 
 		jMenuBar.add(menuAyuda);
-		
+
 		setJMenuBar(jMenuBar);
 
 		panelArticulo = new JTextPane();
@@ -119,7 +122,7 @@ public class VentanaPrincipal extends JFrame {
 		estiloTituloCapitulo.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
 
 		add(panel);
-		
+
 		panelResultados = new PanelResultados();
 		add(panelResultados);
 	}
@@ -163,7 +166,7 @@ public class VentanaPrincipal extends JFrame {
 			return null;
 		}
 	}
-	
+
 	public void setControlador(Controlador controlador) {
 		this.controlador = controlador;
 	}

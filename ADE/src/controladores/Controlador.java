@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import modelo.ArticuloCientifico;
 import modelo.ParteArticulo;
 import modelo.VerificadorPalabrasClave;
+import persistencia.GestorArchivos;
 import vistas.VentanaPrincipal;
 
 public class Controlador implements ActionListener {
@@ -13,15 +14,11 @@ public class Controlador implements ActionListener {
 	private VentanaPrincipal ventanaPrincipal;
 	private VerificadorPalabrasClave verificadorPalabrasClave;
 	private ArticuloCientifico articulo;
-	
+
 	public static final String A_VERIFICAR_PALABRAS_CLAVE = "VERIFICAR_PALABRAS_CLAVE";
-
-	public Controlador() {
-
-		verificadorPalabrasClave = new VerificadorPalabrasClave();
-		articulo = verificadorPalabrasClave.getConversorTextoArticulo()
-				.getArticulo();
-	}
+	public static final String A_CREAR_ARCHIVO = "CREAR_ARCHIVO";
+	public static final String A_CARGAR_ARCHIVO = "CARGAR_ARCHIVO";
+	public static final String A_CARGAR_ARCHIVO_WEB = "A_CARGAR_ARCHIVO_WEB";
 
 	public void iniciar() {
 		this.ventanaPrincipal = new VentanaPrincipal();
@@ -34,16 +31,27 @@ public class Controlador implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
-			case A_VERIFICAR_PALABRAS_CLAVE:
-				analizarPalabraClave();
-				break;
+		case A_VERIFICAR_PALABRAS_CLAVE:
+			analizarPalabraClave();
+			break;
+		case A_CREAR_ARCHIVO:
+			GestorArchivos.guardarArchivo(articulo, ventanaPrincipal);
+			break;
+		case A_CARGAR_ARCHIVO:
+			verificadorPalabrasClave = new VerificadorPalabrasClave("");
+			articulo = verificadorPalabrasClave.getArticulo();
+			break;
+		case A_CARGAR_ARCHIVO_WEB:
+			verificadorPalabrasClave = new VerificadorPalabrasClave("");
+			articulo = verificadorPalabrasClave.getArticulo();
+			break;
 		}
 	}
 
 	public void cargarArticulo() {
 		ventanaPrincipal.agregarTexto("Revista:" + articulo.getRevista() + "\t" + "Volumen: " + articulo.getVolumen()
-				+ "\t"
-				+ "Numero: " + articulo.getNumero() + "\n\n", VentanaPrincipal.ESTILO_NORMAL);
+		+ "\t"
+		+ "Numero: " + articulo.getNumero() + "\n\n", VentanaPrincipal.ESTILO_NORMAL);
 		ventanaPrincipal.agregarTexto(articulo.getTitulo() + "\n\n",
 				VentanaPrincipal.ESTILO_TITULO);
 		for (String autor : articulo.getListaAutores()) {
@@ -64,7 +72,7 @@ public class Controlador implements ActionListener {
 			ventanaPrincipal.agregarTexto(articulo.getListaCapitulos().get(i) + "\n\n",
 					VentanaPrincipal.ESTILO_TITULO_CAPITULO);
 			ventanaPrincipal.agregarTexto(articulo.getContenidoCapitulos().get(i)
- + "\n\n",
+					+ "\n\n",
 					VentanaPrincipal.ESTILO_NORMAL);
 
 		}
@@ -80,19 +88,20 @@ public class Controlador implements ActionListener {
 			ventanaPrincipal.getPanelResultados().agregarPalabraClave(palabra);
 		}
 	}
-	
+
 	public void analizarPalabraClave(){
 		String palabra = ventanaPrincipal.getPanelResultados()
 				.obtenerPalabraSelecionada();
-		System.out.println(palabra);
 		verificadorPalabrasClave.contarPalabras(palabra);
+		ventanaPrincipal.getPanelResultados().limiparTabla();
 		for (ParteArticulo parteArticulo : verificadorPalabrasClave.getLista()) {
 			ventanaPrincipal.getPanelResultados().agregarResultado(
-					parteArticulo.getZonaArticulo().name(),
+					parteArticulo.getZonaArticulo().toString(),
 					Long.toString(parteArticulo.getValorElemento()),
 					Long.toString(parteArticulo.getMaximoElementos()), "0");
 		}
 	}
+
 	public static void main(String[] args) {
 		Controlador c = new Controlador();
 		c.iniciar();

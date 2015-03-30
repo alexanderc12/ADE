@@ -1,4 +1,4 @@
-package modelo;
+package persistencia;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,11 +8,10 @@ import java.net.URL;
 
 /**
  * Permite leer una pagina Web
- * 
  * @author Alexander Castro
  *
  */
-public class LectorWebArticulo {
+public class LectorWeb {
 
 	public static final String ERROR_URL = "Error al leer la URL del articulo.";
 	public static final String ERROR_CARGAR = "Error al cargar el articulo.";
@@ -20,8 +19,8 @@ public class LectorWebArticulo {
 	public static final String ERROR_CERRAR = "Error al cerrar el canal de datos.";
 
 	/**
-	 * Apartir de un URL retorna el contenido HTML de un pagina
-	 *
+	 * A partir de un URL retorna el contenido HTML de un pagina
+	 * 
 	 * @param urlArticulo
 	 * @return String con el HTML de la pagina
 	 */
@@ -39,7 +38,7 @@ public class LectorWebArticulo {
 		} catch (IOException e) {
 			return ERROR_CARGAR;
 		}
-		String linea = null;
+		String linea;
 		StringBuilder texto = new StringBuilder();
 		try {
 			while ((linea = entrada.readLine()) != null)
@@ -71,5 +70,4 @@ public class LectorWebArticulo {
 				.replace("&Ntilde;", "Ñ").replace("&amp;", "&").replace("&nbsp;", " ").replace("&#91;", "[")
 				.replace("&#93;", "]");
 	}
-
 }

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import persistencia.LectorWeb;
+
 /**
  * Representa la estructura de un articulo cientifico
  *
@@ -33,7 +35,7 @@ public class ArticuloCientifico {
 		try {
 			this.url = new URL(url);
 		} catch (MalformedURLException e) {
-			JOptionPane.showMessageDialog(null, LectorWebArticulo.ERROR_URL);
+			JOptionPane.showMessageDialog(null, LectorWeb.ERROR_URL);
 		}
 		listaAutores = new ArrayList<String>();
 		listaReferencias = new ArrayList<String>();
@@ -155,6 +157,4 @@ public class ArticuloCientifico {
 		.append(listaContenidoCapitulos).append("\nLista referencias: ").append(listaReferencias);
 		return articulo.toString();
 	}
-
-
 }
