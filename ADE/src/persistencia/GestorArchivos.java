@@ -9,11 +9,18 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import modelo.ArticuloCientifico;
+import modelo.ConstantesTexto;
 
 public class GestorArchivos {
 
+	public static final String ERROR_RUTA_ARCHIVO = "Error en la ruta del archivo";
+	private static final Object ERROR_CREAR_ARCHIVO = "Error al crear el archivo ADE.";
+	private static final Object ERROR_CERRAR_ARCHIVO = "Error al cerrar el archivo ADE.";
+	private static final Object ERROR_LEER_ARCHIVO = "Error al leer el archivo ADE.";
+	
 	public static void guardarArchivo(ArticuloCientifico articuloCientifico, JFrame ventana) {
 		JFileChooser dialogoGuardar = new JFileChooser();
 		dialogoGuardar.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -22,25 +29,28 @@ public class GestorArchivos {
 			FileOutputStream salida = null;
 			ObjectOutputStream objectOutputStream = null;
 			try {
-				salida = new FileOutputStream(dialogoGuardar.getSelectedFile());
+				salida = new FileOutputStream(dialogoGuardar.getSelectedFile() + ".ade");
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ERROR_RUTA_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+						JOptionPane.ERROR_MESSAGE);
 			}
 			try {
 				objectOutputStream = new ObjectOutputStream(salida);
 				objectOutputStream.writeObject(articuloCientifico);
 			} catch (IOException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ERROR_CREAR_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+						JOptionPane.ERROR_MESSAGE);
 			} finally {
 				try {
 					objectOutputStream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, ERROR_CERRAR_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
 	}
-
+	
 	public static ArticuloCientifico cargarArchivo(JFrame ventana) {
 		JFileChooser dialogoAbrirArchivo = new JFileChooser();
 		dialogoAbrirArchivo.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -51,18 +61,21 @@ public class GestorArchivos {
 			try {
 				entrada = new FileInputStream(dialogoAbrirArchivo.getSelectedFile());
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ERROR_RUTA_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+						JOptionPane.ERROR_MESSAGE);
 			}
 			try {
 				objectInputStream = new ObjectInputStream(entrada);
 				return (ArticuloCientifico) objectInputStream.readObject();
 			} catch (IOException | ClassNotFoundException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ERROR_LEER_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+						JOptionPane.ERROR_MESSAGE);
 			} finally {
 				try {
 					objectInputStream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, ERROR_CERRAR_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}

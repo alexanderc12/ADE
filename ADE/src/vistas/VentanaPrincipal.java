@@ -26,8 +26,8 @@ public class VentanaPrincipal extends JFrame {
 	private static final String T_MENU_ARCHIVO = "Archivo";
 	private static final String T_MENU_AYUDA = "Ayuda";
 	private static final String RUTA_ICONO = "/images/icon.png";
-	private static final int WIDTH = 900;
-	private static final int HEIGHT = 500;
+	private static final int WIDTH = 1000;
+	private static final int HEIGHT = 600;
 	private static final long serialVersionUID = 1L;
 	private JTextPane panelArticulo;
 	private PanelResultados panelResultados;
@@ -134,28 +134,30 @@ public class VentanaPrincipal extends JFrame {
 		setLayout(new GridLayout(1, 2));
 		setIconImage(createImageIcon(RUTA_ICONO).getImage());
 		setLocationRelativeTo(null);
-
-		setVisible(true);
 	}
 
 	public void agregarTexto(String texto, String estilo) {
 		SimpleAttributeSet estiloTexto = null;
 		switch (estilo) {
-		case ESTILO_NORMAL:
-			estiloTexto = estiloSimple;
-			break;
-		case ESTILO_TITULO:
-			estiloTexto = estiloTitulo;
-			break;
-		case ESTILO_TITULO_CAPITULO:
-			estiloTexto = estiloTituloCapitulo;
-			break;
+			case ESTILO_NORMAL:
+				estiloTexto = estiloSimple;
+				break;
+			case ESTILO_TITULO:
+				estiloTexto = estiloTitulo;
+				break;
+			case ESTILO_TITULO_CAPITULO:
+				estiloTexto = estiloTituloCapitulo;
+				break;
 		}
 		try {
 			documento.insertString(documento.getLength(), texto, estiloTexto);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void limpiarPanelArticulo() {
+		panelArticulo.setText("");
 	}
 
 	protected ImageIcon createImageIcon(String path) {
