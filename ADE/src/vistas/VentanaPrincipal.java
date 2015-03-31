@@ -1,11 +1,14 @@
 package vistas;
 
+import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -39,6 +42,7 @@ public class VentanaPrincipal extends JFrame {
 	public static final String ESTILO_TITULO = "TITULO";
 	public static final String ESTILO_TITULO_CAPITULO = "TITULO_CAPITULO";
 	private static final String T_ITEM_CREAR_ARTICULO = "Crear Articulo";
+	private static final String T_ITEM_EXPORTAR_ARTICULO = "Exportar Articulo a ADE";
 	private static final String T_ITEM_CARGAR_ARTICULO_WEB = "Cargar Articulo Web";
 	private static final String T_ITEM_CARGAR_ARTICULO_ADE = "Cargar Articulo ADE";
 	private static final String T_ITEM_ACERCA_DE = "Acerca de";
@@ -50,6 +54,7 @@ public class VentanaPrincipal extends JFrame {
 	private JMenu menuArchivo;
 	private JMenuItem itemCargarArticuloWeb;
 	private JMenuItem itemCrearArticulo;
+	private JMenuItem itemExportarArticulo;
 	private JMenuItem itemCargarArticuloADE;
 	private JMenu menuHerramientas;
 	private JMenu menuAyuda;
@@ -57,6 +62,8 @@ public class VentanaPrincipal extends JFrame {
 	private JMenuItem itemVerificarPalabrasClave;
 
 	private Controlador controlador;
+
+	private JDialog dialogoProgreso;
 
 	public void init() {
 		jMenuBar = new JMenuBar();
@@ -77,6 +84,11 @@ public class VentanaPrincipal extends JFrame {
 		itemCargarArticuloADE.addActionListener(controlador);
 		itemCargarArticuloADE.setActionCommand(Controlador.A_CARGAR_ARCHIVO_WEB);
 		menuArchivo.add(itemCargarArticuloADE);
+
+		itemExportarArticulo = new JMenuItem(T_ITEM_EXPORTAR_ARTICULO);
+		itemExportarArticulo.addActionListener(controlador);
+		itemExportarArticulo.setActionCommand(Controlador.A_CREAR_ARCHIVO);
+		menuArchivo.add(itemExportarArticulo);
 
 		jMenuBar.add(menuArchivo);
 
@@ -108,16 +120,15 @@ public class VentanaPrincipal extends JFrame {
 		estiloSimple = new SimpleAttributeSet();
 		estiloSimple.addAttribute(StyleConstants.FontSize, 12);
 		estiloSimple.addAttribute(StyleConstants.FontFamily, "Arial");
+		estiloSimple.addAttribute(StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
 		estiloTitulo = new SimpleAttributeSet();
-		estiloTitulo.addAttribute(StyleConstants.Alignment, StyleConstants.ALIGN_CENTER);
 		estiloTitulo.addAttribute(StyleConstants.FontSize, 20);
 		estiloTitulo.addAttribute(StyleConstants.FontFamily, "Arial");
 		estiloTitulo.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
 
 		estiloTituloCapitulo = new SimpleAttributeSet();
-		estiloTituloCapitulo.addAttribute(StyleConstants.Alignment, StyleConstants.ALIGN_CENTER);
-		estiloTituloCapitulo.addAttribute(StyleConstants.FontSize, 13);
+		estiloTituloCapitulo.addAttribute(StyleConstants.FontSize, 14);
 		estiloTituloCapitulo.addAttribute(StyleConstants.FontFamily, "Arial");
 		estiloTituloCapitulo.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
 
@@ -134,6 +145,8 @@ public class VentanaPrincipal extends JFrame {
 		setLayout(new GridLayout(1, 2));
 		setIconImage(createImageIcon(RUTA_ICONO).getImage());
 		setLocationRelativeTo(null);
+
+		crearDialogoCargando();
 	}
 
 	public void agregarTexto(String texto, String estilo) {
@@ -160,6 +173,15 @@ public class VentanaPrincipal extends JFrame {
 		panelArticulo.setText("");
 	}
 
+	public void crearDialogoCargando() {
+		dialogoProgreso = new JDialog(this, "Mira el gato mientras carga el articulo...");
+		dialogoProgreso.setSize(400, 300);
+		dialogoProgreso.setLocationRelativeTo(null);
+		JLabel progressBar = new JLabel(createImageIcon("/images/cargando.gif"));
+		dialogoProgreso.add(progressBar);
+		dialogoProgreso.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+	}
+	
 	protected ImageIcon createImageIcon(String path) {
 		URL imgURL = getClass().getResource(path);
 		if (imgURL != null) {
@@ -175,5 +197,15 @@ public class VentanaPrincipal extends JFrame {
 
 	public PanelResultados getPanelResultados() {
 		return panelResultados;
+	}
+
+	public void mostrarDialogoCargando() {
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		dialogoProgreso.setVisible(true);
+	}
+
+	public void ocultarDialogoCargando() {
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		dialogoProgreso.setVisible(false);
 	}
 }

@@ -17,7 +17,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 
 public class VerificadorPalabrasClave {
-
+	
 	private static final int NUMERO_PARTES = 7;
 	private ParteArticulo[] lista;
 	private Directory directory;
@@ -29,7 +29,7 @@ public class VerificadorPalabrasClave {
 	private static final Object ERROR_CERRAR_INDICE = "Error al cerrar la configuración de indexado del articulo.";
 	private static final Object ERROR_ABRIR_CONFIGURACION_LECTURA = "Error en la configuración de lectura del articulo.";
 	private static final Object ERROR_CONTEO = "Error al contar las palabras clave en el articulo.";
-
+	
 	/**
 	 * Se carga el articulo y luego sus partes son pasadas a texto plano, se
 	 * crea un documento que permita su indexado.
@@ -38,13 +38,13 @@ public class VerificadorPalabrasClave {
 	 */
 	public VerificadorPalabrasClave(String ruta) {
 		ConversorTextoArticulo conversorTextoArticulo = new ConversorTextoArticulo(ruta);
+		articulo = conversorTextoArticulo.getArticulo();
 		lista = new ParteArticulo[NUMERO_PARTES];
 		directory = new RAMDirectory();
-		articulo = conversorTextoArticulo.getArticulo();
 		cargarArticulo(articulo);
 		crearDocumento();
 	}
-
+	
 	public VerificadorPalabrasClave(ArticuloCientifico articulo) {
 		lista = new ParteArticulo[NUMERO_PARTES];
 		directory = new RAMDirectory();
@@ -52,7 +52,7 @@ public class VerificadorPalabrasClave {
 		cargarArticulo(articulo);
 		crearDocumento();
 	}
-
+	
 	/**
 	 * El articulo es convertido a una lista de elementos que contiene un
 	 * indentificador y el texto de esa parte del articulo para su posterior
@@ -73,7 +73,7 @@ public class VerificadorPalabrasClave {
 		lista[6] = new ParteArticulo(ZonaArticulo.REFERENCIAS, articulo.getListaReferencias());
 		Util.pasarListaAMinusculas(lista);
 	}
-	
+
 	/**
 	 * Se crea un tipo de campo especial que permita el conteo de palabras.
 	 *
@@ -84,7 +84,7 @@ public class VerificadorPalabrasClave {
 		tipo.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
 		return tipo;
 	}
-
+	
 	/**
 	 * Se crea un documento y se indexa el articulo a este, para ello se
 	 * contsruye un indice con hasta 5 anagramas del contenido del articulo.
@@ -117,7 +117,7 @@ public class VerificadorPalabrasClave {
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
+	
 	/**
 	 * Cuenta la palabra clave en las partes del articulo
 	 *
@@ -149,16 +149,17 @@ public class VerificadorPalabrasClave {
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
+	
 	public ParteArticulo[] getLista() {
 		return lista;
 	}
-
+	
 	public ArticuloCientifico getArticulo() {
 		return articulo;
 	}
-
+	
 	public void setArticulo(ArticuloCientifico articulo) {
 		this.articulo = articulo;
 	}
+	
 }
