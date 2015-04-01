@@ -1,5 +1,6 @@
 package modelo;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,8 +15,12 @@ import persistencia.LectorWeb;
  * @author Alexander Castro
  *
  */
-public class ArticuloCientifico {
+public class ArticuloCientifico implements Serializable {
 	
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Estos atributos son metadatos del articulo pero que no tienen que ver con
 	 * su contenido

@@ -40,27 +40,23 @@ public class Controlador implements ActionListener {
 				analizarPalabraClave();
 				break;
 			case A_CREAR_ARCHIVO:
+
 				break;
 			case A_EXPORTAR_ARCHIVO:
 				GestorArchivos.guardarArchivo(articulo, ventanaPrincipal);
 				break;
 			case A_CARGAR_ARCHIVO:
-				verificadorPalabrasClave = new VerificadorPalabrasClave(GestorArchivos.cargarArchivo(ventanaPrincipal));
-				articulo = verificadorPalabrasClave.getArticulo();
-				cargarArticulo();
-				break;
-			case A_CARGAR_ARCHIVO_WEB:
-				String url = JOptionPane.showInputDialog(ventanaPrincipal, "Ingrese la URL corta del articulo",
-						"Cargar Articulo Web", JOptionPane.QUESTION_MESSAGE);
+				articulo = GestorArchivos.cargarArchivo(ventanaPrincipal);
 				ventanaPrincipal.mostrarDialogoCargando();
-
 				SwingWorker<Void, Void> aWorker = new SwingWorker<Void, Void>() {
 					@Override
 					protected Void doInBackground() throws Exception {
-						verificadorPalabrasClave = new VerificadorPalabrasClave(url);
-						articulo = verificadorPalabrasClave.getArticulo();
+						if (articulo != null) {
+							verificadorPalabrasClave = new VerificadorPalabrasClave(articulo);
+						}
 						return null;
 					}
+					
 					@Override
 					protected void done() {
 						cargarArticulo();
@@ -68,6 +64,29 @@ public class Controlador implements ActionListener {
 					}
 				};
 				aWorker.execute();
+				break;
+			case A_CARGAR_ARCHIVO_WEB:
+				String url = JOptionPane.showInputDialog(ventanaPrincipal, "Ingrese la URL corta del articulo",
+						"Cargar Articulo Web", JOptionPane.QUESTION_MESSAGE);
+				if (url != null) {
+					ventanaPrincipal.mostrarDialogoCargando();
+
+					SwingWorker<Void, Void> bWorker = new SwingWorker<Void, Void>() {
+						@Override
+						protected Void doInBackground() throws Exception {
+							verificadorPalabrasClave = new VerificadorPalabrasClave(url);
+							articulo = verificadorPalabrasClave.getArticulo();
+							return null;
+						}
+						
+						@Override
+						protected void done() {
+							cargarArticulo();
+							ventanaPrincipal.ocultarDialogoCargando();
+						}
+					};
+					bWorker.execute();
+				}
 				break;
 		}
 	}
@@ -97,6 +116,7 @@ public class Controlador implements ActionListener {
 		ventanaPrincipal.agregarTexto("\nReferencias:\n", VentanaPrincipal.ESTILO_TITULO_CAPITULO);
 		ventanaPrincipal.agregarTexto(articulo.getListaReferencias(), VentanaPrincipal.ESTILO_NORMAL);
 		cargarPalabrasClave();
+		ventanaPrincipal.mostrarInicioArticulo();
 	}
 
 	public void cargarPalabrasClave() {
@@ -104,6 +124,7 @@ public class Controlador implements ActionListener {
 		for (String palabra : articulo.getListaPalabrasClave()) {
 			ventanaPrincipal.getPanelResultados().agregarPalabraClave(palabra);
 		}
+		ventanaPrincipal.getPanelResultados().activarSeleccion();
 	}
 
 	public void analizarPalabraClave(){

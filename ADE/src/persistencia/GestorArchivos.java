@@ -22,8 +22,8 @@ public class GestorArchivos {
 	private static final Object ERROR_LEER_ARCHIVO = "Error al leer el archivo ADE.";
 	
 	public static void guardarArchivo(ArticuloCientifico articuloCientifico, JFrame ventana) {
-		JFileChooser dialogoGuardar = new JFileChooser();
-		dialogoGuardar.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		JFileChooser dialogoGuardar = new JFileChooser("./articulos");
+		dialogoGuardar.setDialogTitle("Exportar articulo a archivo ADE");
 		int returnVal = dialogoGuardar.showSaveDialog(ventana);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			FileOutputStream salida = null;
@@ -52,7 +52,8 @@ public class GestorArchivos {
 	}
 	
 	public static ArticuloCientifico cargarArchivo(JFrame ventana) {
-		JFileChooser dialogoAbrirArchivo = new JFileChooser();
+		JFileChooser dialogoAbrirArchivo = new JFileChooser("./articulos");
+		dialogoAbrirArchivo.setDialogTitle("Importar a archivo ADE");
 		dialogoAbrirArchivo.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		int returnVal = dialogoAbrirArchivo.showOpenDialog(ventana);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
