@@ -12,48 +12,43 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import modelo.ArticuloCientifico;
-import modelo.ConstantesTexto;
+import vistas.ConstantesGUI;
 
 public class GestorArchivos {
-
-	public static final String ERROR_RUTA_ARCHIVO = "Error en la ruta del archivo";
-	private static final Object ERROR_CREAR_ARCHIVO = "Error al crear el archivo ADE.";
-	private static final Object ERROR_CERRAR_ARCHIVO = "Error al cerrar el archivo ADE.";
-	private static final Object ERROR_LEER_ARCHIVO = "Error al leer el archivo ADE.";
 	
 	public static void guardarArchivo(ArticuloCientifico articuloCientifico, JFrame ventana) {
-		JFileChooser dialogoGuardar = new JFileChooser("./articulos");
-		dialogoGuardar.setDialogTitle("Exportar articulo a archivo ADE");
+		JFileChooser dialogoGuardar = new JFileChooser(ConstantesGUI.RUTA_PERSISTENCIA);
+		dialogoGuardar.setDialogTitle(ConstantesGUI.DIALOGO_EXPORTAR_TITULO);
 		int returnVal = dialogoGuardar.showSaveDialog(ventana);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			FileOutputStream salida = null;
 			ObjectOutputStream objectOutputStream = null;
 			try {
-				salida = new FileOutputStream(dialogoGuardar.getSelectedFile() + ".ade");
+				salida = new FileOutputStream(dialogoGuardar.getSelectedFile() + ConstantesGUI.EXTENSION_ARCHIVO);
 			} catch (FileNotFoundException e) {
-				JOptionPane.showMessageDialog(null, ERROR_RUTA_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+				JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_RUTA_ARCHIVO, ConstantesGUI.TITULO_ERROR,
 						JOptionPane.ERROR_MESSAGE);
 			}
 			try {
 				objectOutputStream = new ObjectOutputStream(salida);
 				objectOutputStream.writeObject(articuloCientifico);
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, ERROR_CREAR_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+				JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_CREAR_ARCHIVO, ConstantesGUI.TITULO_ERROR,
 						JOptionPane.ERROR_MESSAGE);
 			} finally {
 				try {
 					objectOutputStream.close();
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, ERROR_CERRAR_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+					JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_CERRAR_ARCHIVO, ConstantesGUI.TITULO_ERROR,
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
 	}
-	
+
 	public static ArticuloCientifico cargarArchivo(JFrame ventana) {
-		JFileChooser dialogoAbrirArchivo = new JFileChooser("./articulos");
-		dialogoAbrirArchivo.setDialogTitle("Importar a archivo ADE");
+		JFileChooser dialogoAbrirArchivo = new JFileChooser(ConstantesGUI.RUTA_PERSISTENCIA);
+		dialogoAbrirArchivo.setDialogTitle(ConstantesGUI.DIALOGO_IMPORTAR_TITULO);
 		dialogoAbrirArchivo.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		int returnVal = dialogoAbrirArchivo.showOpenDialog(ventana);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -62,20 +57,20 @@ public class GestorArchivos {
 			try {
 				entrada = new FileInputStream(dialogoAbrirArchivo.getSelectedFile());
 			} catch (FileNotFoundException e) {
-				JOptionPane.showMessageDialog(null, ERROR_RUTA_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+				JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_RUTA_ARCHIVO, ConstantesGUI.TITULO_ERROR,
 						JOptionPane.ERROR_MESSAGE);
 			}
 			try {
 				objectInputStream = new ObjectInputStream(entrada);
 				return (ArticuloCientifico) objectInputStream.readObject();
 			} catch (IOException | ClassNotFoundException e) {
-				JOptionPane.showMessageDialog(null, ERROR_LEER_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+				JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_LEER_ARCHIVO, ConstantesGUI.TITULO_ERROR,
 						JOptionPane.ERROR_MESSAGE);
 			} finally {
 				try {
 					objectInputStream.close();
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, ERROR_CERRAR_ARCHIVO, ConstantesTexto.TITULO_ERROR,
+					JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_CERRAR_ARCHIVO, ConstantesGUI.TITULO_ERROR,
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}

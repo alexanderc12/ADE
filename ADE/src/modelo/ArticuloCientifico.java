@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import persistencia.LectorWeb;
+import vistas.ConstantesGUI;
 
 /**
  * Representa la estructura de un articulo cientifico
@@ -16,7 +17,7 @@ import persistencia.LectorWeb;
  *
  */
 public class ArticuloCientifico implements Serializable {
-	
+
 	/**
 	 *
 	 */
@@ -50,12 +51,12 @@ public class ArticuloCientifico implements Serializable {
 	 */
 	private ArrayList<String> listaTitulosCapitulos;
 	private ArrayList<String> listaContenidoCapitulos;
-	
+
 	public ArticuloCientifico(String url) {
 		try {
 			this.url = new URL(url);
 		} catch (MalformedURLException e) {
-			JOptionPane.showMessageDialog(null, LectorWeb.ERROR_URL, ConstantesTexto.TITULO_ERROR,
+			JOptionPane.showMessageDialog(null, LectorWeb.ERROR_URL, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
 		listaReferencias = "";
@@ -64,144 +65,144 @@ public class ArticuloCientifico implements Serializable {
 		listaTitulosCapitulos = new ArrayList<String>();
 		listaContenidoCapitulos = new ArrayList<String>();
 	}
-	
+
 	/**
 	 * Metodos para agregar datos al articulo
 	 */
 	public void agregarAutor(String autor) {
 		listaAutores.add(autor);
 	}
-
+	
 	public void agregarPalabraClave(String palabra) {
 		listaPalabrasClave.add(palabra);
 	}
-
+	
 	public void agregarTituloCapitulo(String tituloCapitulo) {
 		listaTitulosCapitulos.add(tituloCapitulo);
 	}
-
+	
 	public void agregarContenidoCapitulo(String contenidoCapitulo) {
 		listaContenidoCapitulos.add(contenidoCapitulo);
 	}
-	
+
 	public void agregarReferencia(String referencia) {
 		this.listaReferencias += referencia + "\n";
 	}
-
+	
 	/**
 	 * Metodos para obtener el numero de capitulos del articulo
 	 */
 	public int getNumeroCapitulos() {
 		return listaTitulosCapitulos.size();
 	}
-
+	
 	/**
 	 * Metodos Set y Get
 	 */
 	public URL getUrl() {
 		return url;
 	}
-	
+
 	public void setUrl(URL url) {
 		this.url = url;
 	}
-	
+
 	public String getRevista() {
 		return revista;
 	}
-	
+
 	public void setRevista(String revista) {
 		this.revista = revista;
 	}
-	
+
 	public String getFechaRecepcion() {
 		return fechaRecepcion;
 	}
-	
+
 	public void setFechaRecepcion(String fechaRecepcion) {
 		this.fechaRecepcion = fechaRecepcion;
 	}
-	
+
 	public String getFechaAprobacion() {
 		return fechaAprobacion;
 	}
-	
+
 	public void setFechaAprobacion(String fechaAprobacion) {
 		this.fechaAprobacion = fechaAprobacion;
 	}
-	
+
 	public int getVolumen() {
 		return volumen;
 	}
-	
+
 	public void setVolumen(int volumen) {
 		this.volumen = volumen;
 	}
-	
+
 	public int getNumero() {
 		return numero;
 	}
-	
+
 	public void setNumero(int numero) {
 		this.numero = numero;
 	}
-	
+
 	public ArrayList<String> getListaAutores() {
 		return listaAutores;
 	}
-	
+
 	public void setListaAutores(ArrayList<String> listaAutores) {
 		this.listaAutores = listaAutores;
 	}
-	
+
 	public ArrayList<String> getListaPalabrasClave() {
 		return listaPalabrasClave;
 	}
-	
+
 	public void setListaPalabrasClave(ArrayList<String> listaPalabrasClave) {
 		this.listaPalabrasClave = listaPalabrasClave;
 	}
-	
+
 	public String getTitulo() {
 		return titulo;
 	}
-	
+
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-	
+
 	public String getResumen() {
 		return resumen;
 	}
-	
+
 	public void setResumen(String resumen) {
 		this.resumen = resumen;
 	}
-	
+
 	public String getListaReferencias() {
 		return listaReferencias;
 	}
-	
+
 	public void setListaReferencias(String listaReferencias) {
 		this.listaReferencias = listaReferencias;
 	}
-	
+
 	public ArrayList<String> getListaContenidoCapitulos() {
 		return listaContenidoCapitulos;
 	}
-	
+
 	public void setListaContenidoCapitulos(ArrayList<String> listaContenidoCapitulos) {
 		this.listaContenidoCapitulos = listaContenidoCapitulos;
 	}
-	
+
 	public ArrayList<String> getListaTitulosCapitulos() {
 		return listaTitulosCapitulos;
 	}
-	
+
 	public void setListaTitulosCapitulos(ArrayList<String> listaTitulosCapitulos) {
 		this.listaTitulosCapitulos = listaTitulosCapitulos;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder articulo = new StringBuilder();

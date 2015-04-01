@@ -16,6 +16,8 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 
+import vistas.ConstantesGUI;
+
 public class VerificadorPalabrasClave {
 	
 	private static final int NUMERO_PARTES = 7;
@@ -25,10 +27,10 @@ public class VerificadorPalabrasClave {
 	private ShingleAnalyzerWrapper analyzer;
 	private Document documento;
 	private static final String ERROR_CREAR_INDEX_WRITER = "Error la configuració para el indexado del articulo.";
-	private static final Object ERROR_AGREGAR_DOCUMENTO_INDICE = "Error al agregar al articulo al indice.";
-	private static final Object ERROR_CERRAR_INDICE = "Error al cerrar la configuración de indexado del articulo.";
-	private static final Object ERROR_ABRIR_CONFIGURACION_LECTURA = "Error en la configuración de lectura del articulo.";
-	private static final Object ERROR_CONTEO = "Error al contar las palabras clave en el articulo.";
+	private static final String ERROR_AGREGAR_DOCUMENTO_INDICE = "Error al agregar al articulo al indice.";
+	private static final String ERROR_CERRAR_INDICE = "Error al cerrar la configuración de indexado del articulo.";
+	private static final String ERROR_ABRIR_CONFIGURACION_LECTURA = "Error en la configuración de lectura del articulo.";
+	private static final String ERROR_CONTEO = "Error al contar las palabras clave en el articulo.";
 	
 	/**
 	 * Se carga el articulo y luego sus partes son pasadas a texto plano, se
@@ -96,7 +98,7 @@ public class VerificadorPalabrasClave {
 		try {
 			iwriter = new IndexWriter(directory, config);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, ERROR_CREAR_INDEX_WRITER, ConstantesTexto.TITULO_ERROR,
+			JOptionPane.showMessageDialog(null, ERROR_CREAR_INDEX_WRITER, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
 		documento = new Document();
@@ -107,13 +109,13 @@ public class VerificadorPalabrasClave {
 		try {
 			iwriter.addDocument(documento);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, ERROR_AGREGAR_DOCUMENTO_INDICE, ConstantesTexto.TITULO_ERROR,
+			JOptionPane.showMessageDialog(null, ERROR_AGREGAR_DOCUMENTO_INDICE, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
 		try {
 			iwriter.close();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, ERROR_CERRAR_INDICE, ConstantesTexto.TITULO_ERROR,
+			JOptionPane.showMessageDialog(null, ERROR_CERRAR_INDICE, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -128,7 +130,7 @@ public class VerificadorPalabrasClave {
 		try {
 			ireader = DirectoryReader.open(directory);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, ERROR_ABRIR_CONFIGURACION_LECTURA, ConstantesTexto.TITULO_ERROR,
+			JOptionPane.showMessageDialog(null, ERROR_ABRIR_CONFIGURACION_LECTURA, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
 		long numeroPalabras = 0;
@@ -138,14 +140,14 @@ public class VerificadorPalabrasClave {
 				numeroPalabras = ireader.totalTermFreq(term);
 				parteArticulo.setValorElemento(numeroPalabras);
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, ERROR_CONTEO, ConstantesTexto.TITULO_ERROR,
+				JOptionPane.showMessageDialog(null, ERROR_CONTEO, ConstantesGUI.TITULO_ERROR,
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		try {
 			ireader.close();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, ERROR_CERRAR_INDICE, ConstantesTexto.TITULO_ERROR,
+			JOptionPane.showMessageDialog(null, ERROR_CERRAR_INDICE, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}

@@ -8,7 +8,7 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-import modelo.ConstantesTexto;
+import vistas.ConstantesGUI;
 
 /**
  * Permite leer una pagina Web.
@@ -16,12 +16,12 @@ import modelo.ConstantesTexto;
  * @author Alexander Castro
  */
 public class LectorWeb {
-
+	
 	public static final String ERROR_URL = "Error al leer la URL del articulo.";
 	private static final String ERROR_CARGAR = "Error al cargar el articulo.";
 	private static final String ERROR_LECTURA = "Error al leer el texto del articulo.";
 	private static final String ERROR_CERRAR = "Error al cerrar el canal de datos.";
-
+	
 	/**
 	 * A partir de un URL retorna el contenido HTML de un pagina
 	 *
@@ -33,14 +33,14 @@ public class LectorWeb {
 		try {
 			url = new URL(urlArticulo);
 		} catch (MalformedURLException e) {
-			JOptionPane.showMessageDialog(null, ERROR_URL, ConstantesTexto.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, ERROR_URL, ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
 			return ERROR_URL;
 		}
 		BufferedReader entrada;
 		try {
 			entrada = new BufferedReader(new InputStreamReader(url.openStream()));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, ERROR_CARGAR, ConstantesTexto.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, ERROR_CARGAR, ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
 			return ERROR_CARGAR;
 		}
 		String linea;
@@ -49,18 +49,18 @@ public class LectorWeb {
 			while ((linea = entrada.readLine()) != null)
 				texto.append(linea);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, ERROR_LECTURA, ConstantesTexto.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, ERROR_LECTURA, ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
 			return ERROR_LECTURA;
 		}
 		try {
 			entrada.close();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, ERROR_CERRAR, ConstantesTexto.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, ERROR_CERRAR, ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
 			return ERROR_CERRAR;
 		}
 		return remplazarCaracteresHTML(texto.toString());
 	}
-
+	
 	/**
 	 * Resuelve problemas de internazionalización cambiando los caracteres
 	 * especiales de HTML a sus correspondientes valor para porder analizarlos
