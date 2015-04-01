@@ -47,23 +47,24 @@ public class Controlador implements ActionListener {
 				break;
 			case A_CARGAR_ARCHIVO:
 				articulo = GestorArchivos.cargarArchivo(ventanaPrincipal);
-				ventanaPrincipal.mostrarDialogoCargando();
-				SwingWorker<Void, Void> aWorker = new SwingWorker<Void, Void>() {
-					@Override
-					protected Void doInBackground() throws Exception {
-						if (articulo != null) {
+				if (articulo != null) {
+					ventanaPrincipal.mostrarDialogoCargando();
+					SwingWorker<Void, Void> aWorker = new SwingWorker<Void, Void>() {
+						@Override
+						protected Void doInBackground() throws Exception {
+
 							verificadorPalabrasClave = new VerificadorPalabrasClave(articulo);
+							return null;
 						}
-						return null;
-					}
-					
-					@Override
-					protected void done() {
-						cargarArticulo();
-						ventanaPrincipal.ocultarDialogoCargando();
-					}
-				};
-				aWorker.execute();
+						
+						@Override
+						protected void done() {
+							cargarArticulo();
+							ventanaPrincipal.ocultarDialogoCargando();
+						}
+					};
+					aWorker.execute();
+				}
 				break;
 			case A_CARGAR_ARCHIVO_WEB:
 				String url = JOptionPane.showInputDialog(ventanaPrincipal, "Ingrese la URL corta del articulo",

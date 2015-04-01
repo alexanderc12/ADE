@@ -1,19 +1,23 @@
 package vistas;
 
+import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.BadLocationException;
@@ -24,9 +28,9 @@ import javax.swing.text.StyledDocument;
 import controladores.Controlador;
 
 public class VentanaPrincipal extends JFrame {
-	
+
 	public static final String E_CARGAR_WEB = "CARGAR_WEB";
-	
+
 	private static final String T_TITULO = "ADE - ANALIZADOR DE ETIQUETAS";
 	private static final String T_MENU_ARCHIVO = "Archivo";
 	private static final String T_MENU_AYUDA = "Ayuda";
@@ -54,6 +58,12 @@ public class VentanaPrincipal extends JFrame {
 	private static final String IMAGEN_CARGANDO_ARTICULO = "/images/cargando.gif";
 	private static final String T_TITULO_DIALOGO_CARGANDO = "Mira el gato mientras carga el articulo...";
 	
+	private static final String ICONO_CREAR = "/images/new.png";
+	private static final String ICONO_CARGAR = "/images/open.png";
+	private static final String ICONO_CARGAR_WEB = "/images/open_web.png";
+	private static final String ICONO_EXPORTAR = "/images/export.png";
+	private static final String ICONO_ANALIZAR = "/images/search.png";
+	private static final String ICONO_ACERCA_DE = "/images/help.png";
 	private JMenuBar jMenuBar;
 	private JMenu menuArchivo;
 	private JMenuItem itemCargarArticuloWeb;
@@ -64,85 +74,135 @@ public class VentanaPrincipal extends JFrame {
 	private JMenu menuAyuda;
 	private JMenuItem itemAcercaDe;
 	private JMenuItem itemVerificarPalabrasClave;
-	
-	private Controlador controlador;
-	
+
+	private JToolBar jToolBar;
+	private JButton btnCargarArticuloWeb;
+	private JButton btnCrearArticulo;
+	private JButton btnExportarArticulo;
+	private JButton btnCargarArticuloADE;
+	private JButton btnVerificarPalabrasClave;
+
 	private JDialog dialogoProgreso;
 	
+	private Controlador controlador;
+
 	public void init() {
 		jMenuBar = new JMenuBar();
-		
+
 		menuArchivo = new JMenu(T_MENU_ARCHIVO);
-		
-		itemCrearArticulo = new JMenuItem(T_ITEM_CREAR_ARTICULO);
+
+		itemCrearArticulo = new JMenuItem(T_ITEM_CREAR_ARTICULO, createImageIcon(ICONO_CREAR));
 		itemCrearArticulo.addActionListener(controlador);
 		itemCrearArticulo.setActionCommand(Controlador.A_CREAR_ARCHIVO);
 		menuArchivo.add(itemCrearArticulo);
-		
-		itemCargarArticuloWeb = new JMenuItem(T_ITEM_CARGAR_ARTICULO_WEB);
+
+		itemCargarArticuloWeb = new JMenuItem(T_ITEM_CARGAR_ARTICULO_WEB, createImageIcon(ICONO_CARGAR_WEB));
 		itemCargarArticuloWeb.addActionListener(controlador);
 		itemCargarArticuloWeb.setActionCommand(Controlador.A_CARGAR_ARCHIVO_WEB);
 		menuArchivo.add(itemCargarArticuloWeb);
-		
-		itemCargarArticuloADE = new JMenuItem(T_ITEM_CARGAR_ARTICULO_ADE);
+
+		itemCargarArticuloADE = new JMenuItem(T_ITEM_CARGAR_ARTICULO_ADE, createImageIcon(ICONO_CARGAR));
 		itemCargarArticuloADE.addActionListener(controlador);
 		itemCargarArticuloADE.setActionCommand(Controlador.A_CARGAR_ARCHIVO);
 		menuArchivo.add(itemCargarArticuloADE);
-		
-		itemExportarArticulo = new JMenuItem(T_ITEM_EXPORTAR_ARTICULO);
+
+		itemExportarArticulo = new JMenuItem(T_ITEM_EXPORTAR_ARTICULO, createImageIcon(ICONO_EXPORTAR));
 		itemExportarArticulo.addActionListener(controlador);
 		itemExportarArticulo.setActionCommand(Controlador.A_EXPORTAR_ARCHIVO);
 		menuArchivo.add(itemExportarArticulo);
-		
+
 		jMenuBar.add(menuArchivo);
-		
+
 		menuHerramientas = new JMenu(T_MENU_HERRAMIENTAS);
-		itemVerificarPalabrasClave = new JMenuItem(
-				T_ITEM_VERIFICAR_PALABRAS_CLAVE);
-		itemVerificarPalabrasClave
-		.setActionCommand(Controlador.A_VERIFICAR_PALABRAS_CLAVE);
+		itemVerificarPalabrasClave = new JMenuItem(T_ITEM_VERIFICAR_PALABRAS_CLAVE, createImageIcon(ICONO_EXPORTAR));
+		itemVerificarPalabrasClave.setActionCommand(Controlador.A_VERIFICAR_PALABRAS_CLAVE);
 		itemVerificarPalabrasClave.addActionListener(controlador);
 		menuHerramientas.add(itemVerificarPalabrasClave);
 		jMenuBar.add(menuHerramientas);
-		
+
 		menuAyuda = new JMenu(T_MENU_AYUDA);
-		
-		itemAcercaDe = new JMenuItem(T_ITEM_ACERCA_DE);
+
+		itemAcercaDe = new JMenuItem(T_ITEM_ACERCA_DE, createImageIcon(ICONO_ACERCA_DE));
 		itemAcercaDe.addActionListener(controlador);
 		menuAyuda.add(itemAcercaDe);
-		
+
 		jMenuBar.add(menuAyuda);
-		
+
 		setJMenuBar(jMenuBar);
+
+		jToolBar = new JToolBar();
+		jToolBar.setFloatable(false);
+		jToolBar.setRollover(true);
 		
+		btnCrearArticulo = new JButton(createImageIcon(ICONO_CREAR));
+		btnCrearArticulo.setFocusable(false);
+		btnCrearArticulo.setToolTipText(T_ITEM_CREAR_ARTICULO);
+		btnCrearArticulo.addActionListener(controlador);
+		btnCrearArticulo.setActionCommand(Controlador.A_CREAR_ARCHIVO);
+		jToolBar.add(btnCrearArticulo);
+		
+		btnCargarArticuloWeb = new JButton(createImageIcon(ICONO_CARGAR_WEB));
+		btnCargarArticuloWeb.setFocusable(false);
+		btnCargarArticuloWeb.setToolTipText(T_ITEM_CARGAR_ARTICULO_WEB);
+		btnCargarArticuloWeb.addActionListener(controlador);
+		btnCargarArticuloWeb.setActionCommand(Controlador.A_CARGAR_ARCHIVO_WEB);
+		jToolBar.add(btnCargarArticuloWeb);
+		
+		btnCargarArticuloADE = new JButton(createImageIcon(ICONO_CARGAR));
+		btnCargarArticuloADE.setFocusable(false);
+		btnCargarArticuloADE.setToolTipText(T_ITEM_CARGAR_ARTICULO_ADE);
+		btnCargarArticuloADE.addActionListener(controlador);
+		btnCargarArticuloADE.setActionCommand(Controlador.A_CARGAR_ARCHIVO);
+		jToolBar.add(btnCargarArticuloADE);
+		
+		btnExportarArticulo = new JButton(createImageIcon(ICONO_EXPORTAR));
+		btnExportarArticulo.setFocusable(false);
+		btnExportarArticulo.setToolTipText(T_ITEM_EXPORTAR_ARTICULO);
+		btnExportarArticulo.addActionListener(controlador);
+		btnExportarArticulo.setActionCommand(Controlador.A_EXPORTAR_ARCHIVO);
+		jToolBar.add(btnExportarArticulo);
+		
+		btnVerificarPalabrasClave = new JButton(createImageIcon(ICONO_ANALIZAR));
+		btnVerificarPalabrasClave.setFocusable(false);
+		btnVerificarPalabrasClave.setToolTipText(T_ITEM_VERIFICAR_PALABRAS_CLAVE);
+		btnVerificarPalabrasClave.addActionListener(controlador);
+		btnVerificarPalabrasClave.setActionCommand(Controlador.A_VERIFICAR_PALABRAS_CLAVE);
+		jToolBar.add(btnVerificarPalabrasClave);
+		
+		add(jToolBar, BorderLayout.PAGE_START);
+		
+		JPanel panelPrincipal = new JPanel(new GridLayout(1, 2));
+
 		panelArticulo = new JTextPane();
 		JScrollPane panel = new JScrollPane(panelArticulo);
 		panel.setBorder(BorderFactory.createTitledBorder(T_PANEL_ARTICULO));
 		panelArticulo.setEditable(false);
 		panelArticulo.setHighlighter(null);
 		documento = panelArticulo.getStyledDocument();
-		
+
 		estiloSimple = new SimpleAttributeSet();
 		estiloSimple.addAttribute(StyleConstants.FontSize, 12);
 		estiloSimple.addAttribute(StyleConstants.FontFamily, "Arial");
 		estiloSimple.addAttribute(StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
-		
+
 		estiloTitulo = new SimpleAttributeSet();
 		estiloTitulo.addAttribute(StyleConstants.FontSize, 20);
 		estiloTitulo.addAttribute(StyleConstants.FontFamily, "Arial");
 		estiloTitulo.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
-		
+
 		estiloTituloCapitulo = new SimpleAttributeSet();
 		estiloTituloCapitulo.addAttribute(StyleConstants.FontSize, 14);
 		estiloTituloCapitulo.addAttribute(StyleConstants.FontFamily, "Arial");
 		estiloTituloCapitulo.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
-		
-		add(panel);
-		
+
+		panelPrincipal.add(panel);
+
 		panelResultados = new PanelResultados();
-		add(panelResultados);
+		panelPrincipal.add(panelResultados);
+		
+		add(panelPrincipal, BorderLayout.CENTER);
 	}
-	
+
 	public VentanaPrincipal() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -158,13 +218,13 @@ public class VentanaPrincipal extends JFrame {
 		setTitle(T_TITULO);
 		setSize(WIDTH, HEIGHT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLayout(new GridLayout(1, 2));
+		setLayout(new BorderLayout());
 		setIconImage(createImageIcon(RUTA_ICONO).getImage());
 		setLocationRelativeTo(null);
-		
+
 		crearDialogoCargando();
 	}
-	
+
 	public void agregarTexto(String texto, String estilo) {
 		SimpleAttributeSet estiloTexto = null;
 		switch (estilo) {
@@ -184,15 +244,15 @@ public class VentanaPrincipal extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void mostrarInicioArticulo() {
 		panelArticulo.setCaretPosition(0);
 	}
-	
+
 	public void limpiarPanelArticulo() {
 		panelArticulo.setText("");
 	}
-	
+
 	public void crearDialogoCargando() {
 		dialogoProgreso = new JDialog(this, T_TITULO_DIALOGO_CARGANDO);
 		dialogoProgreso.setSize(400, 300);
@@ -201,7 +261,7 @@ public class VentanaPrincipal extends JFrame {
 		dialogoProgreso.add(progressBar);
 		dialogoProgreso.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	}
-
+	
 	protected ImageIcon createImageIcon(String path) {
 		URL imgURL = getClass().getResource(path);
 		if (imgURL != null) {
@@ -210,20 +270,20 @@ public class VentanaPrincipal extends JFrame {
 			return null;
 		}
 	}
-	
+
 	public void setControlador(Controlador controlador) {
 		this.controlador = controlador;
 	}
-	
+
 	public PanelResultados getPanelResultados() {
 		return panelResultados;
 	}
-	
+
 	public void mostrarDialogoCargando() {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		dialogoProgreso.setVisible(true);
 	}
-	
+
 	public void ocultarDialogoCargando() {
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		dialogoProgreso.setVisible(false);
