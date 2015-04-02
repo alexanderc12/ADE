@@ -1,10 +1,13 @@
 package modelo;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.swing.JOptionPane;
 
-import org.apache.lucene.analysis.shingle.ShingleAnalyzerWrapper;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
@@ -13,6 +16,7 @@ import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.Terms;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 
@@ -24,7 +28,6 @@ public class VerificadorPalabrasClave {
 	private ParteArticulo[] lista;
 	private Directory directory;
 	private ArticuloCientifico articulo;
-	private ShingleAnalyzerWrapper analyzer;
 	private Document documento;
 	private static final String ERROR_CREAR_INDEX_WRITER = "Error la configuració para el indexado del articulo.";
 	private static final String ERROR_AGREGAR_DOCUMENTO_INDICE = "Error al agregar al articulo al indice.";
@@ -75,7 +78,7 @@ public class VerificadorPalabrasClave {
 		lista[6] = new ParteArticulo(ZonaArticulo.REFERENCIAS, articulo.getListaReferencias());
 		Util.pasarListaAMinusculas(lista);
 	}
-
+	
 	/**
 	 * Se crea un tipo de campo especial que permita el conteo de palabras.
 	 *
@@ -84,6 +87,7 @@ public class VerificadorPalabrasClave {
 	private FieldType crearTipoCampo() {
 		FieldType tipo = new FieldType();
 		tipo.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
+		tipo.setStoreTermVectors(true);
 		return tipo;
 	}
 	
@@ -92,7 +96,15 @@ public class VerificadorPalabrasClave {
 	 * contsruye un indice con hasta 5 anagramas del contenido del articulo.
 	 */
 	public void crearDocumento() {
-		analyzer = new ShingleAnalyzerWrapper(2, 5);
+		CharArraySet list = new CharArraySet(0, true);
+		try {
+			for (String palabra : Files.readAllLines(Paths.get("src/data/listaDePalabrasOmitidas.txt"))) {
+				list.add(palabra);
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		StandardAnalyzer analyzer = new StandardAnalyzer(list);
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		IndexWriter iwriter = null;
 		try {
@@ -125,7 +137,7 @@ public class VerificadorPalabrasClave {
 	 *
 	 * @param palabra
 	 */
-	public void contarPalabras(String palabra) {
+	public void contarPalabras(String termino) {
 		DirectoryReader ireader = null;
 		try {
 			ireader = DirectoryReader.open(directory);
@@ -133,15 +145,24 @@ public class VerificadorPalabrasClave {
 			JOptionPane.showMessageDialog(null, ERROR_ABRIR_CONFIGURACION_LECTURA, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
-		long numeroPalabras = 0;
 		for (ParteArticulo parteArticulo : lista) {
-			Term term = new Term(parteArticulo.getZonaArticulo().name(), palabra.toLowerCase());
+			long numeroPalabras = 0;
+			String listaPalabras[] = termino.split(" ");
+			for (String palabra : listaPalabras) {
+				Term term = new Term(parteArticulo.getZonaArticulo().name(), palabra.toLowerCase());
+				try {
+					numeroPalabras += ireader.totalTermFreq(term);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, ERROR_CONTEO, ConstantesGUI.TITULO_ERROR,
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			parteArticulo.setValorElemento((double) numeroPalabras / listaPalabras.length);
 			try {
-				numeroPalabras = ireader.totalTermFreq(term);
-				parteArticulo.setValorElemento(numeroPalabras);
+				Terms listaTerminos = ireader.getTermVector(0, parteArticulo.getZonaArticulo().name());
+				parteArticulo.setMaximoElementos(listaTerminos.size());
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, ERROR_CONTEO, ConstantesGUI.TITULO_ERROR,
-						JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
 			}
 		}
 		try {

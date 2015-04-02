@@ -2,6 +2,7 @@ package controladores;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -24,6 +25,7 @@ public class Controlador implements ActionListener {
 	public static final String A_EXPORTAR_ARCHIVO = "EXPORTAR_ARCHIVO";
 	public static final String A_CARGAR_ARCHIVO_WEB = "A_CARGAR_ARCHIVO_WEB";
 	public static final String NL = System.getProperty("line.separator") + System.getProperty("line.separator");
+	public static final DecimalFormat DECIMAL_FORMART = new DecimalFormat("#0.00");
 	
 	public void iniciar() {
 		this.ventana = new VentanaPrincipal();
@@ -54,8 +56,8 @@ public class Controlador implements ActionListener {
 	}
 	
 	public void cargarArticuloWeb() {
-		String url = JOptionPane.showInputDialog(ventana, "Ingrese la URL corta del articulo",
-				"Cargar Articulo Web", JOptionPane.QUESTION_MESSAGE);
+		String url = JOptionPane.showInputDialog(ventana, "Ingrese la URL corta del articulo", "Cargar Articulo Web",
+				JOptionPane.QUESTION_MESSAGE);
 		if (url != null) {
 			ventana.mostrarDialogoCargando();
 			SwingWorker<Void, Void> bWorker = new SwingWorker<Void, Void>() {
@@ -121,6 +123,7 @@ public class Controlador implements ActionListener {
 		cargarPalabrasClave();
 		ventana.mostrarInicioArticulo();
 		ventana.ocultarDialogoCargando();
+		ventana.getPanelResultados().limiparTabla();
 	}
 	
 	public void cargarPalabrasClave() {
@@ -138,10 +141,12 @@ public class Controlador implements ActionListener {
 		for (ParteArticulo parteArticulo : verificadorPalabrasClave.getLista()) {
 			ventana.getPanelResultados().agregarResultado(
 					parteArticulo.getZonaArticulo().toString(),
-					Long.toString(parteArticulo.getValorElemento()),
-					Long.toString(parteArticulo.getMaximoElementos()), "0");
+					DECIMAL_FORMART.format(parteArticulo.getValorElemento()),
+					DECIMAL_FORMART.format(parteArticulo.getMaximoElementos()),
+					DECIMAL_FORMART.format(parteArticulo.obtenerPorcentaje()));
 		}
 		ventana.getBarraEstado().setPalabraClave(palabra);
+		ventana.getBarraEstado().setEstadisticas("%");
 	}
 	
 	public static void main(String[] args) {
