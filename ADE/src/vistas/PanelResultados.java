@@ -46,9 +46,11 @@ public class PanelResultados extends JPanel {
 
 	public void agregarResultado(String parteArticulo,
 			String numeroIncidencias, String numeroElementos,
+			String numeroElementosAnalizables,
 			String porcentajeIncidencias) {
 		modeloTablaResultados.addRow(new String[] { parteArticulo,
-				numeroIncidencias, numeroElementos, porcentajeIncidencias });
+				numeroIncidencias, numeroElementos, numeroElementosAnalizables,
+				porcentajeIncidencias });
 	}
 
 	public void limiparTabla() {

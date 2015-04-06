@@ -35,8 +35,11 @@ public class VentanaPrincipal extends JFrame {
 	
 	private BarraDeMenu jMenuBar;
 	private BarraDeHerramientas jToolBar;
-	private DialogoCargando dialogoProgreso;
 	private BarraEstado barraEstado;
+
+	private DialogoCargando dialogoProgreso;
+	private DialogoPalabrasVacias dialogoPalabrasVacias;
+	private DialogoNuevoArticulo dialogoNuevoArticulo;
 
 	private Controlador controlador;
 
@@ -103,6 +106,8 @@ public class VentanaPrincipal extends JFrame {
 		setLocationRelativeTo(null);
 
 		dialogoProgreso = new DialogoCargando(this);
+		dialogoPalabrasVacias = new DialogoPalabrasVacias(this);
+		dialogoNuevoArticulo = new DialogoNuevoArticulo(this);
 	}
 
 	public void agregarTexto(String texto, String estilo) {
@@ -151,6 +156,14 @@ public class VentanaPrincipal extends JFrame {
 		dialogoProgreso.setVisible(false);
 	}
 	
+	public void mostrarDialogoEditarPalabrasVacias() {
+		dialogoPalabrasVacias.setVisible(true);
+	}
+	
+	public void mostrarDialogoNuevoArticulo() {
+		dialogoNuevoArticulo.setVisible(true);
+	}
+
 	public BarraEstado getBarraEstado() {
 		return barraEstado;
 	}

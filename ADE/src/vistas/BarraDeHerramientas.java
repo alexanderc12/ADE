@@ -19,6 +19,7 @@ public class BarraDeHerramientas extends JToolBar {
 	private JButton btnExportarArticulo;
 	private JButton btnCargarArticuloADE;
 	private JButton btnVerificarPalabrasClave;
+	private JButton btnEditarPalabrasVacias;
 
 	public BarraDeHerramientas(Controlador controlador) {
 		setFloatable(false);
@@ -60,6 +61,16 @@ public class BarraDeHerramientas extends JToolBar {
 		btnVerificarPalabrasClave.addActionListener(controlador);
 		btnVerificarPalabrasClave.setActionCommand(Controlador.A_VERIFICAR_PALABRAS_CLAVE);
 		add(btnVerificarPalabrasClave);
+		
+		btnEditarPalabrasVacias = new JButton(
+				createImageIcon(ConstantesGUI.ICONO_EDITAR_PALABRAS_VACIAS));
+		btnEditarPalabrasVacias.setFocusable(false);
+		btnEditarPalabrasVacias
+				.setToolTipText(ConstantesGUI.T_ITEM_EDITAR_PALABRAS_VACIAS);
+		btnEditarPalabrasVacias.addActionListener(controlador);
+		btnEditarPalabrasVacias
+				.setActionCommand(Controlador.A_EDITAR_PALABRAS_VACIAS);
+		add(btnEditarPalabrasVacias);
 	}
 
 	protected ImageIcon createImageIcon(String path) {

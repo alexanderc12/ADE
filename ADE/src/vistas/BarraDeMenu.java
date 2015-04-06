@@ -21,9 +21,10 @@ public class BarraDeMenu extends JMenuBar {
 	private JMenuItem itemExportarArticulo;
 	private JMenuItem itemCargarArticuloADE;
 	private JMenu menuHerramientas;
+	private JMenuItem itemVerificarPalabrasClave;
+	private JMenuItem itemEditarPalabrasVacias;
 	private JMenu menuAyuda;
 	private JMenuItem itemAcercaDe;
-	private JMenuItem itemVerificarPalabrasClave;
 
 	public BarraDeMenu(Controlador controlador) {
 
@@ -56,11 +57,21 @@ public class BarraDeMenu extends JMenuBar {
 		add(menuArchivo);
 		
 		menuHerramientas = new JMenu(ConstantesGUI.T_MENU_HERRAMIENTAS);
+
 		itemVerificarPalabrasClave = new JMenuItem(ConstantesGUI.T_ITEM_VERIFICAR_PALABRAS_CLAVE,
 				createImageIcon(ConstantesGUI.ICONO_EXPORTAR));
 		itemVerificarPalabrasClave.setActionCommand(Controlador.A_VERIFICAR_PALABRAS_CLAVE);
 		itemVerificarPalabrasClave.addActionListener(controlador);
 		menuHerramientas.add(itemVerificarPalabrasClave);
+		
+		itemEditarPalabrasVacias = new JMenuItem(
+				ConstantesGUI.T_ITEM_EDITAR_PALABRAS_VACIAS,
+				createImageIcon(ConstantesGUI.T_ITEM_EDITAR_PALABRAS_VACIAS));
+		itemEditarPalabrasVacias
+				.setActionCommand(Controlador.A_EDITAR_PALABRAS_VACIAS);
+		itemEditarPalabrasVacias.addActionListener(controlador);
+		menuHerramientas.add(itemEditarPalabrasVacias);
+
 		add(menuHerramientas);
 		
 		menuAyuda = new JMenu(ConstantesGUI.T_MENU_AYUDA);

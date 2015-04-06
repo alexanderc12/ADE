@@ -11,6 +11,7 @@ import modelo.ArticuloCientifico;
 import modelo.ParteArticulo;
 import modelo.VerificadorPalabrasClave;
 import persistencia.GestorArchivos;
+import vistas.ConstantesGUI;
 import vistas.VentanaPrincipal;
 
 public class Controlador implements ActionListener {
@@ -24,6 +25,7 @@ public class Controlador implements ActionListener {
 	public static final String A_CARGAR_ARCHIVO = "CARGAR_ARCHIVO";
 	public static final String A_EXPORTAR_ARCHIVO = "EXPORTAR_ARCHIVO";
 	public static final String A_CARGAR_ARCHIVO_WEB = "A_CARGAR_ARCHIVO_WEB";
+	public static final String A_EDITAR_PALABRAS_VACIAS = "A_EDITAR_PALABRAS_VACIAS";
 	public static final String NL = System.getProperty("line.separator") + System.getProperty("line.separator");
 	public static final DecimalFormat DECIMAL_FORMART = new DecimalFormat("#0.00");
 	
@@ -38,13 +40,15 @@ public class Controlador implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
 			case A_VERIFICAR_PALABRAS_CLAVE:
-				analizarPalabraClave();
+				if (articulo != null) {
+					analizarPalabraClave();
+				}
 				break;
 			case A_CREAR_ARCHIVO:
-				
+				ventana.mostrarDialogoNuevoArticulo();
 				break;
 			case A_EXPORTAR_ARCHIVO:
-				GestorArchivos.guardarArchivo(articulo, ventana);
+				GestorArchivos.guardarArchivoArticulo(articulo, ventana);
 				break;
 			case A_CARGAR_ARCHIVO:
 				cargarArticuloLocal();
@@ -52,9 +56,16 @@ public class Controlador implements ActionListener {
 			case A_CARGAR_ARCHIVO_WEB:
 				cargarArticuloWeb();
 				break;
+			case A_EDITAR_PALABRAS_VACIAS:
+				mostrarDialogoEditarPalabrasVacias();
+				break;
 		}
 	}
 	
+	public void mostrarDialogoEditarPalabrasVacias(){
+		ventana.mostrarDialogoEditarPalabrasVacias();
+	}
+
 	public void cargarArticuloWeb() {
 		String url = JOptionPane.showInputDialog(ventana, "Ingrese la URL corta del articulo", "Cargar Articulo Web",
 				JOptionPane.QUESTION_MESSAGE);
@@ -77,7 +88,7 @@ public class Controlador implements ActionListener {
 	}
 	
 	public void cargarArticuloLocal() {
-		articulo = GestorArchivos.cargarArchivo(ventana);
+		articulo = GestorArchivos.cargarArchivoArticulo(ventana);
 		if (articulo != null) {
 			ventana.mostrarDialogoCargando();
 			SwingWorker<Void, Void> aWorker = new SwingWorker<Void, Void>() {
@@ -97,16 +108,25 @@ public class Controlador implements ActionListener {
 	
 	public void mostrarArticulo() {
 		ventana.limpiarPanelArticulo();
-		ventana.agregarTexto("Revista: " + articulo.getRevista() + "\t Volumen: " + articulo.getVolumen()
-		+ "\tNumero: " + articulo.getNumero() + NL, VentanaPrincipal.ESTILO_NORMAL);
+		ventana.agregarTexto(ConstantesGUI.T_REVISTA + articulo.getRevista()
+				+ "\t" + ConstantesGUI.T_VOLUMEN + articulo.getVolumen() + "\t"
+				+ ConstantesGUI.T_NUMERO + articulo.getNumero() + NL,
+				VentanaPrincipal.ESTILO_NORMAL);
 		ventana.agregarTexto(articulo.getTitulo() + NL, VentanaPrincipal.ESTILO_TITULO);
 		for (String autor : articulo.getListaAutores()) {
 			ventana.agregarTexto(autor + "\t", VentanaPrincipal.ESTILO_NORMAL);
 		}
-		ventana.agregarTexto("\n\nFecha de recepción:" + articulo.getFechaRecepcion()
-		+ "\tFecha de aprobación:" + articulo.getFechaAprobacion() + NL, VentanaPrincipal.ESTILO_NORMAL);
-		ventana.agregarTexto("Resumen:\n" + articulo.getResumen() + NL, VentanaPrincipal.ESTILO_NORMAL);
-		ventana.agregarTexto("Palabras clave:\n", VentanaPrincipal.ESTILO_NORMAL);
+		ventana.agregarTexto(
+				NL + ConstantesGUI.T_FECHA_RECEPCION
+						+ articulo.getFechaRecepcion() + "\t"
+						+ ConstantesGUI.T_FECHA_RECEPCION
+						+ articulo.getFechaAprobacion() + NL,
+				VentanaPrincipal.ESTILO_NORMAL);
+		ventana.agregarTexto(
+				ConstantesGUI.T_RESUMEN + "\n" + articulo.getResumen() + NL,
+				VentanaPrincipal.ESTILO_NORMAL);
+		ventana.agregarTexto(ConstantesGUI.T_PALABRAS_CLAVE + "\n",
+				VentanaPrincipal.ESTILO_NORMAL);
 		for (String palabra : articulo.getListaPalabrasClave()) {
 			ventana.agregarTexto(palabra + "\t", VentanaPrincipal.ESTILO_NORMAL);
 		}
@@ -117,7 +137,8 @@ public class Controlador implements ActionListener {
 			ventana.agregarTexto(articulo.getListaContenidoCapitulos().get(i) + NL,
 					VentanaPrincipal.ESTILO_NORMAL);
 		}
-		ventana.agregarTexto("\nReferencias:\n", VentanaPrincipal.ESTILO_TITULO_CAPITULO);
+		ventana.agregarTexto("\n" + ConstantesGUI.T_REFERENCIAS + "\n",
+				VentanaPrincipal.ESTILO_TITULO_CAPITULO);
 		ventana.agregarTexto(articulo.getListaReferencias(), VentanaPrincipal.ESTILO_NORMAL);
 		ventana.getBarraEstado().setNombreArticulo(articulo.getTitulo());
 		cargarPalabrasClave();
@@ -142,7 +163,10 @@ public class Controlador implements ActionListener {
 			ventana.getPanelResultados().agregarResultado(
 					parteArticulo.getZonaArticulo().toString(),
 					DECIMAL_FORMART.format(parteArticulo.getValorElemento()),
-					DECIMAL_FORMART.format(parteArticulo.getMaximoElementos()),
+					DECIMAL_FORMART.format(parteArticulo
+.getTotalElementos()),
+					DECIMAL_FORMART.format(parteArticulo
+							.getNumeroElementosAnalizables()),
 					DECIMAL_FORMART.format(parteArticulo.obtenerPorcentaje()));
 		}
 		ventana.getBarraEstado().setPalabraClave(palabra);

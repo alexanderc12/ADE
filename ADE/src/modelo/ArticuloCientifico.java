@@ -202,17 +202,4 @@ public class ArticuloCientifico implements Serializable {
 	public void setListaTitulosCapitulos(ArrayList<String> listaTitulosCapitulos) {
 		this.listaTitulosCapitulos = listaTitulosCapitulos;
 	}
-
-	@Override
-	public String toString() {
-		StringBuilder articulo = new StringBuilder();
-		articulo.append("Revista").append(revista).append("Titulo: ").append(titulo).append("\nURL: ").append(url)
-		.append("\nAutores: ")
-		.append(listaAutores).append("\nResumen: ").append(resumen).append("\nPalabras clave:")
-		.append(listaPalabrasClave).append("\nVolumen: ").append(volumen).append("\nNumero: ").append(numero)
-		.append("\nFecha recepción: ").append(fechaRecepcion).append("\nFecha aprobación: ")
-		.append("\nLista capitulos: ").append(listaTitulosCapitulos).append("\nLista contenidos: ")
-		.append(listaContenidoCapitulos).append("\nLista referencias: ").append(listaReferencias);
-		return articulo.toString();
-	}
 }

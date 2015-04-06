@@ -17,7 +17,8 @@ public class DialogoCargando extends JDialog {
 	public DialogoCargando(VentanaPrincipal ventanaPrincipal) {
 		super(ventanaPrincipal);
 		setTitle(ConstantesGUI.T_TITULO_DIALOGO_CARGANDO);
-		setSize(ConstantesGUI.DIALOGO_CARGANDO_ANCHO, ConstantesGUI.DIALOGO_CARGANDOVENTANA_ALTO);
+		setSize(ConstantesGUI.DIALOGO_CARGANDO_ANCHO,
+				ConstantesGUI.DIALOGO_CARGANDO_ALTO);
 		setLocationRelativeTo(null);
 		JLabel progressBar = new JLabel(createImageIcon(ConstantesGUI.IMAGEN_CARGANDO_ARTICULO));
 		add(progressBar);

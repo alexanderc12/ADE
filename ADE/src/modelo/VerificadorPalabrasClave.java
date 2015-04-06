@@ -35,6 +35,7 @@ public class VerificadorPalabrasClave {
 	private static final String ERROR_ABRIR_CONFIGURACION_LECTURA = "Error en la configuración de lectura del articulo.";
 	private static final String ERROR_CONTEO = "Error al contar las palabras clave en el articulo.";
 	
+
 	/**
 	 * Se carga el articulo y luego sus partes son pasadas a texto plano, se
 	 * crea un documento que permita su indexado.
@@ -93,16 +94,19 @@ public class VerificadorPalabrasClave {
 	
 	/**
 	 * Se crea un documento y se indexa el articulo a este, para ello se
-	 * contsruye un indice con hasta 5 anagramas del contenido del articulo.
+	 * contsruye un indice, omitiendo las palabras vacias de la lista
 	 */
 	public void crearDocumento() {
 		CharArraySet list = new CharArraySet(0, true);
 		try {
-			for (String palabra : Files.readAllLines(Paths.get("src/data/listaDePalabrasOmitidas.txt"))) {
+			for (String palabra : Files.readAllLines(Paths
+					.get(ConstantesGUI.RUTA_PALABRAS_VACIAS))) {
 				list.add(palabra);
 			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null,
+					ConstantesGUI.ERROR_LEER_PALABRAS_VACIAS,
+					ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
 		}
 		StandardAnalyzer analyzer = new StandardAnalyzer(list);
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
@@ -160,7 +164,8 @@ public class VerificadorPalabrasClave {
 			parteArticulo.setValorElemento((double) numeroPalabras / listaPalabras.length);
 			try {
 				Terms listaTerminos = ireader.getTermVector(0, parteArticulo.getZonaArticulo().name());
-				parteArticulo.setMaximoElementos(listaTerminos.size());
+				parteArticulo.setNumeroElementosAnalizables(listaTerminos
+						.size());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
