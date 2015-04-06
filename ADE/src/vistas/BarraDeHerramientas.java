@@ -10,9 +10,6 @@ import controladores.Controlador;
 
 public class BarraDeHerramientas extends JToolBar {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	private JButton btnCargarArticuloWeb;
 	private JButton btnCrearArticulo;

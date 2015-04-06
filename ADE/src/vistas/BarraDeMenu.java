@@ -11,9 +11,6 @@ import controladores.Controlador;
 
 public class BarraDeMenu extends JMenuBar {
 	
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	private JMenu menuArchivo;
 	private JMenuItem itemCargarArticuloWeb;

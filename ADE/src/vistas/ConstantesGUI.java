@@ -1,5 +1,6 @@
 package vistas;
 
+
 public class ConstantesGUI {
 
 	/**
@@ -34,7 +35,7 @@ public class ConstantesGUI {
 	public static final String ICONO_CARGAR_WEB = "/images/open_web.png";
 	public static final String ICONO_EXPORTAR = "/images/export.png";
 	public static final String ICONO_ANALIZAR = "/images/search.png";
-	public static final String ICONO_EDITAR_PALABRAS_VACIAS = "/images/help.png";
+	public static final String ICONO_EDITAR_PALABRAS_VACIAS = "/images/stop_words.png";
 	public static final String ICONO_ACERCA_DE = "/images/help.png";
 	
 	/**
@@ -56,8 +57,8 @@ public class ConstantesGUI {
 	 * Constantes DialogoNuevoArticulo
 	 */
 	public static final String T_TITULO_DIALOGO_NUEVO_ARTICULO = "Nuevo articulo";
-	public static final int DIALOGO_NUEVO_ARTICULO_ANCHO = 600;
-	public static final int DIALOGO_NUEVO_ARTICULO_ALTO = 400;
+	public static final int DIALOGO_NUEVO_ARTICULO_ANCHO = 460;
+	public static final int DIALOGO_NUEVO_ARTICULO_ALTO = 550;
 	public static final String T_REVISTA = "Nombre revista: ";
 	public static final String T_VOLUMEN = "Volumen: ";
 	public static final String T_NUMERO = "Numero: ";
@@ -71,14 +72,24 @@ public class ConstantesGUI {
 	public static final String T_TITULOS_CAPITULOS = "Titulos de los capitulos";
 	public static final String T_CONTENIDO_CAPITULOS = "Contenido capitulos";
 	public static final String T_REFERENCIAS = "Referencias: ";
+	public static final String T_PANEL_DATOS_REVISTA = "Datos de la revista:";
+	public static final String T_PANEL_DATOS_ARTICULO = "Datos generales articulo:";
+	public static final String T_PANEL_CONTENIDOS = "Titulos y contenidos de los capitulos";
+	public static final String[] T_COLUMNAS_TABLA_CONTENIDOS = { "Titulo",
+			"Contenido" };
+	public static final String ICONO_AGREGAR_CAPITULO = "/images/add.png";
+	public static final String T_AGREGAR_CAPITULO = "Agregar capitulo";
+	public static final String ICONO_ELIMINAR_CAPITULO = "/images/remove.png";
+	public static final String T_ELIMINAR_CAPITULO = "Remover Capitulo";
 	
 	/**
 	 * Constantes PanelResultados
 	 */
 	public static final String T_PANEL_RESULTADOS = "Resultados";
 	public static final String T_LISTA_PALABRAS = "Lista palabras clave:";
-	public static final String T_TABLA = "Estadisticas:";
-	public static final String[] T_COLUMNAS_TABLA = { "Parte del articulo",
+	public static final String T_TABLA_RESULTADOS = "Estadisticas:";
+	public static final String[] T_COLUMNAS_TABLA_RESULTADOS = {
+			"Parte del articulo",
 			"Numero de incidencias", "Numero elementos",
 			"Numero elementos analizables",
 	"% Incidencias" };
@@ -96,6 +107,8 @@ public class ConstantesGUI {
 	public static final String RUTA_PERSISTENCIA = "./articulos";
 	public static final String EXTENSION_ARCHIVO = ".ade";
 	public static final String RUTA_PALABRAS_VACIAS = "src/data/listaPalabrasVacias.txt";
+	public static final String TITULO_GUARDAR = "Guardar";
+	public static final String DIALOGO_GUARDAR_PALABRAS_VACIAS = "¿Desea guardar los cambios?";
 	public static final String ERROR_LEER_PALABRAS_VACIAS = "Error al leer el archivo de palabras vacias.";
 	public static final String ERROR_GUARDAR_PALABRAS_VACIAS = "Error al guardar el archivo de palabras vacias.";
 }

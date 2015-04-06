@@ -5,9 +5,6 @@ import javax.swing.JToolBar;
 
 public class BarraEstado extends JToolBar {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	private JLabel lbNombreArticulo;
 	private JLabel lbPlabraClave;

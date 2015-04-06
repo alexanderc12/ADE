@@ -9,9 +9,6 @@ import javax.swing.JLabel;
 
 public class DialogoCargando extends JDialog {
 	
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public DialogoCargando(VentanaPrincipal ventanaPrincipal) {

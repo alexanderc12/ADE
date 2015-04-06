@@ -12,10 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class DialogoPalabrasVacias extends JDialog{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JTextArea txPalabrasVacias;
 	
@@ -33,19 +30,22 @@ public class DialogoPalabrasVacias extends JDialog{
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int opcion = JOptionPane
-						.showConfirmDialog(ventanaPrincipal,
-								"¿Desea guardar los cambios?", "Guardar",
-								JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE);
-				if (opcion == JOptionPane.OK_OPTION) {
-					guardarPalabrasVacias();
-				}
+				mostrarDialogoGuardar();
 				super.windowClosing(e);
 			}
 		});
 	}
 	
+	public void mostrarDialogoGuardar() {
+		int opcion = JOptionPane.showConfirmDialog(this,
+				ConstantesGUI.DIALOGO_GUARDAR_PALABRAS_VACIAS,
+				ConstantesGUI.TITULO_GUARDAR, JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE);
+		if (opcion == JOptionPane.OK_OPTION) {
+			guardarPalabrasVacias();
+		}
+	}
+
 	private void cargarPalabrasVacias() {
 		StringBuilder texto = new StringBuilder();
 		try {

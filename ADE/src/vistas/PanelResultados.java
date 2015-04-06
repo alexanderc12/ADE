@@ -28,11 +28,11 @@ public class PanelResultados extends JPanel {
 		listaPalabrasClave.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_LISTA_PALABRAS));
 		add(listaPalabrasClave);
 		
-		modeloTablaResultados = new DefaultTableModel(ConstantesGUI.T_COLUMNAS_TABLA, 0);
+		modeloTablaResultados = new DefaultTableModel(ConstantesGUI.T_COLUMNAS_TABLA_RESULTADOS, 0);
 		tablaResultados = new JTable(modeloTablaResultados);
 		tablaResultados.setBackground(Color.WHITE);
 		JScrollPane panelTabla = new JScrollPane(tablaResultados);
-		panelTabla.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_TABLA));
+		panelTabla.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_TABLA_RESULTADOS));
 		add(panelTabla);
 	}
 
