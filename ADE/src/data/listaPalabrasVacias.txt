@@ -104,6 +104,7 @@ ellos
 embargo
 en
 entonces
+entre
 era
 eramos
 eran

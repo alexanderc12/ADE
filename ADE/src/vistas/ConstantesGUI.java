@@ -23,7 +23,7 @@ public class ConstantesGUI {
 	public static final String ICONO_VENTANA = "/images/icon.png";
 	public static final String T_VENTANA_TITULO = "ADE - ANALIZADOR DE ETIQUETAS";
 	public static final String T_PANEL_ARTICULO = "Articulo:";
-	public static final int VENTANA_ANCHO = 1000;
+	public static final int VENTANA_ANCHO = 1100;
 	public static final int VENTANA_ALTO = 650;
 
 	/**
@@ -91,10 +91,8 @@ public class ConstantesGUI {
 	public static final String T_LISTA_PALABRAS = "Lista palabras clave:";
 	public static final String T_TABLA_RESULTADOS = "Estadisticas:";
 	public static final String[] T_COLUMNAS_TABLA_RESULTADOS = {
-			"Parte del articulo",
-			"Numero de incidencias", "Numero elementos",
-			"Numero elementos analizables",
-	"% Incidencias" };
+			"Parte Articulo", "N° Incidencias", "N° Elementos",
+			"N° Elementos Analizables", "% Incidencias" };
 
 	/**
 	 * Constantes Dialogos y Errores

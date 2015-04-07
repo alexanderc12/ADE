@@ -1,9 +1,9 @@
 package vistas;
 
 import java.awt.Color;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -20,7 +20,8 @@ public class PanelResultados extends JPanel {
 	private DefaultTableModel modeloTablaResultados;
 
 	public PanelResultados() {
-		setLayout(new GridLayout(2, 1));
+		
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBackground(Color.WHITE);
 		setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_PANEL_RESULTADOS));
 		modeloPalabrasClave = new DefaultListModel<String>();

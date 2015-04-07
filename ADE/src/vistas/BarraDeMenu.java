@@ -63,7 +63,7 @@ public class BarraDeMenu extends JMenuBar {
 		
 		itemEditarPalabrasVacias = new JMenuItem(
 				ConstantesGUI.T_ITEM_EDITAR_PALABRAS_VACIAS,
-				createImageIcon(ConstantesGUI.T_ITEM_EDITAR_PALABRAS_VACIAS));
+				createImageIcon(ConstantesGUI.ICONO_EDITAR_PALABRAS_VACIAS));
 		itemEditarPalabrasVacias
 				.setActionCommand(Controlador.A_EDITAR_PALABRAS_VACIAS);
 		itemEditarPalabrasVacias.addActionListener(controlador);
