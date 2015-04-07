@@ -24,7 +24,7 @@ public class ConstantesGUI {
 	public static final String T_VENTANA_TITULO = "ADE - ANALIZADOR DE ETIQUETAS";
 	public static final String T_PANEL_ARTICULO = "Articulo:";
 	public static final int VENTANA_ANCHO = 1000;
-	public static final int VENTANA_ALTO = 600;
+	public static final int VENTANA_ALTO = 650;
 
 	/**
 	 * Constantes BarraHerramientas
@@ -58,7 +58,7 @@ public class ConstantesGUI {
 	 */
 	public static final String T_TITULO_DIALOGO_NUEVO_ARTICULO = "Nuevo articulo";
 	public static final int DIALOGO_NUEVO_ARTICULO_ANCHO = 460;
-	public static final int DIALOGO_NUEVO_ARTICULO_ALTO = 550;
+	public static final int DIALOGO_NUEVO_ARTICULO_ALTO = 580;
 	public static final String T_REVISTA = "Nombre revista: ";
 	public static final String T_VOLUMEN = "Volumen: ";
 	public static final String T_NUMERO = "Numero: ";
@@ -81,6 +81,8 @@ public class ConstantesGUI {
 	public static final String T_AGREGAR_CAPITULO = "Agregar capitulo";
 	public static final String ICONO_ELIMINAR_CAPITULO = "/images/remove.png";
 	public static final String T_ELIMINAR_CAPITULO = "Remover Capitulo";
+	public static final String T_CREAR_ARTICULO = "Guardar articulo";
+	public static final String T_CANCELAR = "Cancelar";
 	
 	/**
 	 * Constantes PanelResultados
@@ -111,4 +113,5 @@ public class ConstantesGUI {
 	public static final String DIALOGO_GUARDAR_PALABRAS_VACIAS = "¿Desea guardar los cambios?";
 	public static final String ERROR_LEER_PALABRAS_VACIAS = "Error al leer el archivo de palabras vacias.";
 	public static final String ERROR_GUARDAR_PALABRAS_VACIAS = "Error al guardar el archivo de palabras vacias.";
+
 }

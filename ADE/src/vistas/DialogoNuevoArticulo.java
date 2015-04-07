@@ -4,7 +4,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -17,6 +23,9 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
+import modelo.ArticuloCientifico;
+import persistencia.GestorArchivos;
 
 public class DialogoNuevoArticulo extends JDialog {
 	
@@ -36,6 +45,8 @@ public class DialogoNuevoArticulo extends JDialog {
 	private DefaultTableModel modeloTablaContenidos;
 	private JButton btnAgregarCapitulo;
 	private JButton btnRemoverCapitulo;
+	private JButton btnCrearArticulo;
+	private JButton btnCancelar;
 
 	public DialogoNuevoArticulo(VentanaPrincipal ventanaPrincipal) {
 		super(ventanaPrincipal);
@@ -121,7 +132,12 @@ public class DialogoNuevoArticulo extends JDialog {
 		btnAgregarCapitulo.setFocusable(false);
 		btnAgregarCapitulo.setPreferredSize(new Dimension(25, 25));
 		btnAgregarCapitulo.setToolTipText(ConstantesGUI.T_AGREGAR_CAPITULO);
-		// tbnAgregarCapitulo.addActionListener(controlador);
+		btnAgregarCapitulo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				modeloTablaContenidos.addRow(new String[] { "", "" });
+			}
+		});
 		panelContenidos.add(btnAgregarCapitulo);
 		
 		btnRemoverCapitulo = new JButton(
@@ -129,7 +145,13 @@ public class DialogoNuevoArticulo extends JDialog {
 		btnRemoverCapitulo.setPreferredSize(new Dimension(25, 25));
 		btnRemoverCapitulo.setFocusable(false);
 		btnRemoverCapitulo.setToolTipText(ConstantesGUI.T_ELIMINAR_CAPITULO);
-		// tbnRemoverCapitulo.addActionListener(controlador);
+		btnRemoverCapitulo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				modeloTablaContenidos.removeRow(tablaContenidos
+						.getSelectedRow());
+			}
+		});
 		panelContenidos.add(btnRemoverCapitulo);
 
 		modeloTablaContenidos = new DefaultTableModel(
@@ -148,6 +170,40 @@ public class DialogoNuevoArticulo extends JDialog {
 		txReferencias.setBorder(BorderFactory
 				.createTitledBorder(ConstantesGUI.T_REFERENCIAS));
 		add(new JScrollPane(txReferencias));
+		
+		JPanel panelBotones = new JPanel(new GridLayout(1, 2));
+		panelContenidos.setBackground(Color.WHITE);
+		
+		btnCancelar = new JButton(ConstantesGUI.T_CANCELAR);
+		btnCancelar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				limpiarInterfaz();
+			}
+		});
+		panelBotones.add(btnCancelar);
+		
+		btnCrearArticulo = new JButton(ConstantesGUI.T_CREAR_ARTICULO);
+		btnCrearArticulo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GestorArchivos.guardarArchivoArticulo(crearArticulo(),
+						ventanaPrincipal);
+				dispose();
+			}
+		});
+		panelBotones.add(btnCrearArticulo);
+
+		add(panelBotones);
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				limpiarInterfaz();
+				super.windowClosing(e);
+			}
+		});
 	}
 	
 
@@ -158,5 +214,47 @@ public class DialogoNuevoArticulo extends JDialog {
 		} else {
 			return null;
 		}
+	}
+	
+	public void limpiarInterfaz() {
+		txAutores.setText("");
+		txFechaAprobacion.setText("");
+		txFechaRecepcion.setText("");
+		txNumero.setText("");
+		txPalabrasClave.setText("");
+		txReferencias.setText("");
+		txResumen.setText("");
+		txRevista.setText("");
+		txTitulo.setText("");
+		txUrl.setText("");
+		txVolumen.setText("");
+		modeloTablaContenidos = new DefaultTableModel(
+				ConstantesGUI.T_COLUMNAS_TABLA_CONTENIDOS, 1);
+		tablaContenidos.setModel(modeloTablaContenidos);
+	}
+	
+	public ArticuloCientifico crearArticulo(){
+		ArticuloCientifico articuloCientifico = new ArticuloCientifico(txUrl.getText());
+		articuloCientifico.setRevista(txRevista.getText());
+		articuloCientifico.setVolumen(Integer.parseInt(txVolumen.getText()));
+		articuloCientifico.setNumero(Integer.parseInt(txNumero.getText()));
+		articuloCientifico.setFechaRecepcion(txFechaRecepcion.getText());
+		articuloCientifico.setFechaAprobacion(txFechaAprobacion.getText());
+		articuloCientifico.setTitulo(txTitulo.getText());
+		articuloCientifico.setListaAutores(new ArrayList<String>(Arrays
+				.asList(txAutores.getText().split(","))));
+		articuloCientifico.setListaPalabrasClave(new ArrayList<String>(Arrays
+				.asList(txPalabrasClave.getText().split(","))));
+		articuloCientifico.setResumen(txResumen.getText());
+		for (int i = 0; i < modeloTablaContenidos.getRowCount(); i++) {
+			articuloCientifico
+					.agregarTituloCapitulo((String) modeloTablaContenidos
+							.getValueAt(i, 0));
+			articuloCientifico
+					.agregarContenidoCapitulo((String) modeloTablaContenidos
+							.getValueAt(i, 1));
+		}
+		articuloCientifico.agregarReferencia(txReferencias.getText());
+		return articuloCientifico;
 	}
 }

@@ -1,14 +1,7 @@
 package modelo;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
-import persistencia.LectorWeb;
-import vistas.ConstantesGUI;
 
 /**
  * Representa la estructura de un articulo cientifico
@@ -26,7 +19,7 @@ public class ArticuloCientifico implements Serializable {
 	 * Estos atributos son metadatos del articulo pero que no tienen que ver con
 	 * su contenido
 	 */
-	private URL url;
+	private String url;
 	private String revista;
 	private String fechaRecepcion;
 	private String fechaAprobacion;
@@ -53,12 +46,7 @@ public class ArticuloCientifico implements Serializable {
 	private ArrayList<String> listaContenidoCapitulos;
 
 	public ArticuloCientifico(String url) {
-		try {
-			this.url = new URL(url);
-		} catch (MalformedURLException e) {
-			JOptionPane.showMessageDialog(null, LectorWeb.ERROR_URL, ConstantesGUI.TITULO_ERROR,
-					JOptionPane.ERROR_MESSAGE);
-		}
+
 		listaReferencias = "";
 		listaAutores = new ArrayList<String>();
 		listaPalabrasClave = new ArrayList<String>();
@@ -99,11 +87,11 @@ public class ArticuloCientifico implements Serializable {
 	/**
 	 * Metodos Set y Get
 	 */
-	public URL getUrl() {
+	public String getUrl() {
 		return url;
 	}
 
-	public void setUrl(URL url) {
+	public void setUrl(String url) {
 		this.url = url;
 	}
 
