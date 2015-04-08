@@ -2,7 +2,7 @@ package vistas;
 
 
 public class ConstantesGUI {
-
+	
 	/**
 	 * Constantes BarraMenu
 	 */
@@ -16,7 +16,8 @@ public class ConstantesGUI {
 	public static final String T_ITEM_EDITAR_PALABRAS_VACIAS = "Editar Palabras Vacias";
 	public static final String T_MENU_AYUDA = "Ayuda";
 	public static final String T_ITEM_ACERCA_DE = "Acerca de";
-	
+	public static final String T_ITEM_BUSCAR_EN_LISTAS = "Buscar en Indices";
+
 	/**
 	 * Constantes VentanaPrincipal
 	 */
@@ -25,11 +26,11 @@ public class ConstantesGUI {
 	public static final String T_PANEL_ARTICULO = "Articulo:";
 	public static final int VENTANA_ANCHO = 1100;
 	public static final int VENTANA_ALTO = 650;
-
+	
 	/**
 	 * Constantes BarraHerramientas
 	 */
-	
+
 	public static final String ICONO_CREAR = "/images/new.png";
 	public static final String ICONO_CARGAR = "/images/open.png";
 	public static final String ICONO_CARGAR_WEB = "/images/open_web.png";
@@ -37,7 +38,8 @@ public class ConstantesGUI {
 	public static final String ICONO_ANALIZAR = "/images/search.png";
 	public static final String ICONO_EDITAR_PALABRAS_VACIAS = "/images/stop_words.png";
 	public static final String ICONO_ACERCA_DE = "/images/help.png";
-	
+	public static final String ICONO_BUSCAR_EN_LISTAS = "/images/in_list.png";
+
 	/**
 	 * Constantes DialogoCargando
 	 */
@@ -45,14 +47,14 @@ public class ConstantesGUI {
 	public static final String IMAGEN_CARGANDO_ARTICULO = "/images/cargando.gif";
 	public static final int DIALOGO_CARGANDO_ANCHO = 400;
 	public static final int DIALOGO_CARGANDO_ALTO = 300;
-	
+
 	/**
 	 * Constantes DialogoPalabrasVacias
 	 */
 	public static final String T_TITULO_DIALOGO_PALABRAS_VACIAS = "Editar lista palabras vacias";
 	public static final int DIALOGO_PALABRAS_VACIAS_ANCHO = 400;
 	public static final int DIALOGO_PALABRAS_VACIAS_ALTO = 300;
-	
+
 	/**
 	 * Constantes DialogoNuevoArticulo
 	 */
@@ -76,14 +78,14 @@ public class ConstantesGUI {
 	public static final String T_PANEL_DATOS_ARTICULO = "Datos generales articulo:";
 	public static final String T_PANEL_CONTENIDOS = "Titulos y contenidos de los capitulos";
 	public static final String[] T_COLUMNAS_TABLA_CONTENIDOS = { "Titulo",
-			"Contenido" };
+	"Contenido" };
 	public static final String ICONO_AGREGAR_CAPITULO = "/images/add.png";
 	public static final String T_AGREGAR_CAPITULO = "Agregar capitulo";
 	public static final String ICONO_ELIMINAR_CAPITULO = "/images/remove.png";
 	public static final String T_ELIMINAR_CAPITULO = "Remover Capitulo";
 	public static final String T_CREAR_ARTICULO = "Guardar articulo";
 	public static final String T_CANCELAR = "Cancelar";
-	
+
 	/**
 	 * Constantes PanelResultados
 	 */
@@ -91,11 +93,12 @@ public class ConstantesGUI {
 	public static final String T_LISTA_PALABRAS = "Lista palabras clave:";
 	public static final String T_TABLA_RESULTADOS = "Estadisticas:";
 	public static final String[] T_COLUMNAS_TABLA_RESULTADOS = {
-			"Parte Articulo", "N° Incidencias", "N° Elementos",
-			"N° Elementos Analizables", "% Incidencias" };
+		"Parte Articulo", "N° Incidencias", "N° Elementos",
+		"N° Elementos Analizables", "% Incidencias" };
 	public static final String ICONO_CORRECTO = "/images/correct.png";
 	public static final String ICONO_INCORRECTO = "/images/incorrect.png";
-
+	public static final String ICONO_SIN_ANALIZAR = "/images/no_analize.png";
+	
 	/**
 	 * Constantes Dialogos y Errores
 	 */
@@ -113,6 +116,7 @@ public class ConstantesGUI {
 	public static final String DIALOGO_GUARDAR_PALABRAS_VACIAS = "¿Desea guardar los cambios?";
 	public static final String ERROR_LEER_PALABRAS_VACIAS = "Error al leer el archivo de palabras vacias.";
 	public static final String ERROR_GUARDAR_PALABRAS_VACIAS = "Error al guardar el archivo de palabras vacias.";
-
-
+	public static final String LISTA_TERMINOS_IEEE = "src/data/IEEE_Terms.txt";
+	public static final String LISTA_TERMINOS_IFAC = "src/data/IFAC_Keyword_List.txt";
+	
 }

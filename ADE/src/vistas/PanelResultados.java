@@ -16,7 +16,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class PanelResultados extends JPanel {
-
+	
 	private static final long serialVersionUID = 1L;
 	private JList<String> listaPalabrasClave;
 	private DefaultListModel<String> modeloPalabrasClave;
@@ -24,9 +24,9 @@ public class PanelResultados extends JPanel {
 	private DefaultTableModel modeloTablaResultados;
 	private JLabel lbApareceIEEE;
 	private JLabel lbApareceIFAC;
-
+	
 	public PanelResultados() {
-		
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBackground(Color.WHITE);
 		setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_PANEL_RESULTADOS));
@@ -34,24 +34,24 @@ public class PanelResultados extends JPanel {
 		listaPalabrasClave = new JList<String>(modeloPalabrasClave);
 		listaPalabrasClave.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_LISTA_PALABRAS));
 		add(listaPalabrasClave);
-		
+
 		JPanel panelApareceListaTerminos = new JPanel();
 		panelApareceListaTerminos.setBackground(Color.WHITE);
-		
-		lbApareceIEEE = new JLabel();
+
+		lbApareceIEEE = new JLabel(createImageIcon(ConstantesGUI.ICONO_SIN_ANALIZAR));
 		lbApareceIEEE.setPreferredSize(new Dimension(150, 50));
 		lbApareceIEEE.setBorder(BorderFactory
 				.createTitledBorder("Aparece en el indice IEEE"));
 		panelApareceListaTerminos.add(lbApareceIEEE);
-		
-		lbApareceIFAC = new JLabel();
+
+		lbApareceIFAC = new JLabel(createImageIcon(ConstantesGUI.ICONO_SIN_ANALIZAR));
 		lbApareceIFAC.setPreferredSize(new Dimension(150, 50));
 		lbApareceIFAC.setBorder(BorderFactory
 				.createTitledBorder("Aparece en el indice IFAC"));
 		panelApareceListaTerminos.add(lbApareceIFAC);
-		
+
 		add(panelApareceListaTerminos);
-		
+
 		modeloTablaResultados = new DefaultTableModel(ConstantesGUI.T_COLUMNAS_TABLA_RESULTADOS, 0);
 		tablaResultados = new JTable(modeloTablaResultados);
 		tablaResultados.setBackground(Color.WHITE);
@@ -59,33 +59,36 @@ public class PanelResultados extends JPanel {
 		panelTabla.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_TABLA_RESULTADOS));
 		add(panelTabla);
 	}
-	
+
 	public void modificarPanelTerminosAparecen(boolean apareceIEEE,
 			boolean aparceIFAC) {
 		if (apareceIEEE) {
 			lbApareceIEEE
-					.setIcon(createImageIcon(ConstantesGUI.ICONO_CORRECTO));
+			.setIcon(createImageIcon(ConstantesGUI.ICONO_CORRECTO));
 		} else {
 			lbApareceIEEE
-					.setIcon(createImageIcon(ConstantesGUI.ICONO_INCORRECTO));
+			.setIcon(createImageIcon(ConstantesGUI.ICONO_INCORRECTO));
 		}
 		if (aparceIFAC) {
 			lbApareceIFAC
-					.setIcon(createImageIcon(ConstantesGUI.ICONO_CORRECTO));
+			.setIcon(createImageIcon(ConstantesGUI.ICONO_CORRECTO));
 		} else {
 			lbApareceIFAC
-					.setIcon(createImageIcon(ConstantesGUI.ICONO_INCORRECTO));
+			.setIcon(createImageIcon(ConstantesGUI.ICONO_INCORRECTO));
 		}
 	}
-
+	
 	public void agregarPalabraClave(String palabra) {
 		modeloPalabrasClave.addElement(palabra);
 	}
-
+	
 	public String obtenerPalabraSelecionada() {
 		return listaPalabrasClave.getSelectedValue();
 	}
-
+	
+	public int obtenerIndicePalabraSelecionada() {
+		return listaPalabrasClave.getSelectedIndex();
+	}
 	public void agregarResultado(String parteArticulo,
 			String numeroIncidencias, String numeroElementos,
 			String numeroElementosAnalizables,
@@ -94,19 +97,24 @@ public class PanelResultados extends JPanel {
 				numeroIncidencias, numeroElementos, numeroElementosAnalizables,
 				porcentajeIncidencias });
 	}
-
+	
 	public void limiparTabla() {
 		modeloTablaResultados.setRowCount(0);
 	}
-	
+
 	public void limpiarLista() {
 		modeloPalabrasClave.clear();
 	}
-	
+
 	public void activarSeleccion() {
 		listaPalabrasClave.setSelectedIndex(0);
 	}
-	
+
+	public void limpiarResultadosIndices() {
+		lbApareceIEEE.setIcon(createImageIcon(ConstantesGUI.ICONO_SIN_ANALIZAR));
+		lbApareceIFAC.setIcon(createImageIcon(ConstantesGUI.ICONO_SIN_ANALIZAR));
+
+	}
 	protected ImageIcon createImageIcon(String path) {
 		URL imgURL = getClass().getResource(path);
 		if (imgURL != null) {

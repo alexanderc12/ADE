@@ -10,6 +10,7 @@ import javax.swing.SwingWorker;
 import modelo.ArticuloCientifico;
 import modelo.ParteArticulo;
 import modelo.VerificadorPalabrasClave;
+import modelo.VerificadorTerminos;
 import persistencia.GestorArchivos;
 import vistas.ConstantesGUI;
 import vistas.VentanaPrincipal;
@@ -26,6 +27,7 @@ public class Controlador implements ActionListener {
 	public static final String A_EXPORTAR_ARCHIVO = "EXPORTAR_ARCHIVO";
 	public static final String A_CARGAR_ARCHIVO_WEB = "A_CARGAR_ARCHIVO_WEB";
 	public static final String A_EDITAR_PALABRAS_VACIAS = "A_EDITAR_PALABRAS_VACIAS";
+	public static final String A_BUSCAR_EN_LISTAS = "BUSCAR_EN_INDICES";
 	public static final String NL = System.getProperty("line.separator") + System.getProperty("line.separator");
 	public static final DecimalFormat DECIMAL_FORMART = new DecimalFormat("#0.00");
 	
@@ -59,7 +61,18 @@ public class Controlador implements ActionListener {
 			case A_EDITAR_PALABRAS_VACIAS:
 				mostrarDialogoEditarPalabrasVacias();
 				break;
+			case A_BUSCAR_EN_LISTAS:
+				buscarEnIndices();
+				break;
 		}
+	}
+	
+	public void buscarEnIndices() {
+		String palabra = articulo.getListaPalabrasClaveIngles()
+				.get(ventana.getPanelResultados().obtenerIndicePalabraSelecionada());
+		ventana.getPanelResultados().modificarPanelTerminosAparecen(
+				VerificadorTerminos.verificarTermino(palabra, ConstantesGUI.LISTA_TERMINOS_IEEE),
+				VerificadorTerminos.verificarTermino(palabra, ConstantesGUI.LISTA_TERMINOS_IFAC));
 	}
 	
 	public void mostrarDialogoEditarPalabrasVacias(){
@@ -109,18 +122,18 @@ public class Controlador implements ActionListener {
 	public void mostrarArticulo() {
 		ventana.limpiarPanelArticulo();
 		ventana.agregarTexto(ConstantesGUI.T_REVISTA + articulo.getRevista()
-				+ "\t" + ConstantesGUI.T_VOLUMEN + articulo.getVolumen() + "\t"
-				+ ConstantesGUI.T_NUMERO + articulo.getNumero() + NL,
-				VentanaPrincipal.ESTILO_NORMAL);
+		+ "\t" + ConstantesGUI.T_VOLUMEN + articulo.getVolumen() + "\t"
+		+ ConstantesGUI.T_NUMERO + articulo.getNumero() + NL,
+		VentanaPrincipal.ESTILO_NORMAL);
 		ventana.agregarTexto(articulo.getTitulo() + NL, VentanaPrincipal.ESTILO_TITULO);
 		for (String autor : articulo.getListaAutores()) {
 			ventana.agregarTexto(autor + "\t", VentanaPrincipal.ESTILO_NORMAL);
 		}
 		ventana.agregarTexto(
 				NL + ConstantesGUI.T_FECHA_RECEPCION
-						+ articulo.getFechaRecepcion() + "\t"
-						+ ConstantesGUI.T_FECHA_RECEPCION
-						+ articulo.getFechaAprobacion() + NL,
+				+ articulo.getFechaRecepcion() + "\t"
+				+ ConstantesGUI.T_FECHA_RECEPCION
+				+ articulo.getFechaAprobacion() + NL,
 				VentanaPrincipal.ESTILO_NORMAL);
 		ventana.agregarTexto(
 				ConstantesGUI.T_RESUMEN + "\n" + articulo.getResumen() + NL,
@@ -145,6 +158,7 @@ public class Controlador implements ActionListener {
 		ventana.mostrarInicioArticulo();
 		ventana.ocultarDialogoCargando();
 		ventana.getPanelResultados().limiparTabla();
+		ventana.getPanelResultados().limpiarResultadosIndices();
 	}
 	
 	public void cargarPalabrasClave() {
@@ -164,10 +178,10 @@ public class Controlador implements ActionListener {
 					parteArticulo.getZonaArticulo().toString(),
 					DECIMAL_FORMART.format(parteArticulo.getValorElemento()),
 					DECIMAL_FORMART.format(parteArticulo
-.getTotalElementos()),
-					DECIMAL_FORMART.format(parteArticulo
-							.getNumeroElementosAnalizables()),
-					DECIMAL_FORMART.format(parteArticulo.obtenerPorcentaje()));
+							.getTotalElementos()),
+							DECIMAL_FORMART.format(parteArticulo
+									.getNumeroElementosAnalizables()),
+									DECIMAL_FORMART.format(parteArticulo.obtenerPorcentaje()));
 		}
 		ventana.getBarraEstado().setPalabraClave(palabra);
 		ventana.getBarraEstado().setEstadisticas("%");

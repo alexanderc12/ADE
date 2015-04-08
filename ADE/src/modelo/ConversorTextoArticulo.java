@@ -18,7 +18,7 @@ import persistencia.LectorWeb;
  *
  */
 public class ConversorTextoArticulo {
-	
+
 	private ArticuloCientifico articulo;
 	private String texto;
 	private Document documento;
@@ -43,8 +43,8 @@ public class ConversorTextoArticulo {
 	private static final String FIN_REFERENCIA = " [ Links ]";
 	private static final String EXP_REG_NO_HTML = "\\<[^>]*>";
 	private static final String EXP_REG_NO_ESPACIOS = "\\s+";
-	
-	
+
+
 	public ConversorTextoArticulo(String archivo) {
 		articulo = new ArticuloCientifico(archivo);
 		texto = LectorWeb.leerArticulo(archivo);
@@ -54,13 +54,13 @@ public class ConversorTextoArticulo {
 		extraerContenidoCapitulos();
 		extraerReferencias();
 	}
-	
+
 	private void extraerTextoArticulo(String textoInicio, String textoFin) {
 		int indexInicioMetadatos = texto.indexOf(textoInicio);
 		int indexFinMetadatos = texto.indexOf(textoFin);
 		documento = Jsoup.parse(texto.substring(indexInicioMetadatos, indexFinMetadatos));
 	}
-	
+
 	/**
 	 * Extrae los metadatos de la cabecera de la magina Web teniendo en cuenta
 	 * que estan guardados en una etiqueta meta, asi que se buscan por su valor
@@ -82,7 +82,7 @@ public class ConversorTextoArticulo {
 			articulo.agregarAutor(autor.attr(ATRIBUTO_CONTENIDO));
 		}
 	}
-	
+
 	/**
 	 * Extrae los metadatos del contenido del articulo, las fechas,el resumen y
 	 * las palabras clave(a estas se les da un formato quitando el espacio al
@@ -97,25 +97,30 @@ public class ConversorTextoArticulo {
 		Element resumen = articulo.getNumero() == 36
 				? documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().parent().parent().nextElementSibling()
 						: documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().parent().nextElementSibling();
-		articulo.setResumen(resumen.ownText());
-		Element palabrasClaves = resumen.nextElementSibling();
-		String[] listaPalabras = palabrasClaves.ownText().split(",");
-		articulo.agregarPalabraClave(listaPalabras[0]);
-		for (int i = 1; i < listaPalabras.length - 1; i++) {
-			articulo.agregarPalabraClave(listaPalabras[i].substring(1));
-		}
-		articulo.agregarPalabraClave(listaPalabras[listaPalabras.length - 1]
-				.replace(".", "").substring(1));
+				articulo.setResumen(resumen.ownText());
+				Element palabrasClaves = resumen.nextElementSibling();
+				String[] listaPalabras = palabrasClaves.ownText().split(",");
+				articulo.agregarPalabraClave(listaPalabras[0]);
+				for (int i = 1; i < listaPalabras.length - 1; i++) {
+					articulo.agregarPalabraClave(listaPalabras[i].substring(1));
+				}
+				articulo.agregarPalabraClave(listaPalabras[listaPalabras.length - 1]
+						.replace(".", "").substring(1));
+				
+				Element palabrasClaveIngles = documento
+						.getElementsContainingOwnText("Keywords:").first().parent();
+				String[] listaPalabrasClaveIngles = palabrasClaveIngles.ownText()
+						.split(",");
 
-		Element palabrasClaveIngles = documento
-				.getElementsContainingOwnText("Keywords:").first().parent();
-		String[] listaPalabrasClaveIngles = palabrasClaveIngles.ownText()
-				.split(",");
-		
-		articulo.agregarPalabraClaveIngles(listaPalabrasClaveIngles[0]);
-
+				articulo.agregarPalabraClaveIngles(listaPalabrasClaveIngles[0]);
+				for (int i = 1; i < listaPalabrasClaveIngles.length - 1; i++) {
+					articulo.agregarPalabraClaveIngles(listaPalabrasClaveIngles[i].substring(1));
+				}
+				articulo.agregarPalabraClaveIngles(
+				listaPalabrasClaveIngles[listaPalabrasClaveIngles.length - 1].replace(".", "").substring(1));
+				
 	}
-	
+
 	/**
 	 * Extrae los titulos de los capitulos
 	 */
@@ -126,7 +131,7 @@ public class ConversorTextoArticulo {
 			articulo.agregarTituloCapitulo(contenidos.get(i).text());
 		}
 	}
-	
+
 	/**
 	 * Extrae el texto de los capitulos
 	 */
@@ -147,7 +152,7 @@ public class ConversorTextoArticulo {
 					.substring(1));
 		}
 	}
-	
+
 	/**
 	 * Extrae las referencias del articulo
 	 */
@@ -161,7 +166,7 @@ public class ConversorTextoArticulo {
 			}
 		}
 	}
-	
+
 	public ArticuloCientifico getArticulo() {
 		return articulo;
 	}
