@@ -97,14 +97,23 @@ public class ConversorTextoArticulo {
 		Element resumen = articulo.getNumero() == 36
 				? documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().parent().parent().nextElementSibling()
 						: documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().parent().nextElementSibling();
-				articulo.setResumen(resumen.ownText());
-				Element palabrasClaves = resumen.nextElementSibling();
-				String[] listaPalabras = palabrasClaves.ownText().split(",");
-				articulo.agregarPalabraClave(listaPalabras[0]);
-				for (int i = 1; i < listaPalabras.length - 1; i++) {
-					articulo.agregarPalabraClave(listaPalabras[i].substring(1));
-				}
-				articulo.agregarPalabraClave(listaPalabras[listaPalabras.length - 1].replace(".", "").substring(1));
+		articulo.setResumen(resumen.ownText());
+		Element palabrasClaves = resumen.nextElementSibling();
+		String[] listaPalabras = palabrasClaves.ownText().split(",");
+		articulo.agregarPalabraClave(listaPalabras[0]);
+		for (int i = 1; i < listaPalabras.length - 1; i++) {
+			articulo.agregarPalabraClave(listaPalabras[i].substring(1));
+		}
+		articulo.agregarPalabraClave(listaPalabras[listaPalabras.length - 1]
+				.replace(".", "").substring(1));
+
+		Element palabrasClaveIngles = documento
+				.getElementsContainingOwnText("Keywords:").first().parent();
+		String[] listaPalabrasClaveIngles = palabrasClaveIngles.ownText()
+				.split(",");
+		
+		articulo.agregarPalabraClaveIngles(listaPalabrasClaveIngles[0]);
+
 	}
 	
 	/**

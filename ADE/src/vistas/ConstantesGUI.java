@@ -93,6 +93,8 @@ public class ConstantesGUI {
 	public static final String[] T_COLUMNAS_TABLA_RESULTADOS = {
 			"Parte Articulo", "N° Incidencias", "N° Elementos",
 			"N° Elementos Analizables", "% Incidencias" };
+	public static final String ICONO_CORRECTO = "/images/correct.png";
+	public static final String ICONO_INCORRECTO = "/images/incorrect.png";
 
 	/**
 	 * Constantes Dialogos y Errores
@@ -111,5 +113,6 @@ public class ConstantesGUI {
 	public static final String DIALOGO_GUARDAR_PALABRAS_VACIAS = "¿Desea guardar los cambios?";
 	public static final String ERROR_LEER_PALABRAS_VACIAS = "Error al leer el archivo de palabras vacias.";
 	public static final String ERROR_GUARDAR_PALABRAS_VACIAS = "Error al guardar el archivo de palabras vacias.";
+
 
 }

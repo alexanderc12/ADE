@@ -31,6 +31,7 @@ public class ArticuloCientifico implements Serializable {
 	 * las que fue indexado el articulo
 	 */
 	private ArrayList<String> listaPalabrasClave;
+	private ArrayList<String> listaPalabrasClaveIngles;
 	/**
 	 * Estos son los atributos que tienen que ver directamente con el contenido
 	 * el articulo y seran analizados
@@ -50,6 +51,7 @@ public class ArticuloCientifico implements Serializable {
 		listaReferencias = "";
 		listaAutores = new ArrayList<String>();
 		listaPalabrasClave = new ArrayList<String>();
+		listaPalabrasClaveIngles = new ArrayList<String>();
 		listaTitulosCapitulos = new ArrayList<String>();
 		listaContenidoCapitulos = new ArrayList<String>();
 	}
@@ -65,6 +67,10 @@ public class ArticuloCientifico implements Serializable {
 		listaPalabrasClave.add(palabra);
 	}
 	
+	public void agregarPalabraClaveIngles(String palabra) {
+		listaPalabrasClaveIngles.add(palabra);
+	}
+
 	public void agregarTituloCapitulo(String tituloCapitulo) {
 		listaTitulosCapitulos.add(tituloCapitulo);
 	}
@@ -189,5 +195,14 @@ public class ArticuloCientifico implements Serializable {
 
 	public void setListaTitulosCapitulos(ArrayList<String> listaTitulosCapitulos) {
 		this.listaTitulosCapitulos = listaTitulosCapitulos;
+	}
+	
+	public ArrayList<String> getListaPalabrasClaveIngles() {
+		return listaPalabrasClaveIngles;
+	}
+	
+	public void setListaPalabrasClaveIngles(
+			ArrayList<String> listaPalabrasClaveIngles) {
+		this.listaPalabrasClaveIngles = listaPalabrasClaveIngles;
 	}
 }

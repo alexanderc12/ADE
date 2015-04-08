@@ -35,7 +35,6 @@ public class VerificadorPalabrasClave {
 	private static final String ERROR_ABRIR_CONFIGURACION_LECTURA = "Error en la configuración de lectura del articulo.";
 	private static final String ERROR_CONTEO = "Error al contar las palabras clave en el articulo.";
 	
-
 	/**
 	 * Se carga el articulo y luego sus partes son pasadas a texto plano, se
 	 * crea un documento que permita su indexado.
