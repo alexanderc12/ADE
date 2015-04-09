@@ -1,5 +1,6 @@
 package controladores;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -13,12 +14,24 @@ import modelo.VerificadorPalabrasClave;
 import modelo.VerificadorTerminos;
 import persistencia.GestorArchivos;
 import vistas.ConstantesGUI;
+import vistas.DialogoAcercaDe;
+import vistas.DialogoCargando;
+import vistas.DialogoNuevoArticulo;
+import vistas.DialogoPalabrasVacias;
+import vistas.DialogoTopTerminos;
+import vistas.PanelResultados;
 import vistas.VentanaPrincipal;
 
 public class Controlador implements ActionListener {
 	
 	private VentanaPrincipal ventana;
+	private DialogoCargando dialogoProgreso;
+	private DialogoPalabrasVacias dialogoPalabrasVacias;
+	private DialogoNuevoArticulo dialogoNuevoArticulo;
+	private DialogoAcercaDe dialogoAcercaDe;
+	private DialogoTopTerminos dialogoTopTerminos;
 	private VerificadorPalabrasClave verificadorPalabrasClave;
+	private PanelResultados panelResultados;
 	private ArticuloCientifico articulo;
 	
 	public static final String A_VERIFICAR_PALABRAS_CLAVE = "VERIFICAR_PALABRAS_CLAVE";
@@ -28,13 +41,22 @@ public class Controlador implements ActionListener {
 	public static final String A_CARGAR_ARCHIVO_WEB = "A_CARGAR_ARCHIVO_WEB";
 	public static final String A_EDITAR_PALABRAS_VACIAS = "A_EDITAR_PALABRAS_VACIAS";
 	public static final String A_BUSCAR_EN_LISTAS = "BUSCAR_EN_INDICES";
+	public static final String A_VER_ACERCA_DE = "VER_ACERCA_DE";
 	public static final String NL = System.getProperty("line.separator") + System.getProperty("line.separator");
 	public static final DecimalFormat DECIMAL_FORMART = new DecimalFormat("#0.00");
+	public static final String A_VER_TERMINOS_TOP = "VER_DIALOGO_TERMINOS_TOP";
+	public static final String A_ACTUALIZAR_LISTA_TERMINOS_TOP = "ACTUALIZAR_LISTA_TERMINOS_TOP";
 	
 	public void iniciar() {
 		this.ventana = new VentanaPrincipal();
 		ventana.setControlador(this);
 		ventana.init();
+		dialogoProgreso = new DialogoCargando(ventana);
+		dialogoPalabrasVacias = new DialogoPalabrasVacias(ventana);
+		dialogoNuevoArticulo = new DialogoNuevoArticulo(ventana);
+		dialogoAcercaDe = new DialogoAcercaDe(ventana);
+		dialogoTopTerminos = new DialogoTopTerminos(ventana, this);
+		panelResultados = ventana.getPanelResultados();
 		ventana.setVisible(true);
 	}
 	
@@ -47,7 +69,7 @@ public class Controlador implements ActionListener {
 				}
 				break;
 			case A_CREAR_ARCHIVO:
-				ventana.mostrarDialogoNuevoArticulo();
+				mostrarDialogoNuevoArticulo();
 				break;
 			case A_EXPORTAR_ARCHIVO:
 				GestorArchivos.guardarArchivoArticulo(articulo, ventana);
@@ -64,26 +86,45 @@ public class Controlador implements ActionListener {
 			case A_BUSCAR_EN_LISTAS:
 				buscarEnIndices();
 				break;
+			case A_VER_ACERCA_DE:
+				mostrarDialogoAcercaDe();
+				break;
+			case A_VER_TERMINOS_TOP:
+				mostrarDialogoTopTerminos();
+				break;
+			case A_ACTUALIZAR_LISTA_TERMINOS_TOP:
+				actualizarListaTerminosTop();
+				break;
 		}
+	}
+	
+	private void actualizarListaTerminosTop() {
+		dialogoTopTerminos.agregarLista(verificadorPalabrasClave
+				.obtenerTopPalabras(dialogoTopTerminos.obtenerParteSeleccionada(), dialogoTopTerminos.obtenerNumero()));
+	}
+	
+	private void mostrarDialogoTopTerminos() {
+		dialogoTopTerminos.setVisible(true);
+		dialogoTopTerminos.limpiarInterfaz();
+	}
+	
+	public void mostrarDialogoAcercaDe() {
+		dialogoAcercaDe.setVisible(true);
 	}
 	
 	public void buscarEnIndices() {
 		String palabra = articulo.getListaPalabrasClaveIngles()
-				.get(ventana.getPanelResultados().obtenerIndicePalabraSelecionada());
-		ventana.getPanelResultados().modificarPanelTerminosAparecen(
+				.get(panelResultados.obtenerIndicePalabraSelecionada());
+		panelResultados.modificarPanelTerminosAparecen(
 				VerificadorTerminos.verificarTermino(palabra, ConstantesGUI.LISTA_TERMINOS_IEEE),
 				VerificadorTerminos.verificarTermino(palabra, ConstantesGUI.LISTA_TERMINOS_IFAC));
 	}
 	
-	public void mostrarDialogoEditarPalabrasVacias(){
-		ventana.mostrarDialogoEditarPalabrasVacias();
-	}
-
 	public void cargarArticuloWeb() {
 		String url = JOptionPane.showInputDialog(ventana, "Ingrese la URL corta del articulo", "Cargar Articulo Web",
 				JOptionPane.QUESTION_MESSAGE);
 		if (url != null) {
-			ventana.mostrarDialogoCargando();
+			mostrarDialogoCargando();
 			SwingWorker<Void, Void> bWorker = new SwingWorker<Void, Void>() {
 				@Override
 				protected Void doInBackground() throws Exception {
@@ -103,7 +144,7 @@ public class Controlador implements ActionListener {
 	public void cargarArticuloLocal() {
 		articulo = GestorArchivos.cargarArchivoArticulo(ventana);
 		if (articulo != null) {
-			ventana.mostrarDialogoCargando();
+			mostrarDialogoCargando();
 			SwingWorker<Void, Void> aWorker = new SwingWorker<Void, Void>() {
 				@Override
 				protected Void doInBackground() throws Exception {
@@ -156,35 +197,56 @@ public class Controlador implements ActionListener {
 		ventana.getBarraEstado().setNombreArticulo(articulo.getTitulo());
 		cargarPalabrasClave();
 		ventana.mostrarInicioArticulo();
-		ventana.ocultarDialogoCargando();
-		ventana.getPanelResultados().limiparTabla();
-		ventana.getPanelResultados().limpiarResultadosIndices();
+		panelResultados.limiparTabla();
+		panelResultados.limpiarResultadosIndices();
+		ocultarDialogoCargando();
 	}
 	
 	public void cargarPalabrasClave() {
-		ventana.getPanelResultados().limpiarLista();
+		panelResultados.limpiarLista();
 		for (String palabra : articulo.getListaPalabrasClave()) {
-			ventana.getPanelResultados().agregarPalabraClave(palabra);
+			panelResultados.agregarPalabraClave(palabra);
 		}
-		ventana.getPanelResultados().activarSeleccion();
+		panelResultados.activarSeleccion();
 	}
 	
 	public void analizarPalabraClave(){
-		String palabra = ventana.getPanelResultados().obtenerPalabraSelecionada();
+		String palabra = panelResultados.obtenerPalabraSelecionada();
 		verificadorPalabrasClave.contarPalabras(palabra);
-		ventana.getPanelResultados().limiparTabla();
+		verificadorPalabrasClave.contarPalabrasLema(palabra);
+		panelResultados.limiparTabla();
 		for (ParteArticulo parteArticulo : verificadorPalabrasClave.getLista()) {
-			ventana.getPanelResultados().agregarResultado(
+			panelResultados.agregarResultado(
 					parteArticulo.getZonaArticulo().toString(),
 					DECIMAL_FORMART.format(parteArticulo.getValorElemento()),
-					DECIMAL_FORMART.format(parteArticulo
-							.getTotalElementos()),
-							DECIMAL_FORMART.format(parteArticulo
-									.getNumeroElementosAnalizables()),
-									DECIMAL_FORMART.format(parteArticulo.obtenerPorcentaje()));
+					DECIMAL_FORMART.format(parteArticulo.getTotalElementos()),
+					DECIMAL_FORMART.format(parteArticulo.getNumeroElementosAnalizables()),
+					DECIMAL_FORMART.format(parteArticulo.getNumeroElementosLema()),
+					DECIMAL_FORMART.format(parteArticulo.getValorElementoLema()),
+					DECIMAL_FORMART.format(parteArticulo.calcularPorcentajeFrecuencia()));
 		}
 		ventana.getBarraEstado().setPalabraClave(palabra);
-		ventana.getBarraEstado().setEstadisticas("%");
+		double porcentaje = verificadorPalabrasClave.calcularPuntajePalabra();
+		ventana.getBarraEstado().setEstadisticas(DECIMAL_FORMART.format(porcentaje) + "%");
+		panelResultados.modificarNivelAfinidad(porcentaje);
+	}
+	
+	public void mostrarDialogoCargando() {
+		ventana.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		dialogoProgreso.setVisible(true);
+	}
+	
+	public void ocultarDialogoCargando() {
+		ventana.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		dialogoProgreso.setVisible(false);
+	}
+	
+	public void mostrarDialogoEditarPalabrasVacias() {
+		dialogoPalabrasVacias.setVisible(true);
+	}
+	
+	public void mostrarDialogoNuevoArticulo() {
+		dialogoNuevoArticulo.setVisible(true);
 	}
 	
 	public static void main(String[] args) {

@@ -1,7 +1,6 @@
 package vistas;
 
 import java.awt.BorderLayout;
-import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.net.URL;
 
@@ -36,10 +35,6 @@ public class VentanaPrincipal extends JFrame {
 	private BarraDeMenu jMenuBar;
 	private BarraDeHerramientas jToolBar;
 	private BarraEstado barraEstado;
-
-	private DialogoCargando dialogoProgreso;
-	private DialogoPalabrasVacias dialogoPalabrasVacias;
-	private DialogoNuevoArticulo dialogoNuevoArticulo;
 
 	private Controlador controlador;
 
@@ -105,9 +100,6 @@ public class VentanaPrincipal extends JFrame {
 		setIconImage(createImageIcon(ConstantesGUI.ICONO_VENTANA).getImage());
 		setLocationRelativeTo(null);
 
-		dialogoProgreso = new DialogoCargando(this);
-		dialogoPalabrasVacias = new DialogoPalabrasVacias(this);
-		dialogoNuevoArticulo = new DialogoNuevoArticulo(this);
 	}
 
 	public void agregarTexto(String texto, String estilo) {
@@ -144,24 +136,6 @@ public class VentanaPrincipal extends JFrame {
 
 	public PanelResultados getPanelResultados() {
 		return panelResultados;
-	}
-
-	public void mostrarDialogoCargando() {
-		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		dialogoProgreso.setVisible(true);
-	}
-
-	public void ocultarDialogoCargando() {
-		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		dialogoProgreso.setVisible(false);
-	}
-	
-	public void mostrarDialogoEditarPalabrasVacias() {
-		dialogoPalabrasVacias.setVisible(true);
-	}
-	
-	public void mostrarDialogoNuevoArticulo() {
-		dialogoNuevoArticulo.setVisible(true);
 	}
 
 	public BarraEstado getBarraEstado() {

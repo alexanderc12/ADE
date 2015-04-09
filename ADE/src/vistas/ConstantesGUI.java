@@ -2,7 +2,7 @@ package vistas;
 
 
 public class ConstantesGUI {
-	
+
 	/**
 	 * Constantes BarraMenu
 	 */
@@ -17,7 +17,8 @@ public class ConstantesGUI {
 	public static final String T_MENU_AYUDA = "Ayuda";
 	public static final String T_ITEM_ACERCA_DE = "Acerca de";
 	public static final String T_ITEM_BUSCAR_EN_LISTAS = "Buscar en Indices";
-
+	public static final String T_ITEM_VER_TERMINOS_TOP = "Ver Terminos Top";
+	
 	/**
 	 * Constantes VentanaPrincipal
 	 */
@@ -26,11 +27,11 @@ public class ConstantesGUI {
 	public static final String T_PANEL_ARTICULO = "Articulo:";
 	public static final int VENTANA_ANCHO = 1100;
 	public static final int VENTANA_ALTO = 650;
-	
+
 	/**
 	 * Constantes BarraHerramientas
 	 */
-
+	
 	public static final String ICONO_CREAR = "/images/new.png";
 	public static final String ICONO_CARGAR = "/images/open.png";
 	public static final String ICONO_CARGAR_WEB = "/images/open_web.png";
@@ -39,7 +40,8 @@ public class ConstantesGUI {
 	public static final String ICONO_EDITAR_PALABRAS_VACIAS = "/images/stop_words.png";
 	public static final String ICONO_ACERCA_DE = "/images/help.png";
 	public static final String ICONO_BUSCAR_EN_LISTAS = "/images/in_list.png";
-
+	public static final String ICONO_VER_TERMINOS_TOP = "/images/top.png";
+	
 	/**
 	 * Constantes DialogoCargando
 	 */
@@ -47,14 +49,14 @@ public class ConstantesGUI {
 	public static final String IMAGEN_CARGANDO_ARTICULO = "/images/cargando.gif";
 	public static final int DIALOGO_CARGANDO_ANCHO = 400;
 	public static final int DIALOGO_CARGANDO_ALTO = 300;
-
+	
 	/**
 	 * Constantes DialogoPalabrasVacias
 	 */
 	public static final String T_TITULO_DIALOGO_PALABRAS_VACIAS = "Editar lista palabras vacias";
 	public static final int DIALOGO_PALABRAS_VACIAS_ANCHO = 400;
 	public static final int DIALOGO_PALABRAS_VACIAS_ALTO = 300;
-
+	
 	/**
 	 * Constantes DialogoNuevoArticulo
 	 */
@@ -85,20 +87,41 @@ public class ConstantesGUI {
 	public static final String T_ELIMINAR_CAPITULO = "Remover Capitulo";
 	public static final String T_CREAR_ARTICULO = "Guardar articulo";
 	public static final String T_CANCELAR = "Cancelar";
-
+	
+	/**
+	 * Constantes DialogoAcercaDe
+	 */
+	public static final String T_TITULO_DIALOGO_ACERCA_DE = "Acerca de";
+	public static final int DIALOGO_ACERCA_DE_ANCHO = 500;
+	public static final int DIALOGO_ACERCA_DE_ALTO = 500;
+	
 	/**
 	 * Constantes PanelResultados
 	 */
 	public static final String T_PANEL_RESULTADOS = "Resultados";
 	public static final String T_LISTA_PALABRAS = "Lista palabras clave:";
 	public static final String T_TABLA_RESULTADOS = "Estadisticas:";
-	public static final String[] T_COLUMNAS_TABLA_RESULTADOS = {
-		"Parte Articulo", "N° Incidencias", "N° Elementos",
-		"N° Elementos Analizables", "% Incidencias" };
+	public static final String[] T_COLUMNAS_TABLA_RESULTADOS = { "<html>Parte<br>Articulo",
+ "<html>N°<br>Elementos",
+			"<html>N° Elementos<br>Analizables", "<html>N° Incidencias<br>Regulares",
+		"<html>N° Elementos<br>Lema", "<html>N° Incidencias<br>Lema", "<html>%<br>Incidencias" };
 	public static final String ICONO_CORRECTO = "/images/correct.png";
 	public static final String ICONO_INCORRECTO = "/images/incorrect.png";
 	public static final String ICONO_SIN_ANALIZAR = "/images/no_analize.png";
+	public static final String T_BARRA_AFINIDAD = "Porcentaje nivel afinidad:";
 	
+	/**
+	 * Constantes DialogoTopTerminos
+	 */
+	public static final String T_LISTA_TOP_TERMINOS = "Terminos Con Mayor Frecuencia:";
+	public static final String T_TITULO_DIALOGO_TOP_TERMINOS = "Top de terminos";
+	public static final int DIALOGO_TOP_TERMINOS_ALTO = 400;
+	public static final int DIALOGO_TOP_TERMINOS_ANCHO = 500;
+	public static final String ICONO_ACTUALIZAR_LISTA_TOP_TERMINOS = "/images/refresh.png";
+	public static final String T_ACTUALIZAR_LISTA_TOP_TERMINOS = "Actualizar Lista";
+	public static final String T_LISTA_PARTES_ARTICULO = "Lista partes articulo:";
+	public static final String T_NUMERO_TERMINOS = "N° Terminos: ";
+
 	/**
 	 * Constantes Dialogos y Errores
 	 */
@@ -118,5 +141,4 @@ public class ConstantesGUI {
 	public static final String ERROR_GUARDAR_PALABRAS_VACIAS = "Error al guardar el archivo de palabras vacias.";
 	public static final String LISTA_TERMINOS_IEEE = "src/data/IEEE_Terms.txt";
 	public static final String LISTA_TERMINOS_IFAC = "src/data/IFAC_Keyword_List.txt";
-	
 }

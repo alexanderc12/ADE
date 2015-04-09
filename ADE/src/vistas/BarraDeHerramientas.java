@@ -18,6 +18,7 @@ public class BarraDeHerramientas extends JToolBar {
 	private JButton btnVerificarPalabrasClave;
 	private JButton btnEditarPalabrasVacias;
 	private JButton btnBuscarEnListas;
+	private JButton btnMostarTerminosTop;
 	
 	public BarraDeHerramientas(Controlador controlador) {
 		setFloatable(false);
@@ -76,6 +77,14 @@ public class BarraDeHerramientas extends JToolBar {
 		btnBuscarEnListas.addActionListener(controlador);
 		btnBuscarEnListas.setActionCommand(Controlador.A_BUSCAR_EN_LISTAS);
 		add(btnBuscarEnListas);
+		
+		btnMostarTerminosTop = new JButton(createImageIcon(ConstantesGUI.ICONO_VER_TERMINOS_TOP));
+		btnMostarTerminosTop.setFocusable(false);
+		btnMostarTerminosTop.setToolTipText(ConstantesGUI.T_ITEM_VER_TERMINOS_TOP);
+		btnMostarTerminosTop.addActionListener(controlador);
+		btnMostarTerminosTop.setActionCommand(Controlador.A_VER_TERMINOS_TOP);
+		add(btnMostarTerminosTop);
+		
 	}
 	
 	protected ImageIcon createImageIcon(String path) {
