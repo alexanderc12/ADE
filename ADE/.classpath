@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="src/lib/lucene-analyzers-common-5.0.0.jar" sourcepath="src/lib/lucene-analyzers-common-5.0.0.jar"/>
 	<classpathentry kind="lib" path="src/lib/lucene-queryparser-5.0.0.jar"/>
 	<classpathentry kind="lib" path="src/lib/lucene-misc-5.0.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Apache Jena"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
