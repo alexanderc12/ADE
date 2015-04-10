@@ -2,11 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="src/lib/jsoup-1.8.1.jar"/>
-	<classpathentry kind="lib" path="src/lib/lucene-core-5.0.0.jar"/>
-	<classpathentry kind="lib" path="src/lib/lucene-analyzers-common-5.0.0.jar" sourcepath="src/lib/lucene-analyzers-common-5.0.0.jar"/>
-	<classpathentry kind="lib" path="src/lib/lucene-queryparser-5.0.0.jar"/>
-	<classpathentry kind="lib" path="src/lib/lucene-misc-5.0.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Apache Jena"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSoup"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Lucene"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
