@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -18,7 +19,8 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class GestorSemantico {
 
-	public void buscarSinonimos(String termino) {
+	public ArrayList<String> buscarSinonimos(String termino) {
+		ArrayList<String> listaSinonimos = new ArrayList<>();
 		InputStream in = null;
 		try {
 			in = new FileInputStream(new File("src/data/tesauro.rdf"));
@@ -43,9 +45,10 @@ public class GestorSemantico {
 		ResultSet results = qe.execSelect();
 		while (results.hasNext()) {
 			QuerySolution row = results.nextSolution();
-			System.out.println(row.getLiteral("altLabel").getString());
+			listaSinonimos.add(row.getLiteral("altLabel").getString());
 		}
 		qe.close();
+		return listaSinonimos;
 	}
 
 	/**
@@ -65,9 +68,9 @@ public class GestorSemantico {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		String queryString = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>" + " SELECT ?altLabel "
-				+ " WHERE {?concept skos:altLabel ?altLabel . ?concept skos:prefLabel ?a .  ?concept"
-				+ " FILTER regex(?a, \"seguridad\", \"i\") FILTER(lang(?altLabel) =\"es\")}";
+		String queryString = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> PREFIX text: <http://jena.apache.org/text#>" + " SELECT ?x "
+				+ " WHERE {?concept skos:altLabel ?altLabel . ?concept skos:prefLabel ?a .  ?concept skos:narrower ?narrower . ?narrower skos:prefLabel ?x ."
+				+ " FILTER CONTAINS(str(?a), \"Industria de edi\") FILTER(lang(?x) =\"es\")}";
 
 		Query query = QueryFactory.create(queryString);
 
@@ -113,7 +116,7 @@ public class GestorSemantico {
 
 	public static void main(String[] args) throws IOException {
 		GestorSemantico t = new GestorSemantico();
-		t.buscarSinonimos("docente");
+		t.buscarAreasRelacionadas();
 	}
 
 }
