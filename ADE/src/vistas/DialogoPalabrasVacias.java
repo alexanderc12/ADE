@@ -58,7 +58,7 @@ public class DialogoPalabrasVacias extends JDialog{
 
 	public void guardarPalabrasVacias() {
 		try {
-			Files.write(Paths.get(ConstantesGUI.ERROR_LEER_PALABRAS_VACIAS), txPalabrasVacias.getText().getBytes());
+			Files.write(Paths.get(ConstantesGUI.RUTA_PALABRAS_VACIAS), txPalabrasVacias.getText().getBytes());
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_GUARDAR_PALABRAS_VACIAS, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);

@@ -30,6 +30,8 @@ public class VerificadorPalabrasClave {
 
 	private static final int NUMERO_PARTES = 7;
 	private ParteArticulo[] lista;
+	private boolean aparaceIEEE;
+	private boolean apareceIFAC;
 	private Directory directoryNormal;
 	private Directory directoryLema;
 	private ArticuloCientifico articulo;
@@ -38,6 +40,8 @@ public class VerificadorPalabrasClave {
 	private SpanishStemmer stemmer = new SpanishStemmer();
 	private static final int INDEX_NORMAL = 0;
 	private static final int INDEX_LEMA = 1;
+	private String palabra;
+	private String palabraEnIngles;
 
 	/**
 	 * Se carga el articulo y luego sus partes son pasadas a texto plano, se
@@ -135,7 +139,7 @@ public class VerificadorPalabrasClave {
 		documento = new Document();
 		FieldType tipo = crearTipoCampo();
 		for (ParteArticulo parte : lista) {
-			documento.add(new Field(parte.getZonaArticulo().name(), parte.getTexto(), tipo));
+			documento.add(new Field(parte.getZona(), parte.getTexto(), tipo));
 		}
 		try {
 			iwriter.addDocument(documento);
@@ -177,6 +181,7 @@ public class VerificadorPalabrasClave {
 	 * @param palabra
 	 */
 	public void contarFrecuenciaPalabra(String termino) {
+		palabra = termino;
 		DirectoryReader ireader = abrirIndice(directoryNormal);
 		String listaPalabras[] = termino.split(" ");
 		for (ParteArticulo parteArticulo : lista) {
@@ -184,7 +189,7 @@ public class VerificadorPalabrasClave {
 			int numeroPalabrasAnalizadas = 0;
 			for (String palabra : listaPalabras) {
 				if (!listaPalabrasVacias.contains(palabra)) {
-					Term term = new Term(parteArticulo.getZonaArticulo().name(), palabra.toLowerCase());
+					Term term = new Term(parteArticulo.getZona(), palabra.toLowerCase());
 					numeroPalabrasAnalizadas++;
 					try {
 						numeroPalabras += ireader.totalTermFreq(term);
@@ -196,13 +201,19 @@ public class VerificadorPalabrasClave {
 			}
 			parteArticulo.setValorElemento((double) numeroPalabras / numeroPalabrasAnalizadas);
 			try {
-				Terms listaTerminos = ireader.getTermVector(0, parteArticulo.getZonaArticulo().name());
+				Terms listaTerminos = ireader.getTermVector(0, parteArticulo.getZona());
 				parteArticulo.setNumeroElementosAnalizables(listaTerminos.size());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 		cerrarIndice(ireader);
+	}
+
+	public void verificarIndices(String palabraEnIngles){
+		this.palabraEnIngles = palabraEnIngles;
+		aparaceIEEE = VerificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IEEE);
+		apareceIFAC = VerificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IFAC);
 	}
 
 	/**
@@ -219,7 +230,7 @@ public class VerificadorPalabrasClave {
 				if (!listaPalabrasVacias.contains(palabra)) {
 					stemmer.setCurrent(palabra.toLowerCase());
 					stemmer.stem();
-					Term term = new Term(parteArticulo.getZonaArticulo().name(), stemmer.getCurrent());
+					Term term = new Term(parteArticulo.getZona(), stemmer.getCurrent());
 					numeroPalabrasAnalizadas++;
 					try {
 						numeroPalabras += ireader.totalTermFreq(term);
@@ -231,7 +242,7 @@ public class VerificadorPalabrasClave {
 			}
 			parteArticulo.setValorElementoLema((double) numeroPalabras / numeroPalabrasAnalizadas);
 			try {
-				Terms listaTerminos = ireader.getTermVector(0, parteArticulo.getZonaArticulo().name());
+				Terms listaTerminos = ireader.getTermVector(0, parteArticulo.getZona());
 				parteArticulo.setNumeroElementosLema(listaTerminos.size());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -243,9 +254,6 @@ public class VerificadorPalabrasClave {
 	public void contarFrecuenciaMejorSinonimo(String termino) {
 		DirectoryReader ireader = abrirIndice(directoryNormal);
 		ArrayList<String> listaSinonimos = GestorSemantico.buscarSinonimos(termino);
-		for (String string : listaSinonimos) {
-			System.out.println(string);
-		}
 		long numeroMayorIncidencias = 0;
 		for (String sinonimo : listaSinonimos) {
 			String listaPalabras[] = sinonimo.split(" ");
@@ -254,11 +262,10 @@ public class VerificadorPalabrasClave {
 				int numeroPalabrasAnalizadas = 0;
 				for (String palabra : listaPalabras) {
 					if (!listaPalabrasVacias.contains(palabra)) {
-						Term term = new Term(parteArticulo.getZonaArticulo().name(), palabra.toLowerCase());
+						Term term = new Term(parteArticulo.getZona(), palabra.toLowerCase());
 						numeroPalabrasAnalizadas++;
 						try {
 							numeroPalabras += ireader.totalTermFreq(term);
-							System.out.println(numeroPalabras);
 						} catch (IOException e) {
 							JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_CONTEO, ConstantesGUI.TITULO_ERROR,
 									JOptionPane.ERROR_MESSAGE);
@@ -274,11 +281,11 @@ public class VerificadorPalabrasClave {
 		cerrarIndice(ireader);
 	}
 
-	public ArrayList<String> obtenerTopPalabras(ZonaArticulo zonaArticulo, int n) {
+	public ArrayList<String> obtenerTopPalabras(String zonaArticulo, int n) {
 		ArrayList<String> listaTerminosTop = new ArrayList<>();
 		DirectoryReader ireader = abrirIndice(directoryNormal);
 		try {
-			TermStats[] stats = HighFreqTerms.getHighFreqTerms(ireader, n, zonaArticulo.name(),
+			TermStats[] stats = HighFreqTerms.getHighFreqTerms(ireader, n, zonaArticulo,
 					new HighFreqTerms.TotalTermFreqComparator());
 			for (TermStats stat : stats) {
 				listaTerminosTop.add((stat.termtext.utf8ToString() + "," + stat.totalTermFreq));
@@ -293,7 +300,7 @@ public class VerificadorPalabrasClave {
 	public double calcularPuntajePalabra() {
 		double totalPuntos = 0;
 		for (ParteArticulo parteArticulo : lista) {
-			totalPuntos += parteArticulo.calcularPuntos() * parteArticulo.getZonaArticulo().getPonderado();
+			totalPuntos += parteArticulo.calcularPuntos() * ZonaArticulo.valueOf(parteArticulo.getZona());
 		}
 		return totalPuntos;
 	}
@@ -305,4 +312,37 @@ public class VerificadorPalabrasClave {
 	public ArticuloCientifico getArticulo() {
 		return articulo;
 	}
+
+	public boolean isAparaceIEEE() {
+		return aparaceIEEE;
+	}
+
+	public boolean isApareceIFAC() {
+		return apareceIFAC;
+	}
+
+	public String getPalabra() {
+		return palabra;
+	}
+
+	public String getPalabraEnIngles() {
+		return palabraEnIngles;
+	}
+
+	public long calcularTotalElementos() {
+		long totalelementos = 0;
+		for (ParteArticulo parteArticulo : lista) {
+			totalelementos += parteArticulo.getTotalElementos();
+		}
+		return totalelementos;
+	}
+
+	public long calcularTotalElementosAnalizables() {
+		long totalelementos = 0;
+		for (ParteArticulo parteArticulo : lista) {
+			totalelementos += parteArticulo.getNumeroElementosAnalizables();
+		}
+		return totalelementos;
+	}
+
 }

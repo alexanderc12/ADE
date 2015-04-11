@@ -2,69 +2,70 @@ package vistas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 
 import controladores.Controlador;
 
 public class DialogoReporte extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private StyledDocument documento;
-	private SimpleAttributeSet estiloSimple;
-	private SimpleAttributeSet estiloTitulo;
-	private SimpleAttributeSet estiloTituloCapitulo;
-	private JTextPane panelReporte;
+	private JEditorPane panelReporte;
+	private SimpleAttributeSet estiloPuntuacion;
+	private HTMLEditorKit editorHTML;
+	private Document reporte;
 
 	public DialogoReporte(VentanaPrincipal ventanaPrincipal, Controlador controlador) {
 		super(ventanaPrincipal);
 		setLayout(new BorderLayout());
-		setTitle(ConstantesGUI.T_TITULO_DIALOGO_TOP_TERMINOS);
-		setSize(ConstantesGUI.DIALOGO_TOP_TERMINOS_ANCHO, ConstantesGUI.DIALOGO_TOP_TERMINOS_ALTO);
+		setTitle(ConstantesGUI.T_TITULO_DIALOGO_REPORTE);
+		setSize(ConstantesGUI.DIALOGO_REPORTE_ANCHO, ConstantesGUI.DIALOGO_REPORTE_ALTO);
 		setLocationRelativeTo(null);
 		setBackground(Color.WHITE);
-		estiloSimple = ventanaPrincipal.getEstiloSimple();
-		estiloTitulo = ventanaPrincipal.getEstiloTitulo();
-		estiloTituloCapitulo = ventanaPrincipal.getEstiloTituloCapitulo();
+
+		estiloPuntuacion = new SimpleAttributeSet();
+		estiloPuntuacion.addAttribute(StyleConstants.FontSize, 12);
+		estiloPuntuacion.addAttribute(StyleConstants.FontFamily, "Arial");
 
 		panelReporte = new JTextPane();
+		editorHTML = new HTMLEditorKit();
+		panelReporte.setEditorKit(editorHTML);
+
+		StyleSheet styleSheet = editorHTML.getStyleSheet();
+		try {
+			styleSheet.loadRules(new BufferedReader(new FileReader(new File("src/data/bootstrap.css"))), null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		reporte = editorHTML.createDefaultDocument();
+		panelReporte.setDocument(reporte);
 		JScrollPane panel = new JScrollPane(panelReporte);
-		panel.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_PANEL_ARTICULO));
 		panelReporte.setEditable(false);
 		panelReporte.setHighlighter(null);
-		documento = panelReporte.getStyledDocument();
 
 		add(panel);
 	}
 
-	public void agregarTexto(String texto, String estilo) {
-		SimpleAttributeSet estiloTexto = null;
-		switch (estilo) {
-			case ConstantesGUI.ESTILO_NORMAL:
-				estiloTexto = estiloSimple;
-				break;
-			case ConstantesGUI.ESTILO_TITULO:
-				estiloTexto = estiloTitulo;
-				break;
-			case ConstantesGUI.ESTILO_TITULO_CAPITULO:
-				estiloTexto = estiloTituloCapitulo;
-				break;
-		}
-		try {
-			documento.insertString(documento.getLength(), texto, estiloTexto);
-		} catch (BadLocationException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
-		}
+	public void agregarTexto(String texto) {
+		panelReporte.setText(texto);
 	}
+
+
 
 	protected ImageIcon createImageIcon(String path) {
 		URL imgURL = getClass().getResource(path);

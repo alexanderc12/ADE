@@ -2,7 +2,7 @@ package modelo;
 
 public class ParteArticulo {
 
-	private ZonaArticulo zonaArticulo;
+	private String zona;
 	private double numeroElementosAnalizables;
 	private double totalElementos;
 	private double valorElementos;
@@ -11,8 +11,8 @@ public class ParteArticulo {
 	private double valorSinonimos;
 	private String texto;
 
-	public ParteArticulo(ZonaArticulo zonaArticulo, String texto) {
-		this.zonaArticulo = zonaArticulo;
+	public ParteArticulo(String nombreZona, String texto) {
+		this.zona = nombreZona;
 		this.texto = texto;
 		this.totalElementos = Util.contarPalabras(texto);
 	}
@@ -41,14 +41,6 @@ public class ParteArticulo {
 			totalPuntos = porcentajeFrecuencia * 40;
 		}
 		return totalPuntos;
-	}
-
-	public ZonaArticulo getZonaArticulo() {
-		return zonaArticulo;
-	}
-
-	public void setZonaArticulo(ZonaArticulo zonaArticulo) {
-		this.zonaArticulo = zonaArticulo;
 	}
 
 	public double getNumeroElementosAnalizables() {
@@ -105,5 +97,9 @@ public class ParteArticulo {
 
 	public void setValorSinonimos(double valorSinonimos) {
 		this.valorSinonimos = valorSinonimos;
+	}
+
+	public String getZona() {
+		return zona;
 	}
 }

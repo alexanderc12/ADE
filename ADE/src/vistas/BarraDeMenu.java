@@ -24,6 +24,7 @@ public class BarraDeMenu extends JMenuBar {
 	private JMenuItem itemconsultarTeusaro;
 	private JMenu menuConfiguracion;
 	private JMenuItem itemEditarPalabrasVacias;
+	private JMenuItem itemEditarPonderados;
 	private JMenu menuAyuda;
 	private JMenuItem itemAcercaDe;
 	private JMenuItem itemGenerarReporte;
@@ -100,6 +101,12 @@ public class BarraDeMenu extends JMenuBar {
 		.setActionCommand(Controlador.A_EDITAR_PALABRAS_VACIAS);
 		itemEditarPalabrasVacias.addActionListener(controlador);
 		menuConfiguracion.add(itemEditarPalabrasVacias);
+
+		itemEditarPonderados = new JMenuItem(ConstantesGUI.T_ITEM_EDITAR_PONDERADOS,
+				createImageIcon(ConstantesGUI.ICONO_EDITAR_PONDERADOS));
+		itemEditarPonderados.setActionCommand(Controlador.A_EDITAR_PONDERADOS);
+		itemEditarPonderados.addActionListener(controlador);
+		menuConfiguracion.add(itemEditarPonderados);
 
 		add(menuConfiguracion);
 

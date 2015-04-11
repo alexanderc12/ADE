@@ -1,6 +1,5 @@
 package vistas;
 
-
 public class ConstantesGUI {
 
 	/**
@@ -19,6 +18,7 @@ public class ConstantesGUI {
 	public static final String T_ITEM_CONSULTAR_SINONIMOS = "Buscar Sinonimos";
 	public static final String T_MENU_CONFIGURACION = "Configuración";
 	public static final String T_ITEM_EDITAR_PALABRAS_VACIAS = "Editar Palabras Vacias";
+	public static final String T_ITEM_EDITAR_PONDERADOS = "Editar Poderados";
 	public static final String T_MENU_AYUDA = "Ayuda";
 	public static final String T_ITEM_ACERCA_DE = "Acerca de";
 
@@ -49,14 +49,19 @@ public class ConstantesGUI {
 	public static final String ICONO_VER_TERMINOS_TOP = "/images/top.png";
 	public static final String ICONO_CONSULTAR_SINONIMOS = "/images/tesauro.png";
 	public static final String ICONO_GENERAR_REPORTE = "/images/report.png";
+	public static final String ICONO_EDITAR_PONDERADOS = "/images/edit_p.png";
 
 	/**
 	 * Constantes DialogoCargando
 	 */
-	public static final String T_TITULO_DIALOGO_CARGANDO = "Mira el gato mientras carga el articulo...";
+	public static final String T_TITULO_DIALOGO_CARGANDO_ARTICULO = "Mira el gato mientras carga el articulo...";
+	public static final String T_TITULO_DIALOGO_CARGANDO_RESULTADOS = "Procesando...";
 	public static final String IMAGEN_CARGANDO_ARTICULO = "/images/cargando.gif";
-	public static final int DIALOGO_CARGANDO_ANCHO = 400;
-	public static final int DIALOGO_CARGANDO_ALTO = 300;
+	public static final String IMAGEN_CARGANDO_RESULTADOS = "/images/loading.gif";
+	public static final int DIALOGO_CARGANDO_ARTICULO_ANCHO = 400;
+	public static final int DIALOGO_CARGANDO_ARTICULO_ALTO = 300;
+	public static final int DIALOGO_CARGANDO_RESULTADOS_ANCHO = 160;
+	public static final int DIALOGO_CARGANDO_RESULTADOS_ALTO = 170;
 
 	/**
 	 * Constantes DialogoPalabrasVacias
@@ -81,8 +86,8 @@ public class ConstantesGUI {
 	public static final String T_AUTORES = "Autores: ";
 	public static final String T_PALABRAS_CLAVE = "Palabras clave: ";
 	public static final String T_RESUMEN = "Resumen: ";
-	public static final String T_TITULOS_CAPITULOS = "Titulos de los capitulos";
-	public static final String T_CONTENIDO_CAPITULOS = "Contenido capitulos";
+	public static final String T_TITULOS_CAPITULOS = "Titulos de los capitulos: ";
+	public static final String T_CONTENIDO_CAPITULOS = "Contenido capitulos: ";
 	public static final String T_REFERENCIAS = "Referencias: ";
 	public static final String T_PANEL_DATOS_REVISTA = "Datos de la revista:";
 	public static final String T_PANEL_DATOS_ARTICULO = "Datos generales articulo:";
@@ -138,6 +143,12 @@ public class ConstantesGUI {
 	public static final int DIALOGO_SINONIMOS_ALTO = 300;
 	public static final int DIALOGO_SINONIMOS_ANCHO = 410;
 	/**
+	 * Constantes DialogoReporte
+	 */
+	public static final String T_TITULO_DIALOGO_REPORTE = "Dialogo Reporte";
+	public static final int DIALOGO_REPORTE_ANCHO = 1000;
+	public static final int DIALOGO_REPORTE_ALTO = 600;
+	/**
 	 * Constantes Dialogos y Errores
 	 */
 	public static final String TITULO_ERROR = "Error en el proceso :(";
@@ -159,10 +170,17 @@ public class ConstantesGUI {
 	public static final String ERROR_CERRAR_INDICE = "Error al cerrar la configuración de indexado del articulo.";
 	public static final String ERROR_ABRIR_CONFIGURACION_LECTURA = "Error en la configuración de lectura del articulo.";
 	public static final String ERROR_CONTEO = "Error al contar las palabras clave en el articulo.";
+	public static final String ERROR_LEER_PONDERADOS = "Error al leer el archivo de ponderados.";
 	public static final String DIALOGO_BUSCAR_PALABRA_ES = "Ingrese el termino clave que quiere analizar en español:";
 	public static final String DIALOGO_BUSCAR_PALABRA_EN = "Ingrese el termino clave que quiere analizar en ingles:";
 	public static final String TITULO_BUSCAR_PALABRA = "Buscar nueva palabra";
+	public static final Object ERROR_GUARDAR_PONDERADOS = "La suma de los ponderados debe ser igual a 100.";
 
+	/**
+	 * DialogoPonderados
+	 */
+	public static final String T_INTRODUCCION = "Introducción:";
+	public static final String T_CONCLUSIONES = "Conclusiones:";
 	/**
 	 * Rutas persistencia
 	 */
@@ -172,4 +190,5 @@ public class ConstantesGUI {
 	public static final String RUTA_LISTA_TERMINOS_IEEE = "src/data/IEEE_Terms.txt";
 	public static final String RUTA_LISTA_TERMINOS_IFAC = "src/data/IFAC_Keyword_List.txt";
 	public static final String RUTA_TESAURO_UNESCO = "src/data/tesauro.rdf";
+	public static final String RUTA_PONDERADOS = "src/data/ponderados.txt";
 }

@@ -25,7 +25,7 @@ import modelo.ZonaArticulo;
 public class DialogoTopTerminos extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private JComboBox<ZonaArticulo> bxPartesArticulo;
+	private JComboBox<String> bxPartesArticulo;
 	private JTextField txNumeroTerminos;
 	private JTable tablaTerminosTop;
 	private DefaultTableModel modeloTablaTerminosTop;
@@ -98,8 +98,8 @@ public class DialogoTopTerminos extends JDialog {
 		}
 	}
 
-	public ZonaArticulo obtenerParteSeleccionada() {
-		return (ZonaArticulo) bxPartesArticulo.getSelectedItem();
+	public String obtenerParteSeleccionada() {
+		return (String) bxPartesArticulo.getSelectedItem();
 	}
 
 	public int obtenerNumero() {

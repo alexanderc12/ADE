@@ -3,6 +3,9 @@ package controladores;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -10,10 +13,11 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import modelo.ArticuloCientifico;
+import modelo.GeneradorReporte;
 import modelo.GestorSemantico;
 import modelo.ParteArticulo;
 import modelo.VerificadorPalabrasClave;
-import modelo.VerificadorTerminos;
+import modelo.ZonaArticulo;
 import persistencia.GestorArchivos;
 import vistas.ConstantesGUI;
 import vistas.DialogoAcercaDe;
@@ -21,6 +25,8 @@ import vistas.DialogoCargando;
 import vistas.DialogoListaSinonimos;
 import vistas.DialogoNuevoArticulo;
 import vistas.DialogoPalabrasVacias;
+import vistas.DialogoPonderados;
+import vistas.DialogoReporte;
 import vistas.DialogoTopTerminos;
 import vistas.PanelResultados;
 import vistas.VentanaPrincipal;
@@ -34,9 +40,12 @@ public class Controlador implements ActionListener {
 	private DialogoAcercaDe dialogoAcercaDe;
 	private DialogoTopTerminos dialogoTopTerminos;
 	private DialogoListaSinonimos dialogoListaSinonimos;
-	private VerificadorPalabrasClave verificadorPalabrasClave;
+	private DialogoReporte dialogoReporte;
+	private DialogoPonderados dialogoPonderados;
 	private PanelResultados panelResultados;
+	private VerificadorPalabrasClave verificadorPalabrasClave;
 	private ArticuloCientifico articulo;
+	private GeneradorReporte generadorReporte;
 
 	public static final String A_VERIFICAR_PALABRAS_CLAVE = "VERIFICAR_PALABRAS_CLAVE";
 	public static final String A_CREAR_ARCHIVO = "CREAR_ARCHIVO";
@@ -53,8 +62,15 @@ public class Controlador implements ActionListener {
 	public static final String A_GENERAR_REPORTE = "GENERAR_REPORTE";
 	public static final String NL = System.getProperty("line.separator") + System.getProperty("line.separator");
 	public static final DecimalFormat DECIMAL_FORMART = new DecimalFormat("#0.00");
+	public static final String A_EDITAR_PONDERADOS = "EDITAR_PONDERADOS";
 
 	public void iniciar() {
+		try {
+			ZonaArticulo.actualizarPonderados(Files.readAllLines(Paths.get(ConstantesGUI.RUTA_PONDERADOS)));
+		} catch (IOException e1) {
+			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_LEER_PONDERADOS, ConstantesGUI.TITULO_ERROR,
+					JOptionPane.ERROR_MESSAGE);
+		}
 		this.ventana = new VentanaPrincipal();
 		ventana.init(this);
 		dialogoProgreso = new DialogoCargando(ventana);
@@ -63,7 +79,10 @@ public class Controlador implements ActionListener {
 		dialogoAcercaDe = new DialogoAcercaDe(ventana);
 		dialogoTopTerminos = new DialogoTopTerminos(ventana, this);
 		dialogoListaSinonimos = new DialogoListaSinonimos(ventana, this);
+		dialogoReporte = new DialogoReporte(ventana, this);
+		dialogoPonderados = new DialogoPonderados(ventana);
 		panelResultados = ventana.getPanelResultados();
+		generadorReporte = new GeneradorReporte();
 		ventana.setVisible(true);
 	}
 
@@ -108,21 +127,17 @@ public class Controlador implements ActionListener {
 				break;
 			case A_GENERAR_REPORTE:
 				generarReporte();
+			case A_EDITAR_PONDERADOS:
+				mostrarDialogoPonderado();
 				break;
 		}
-	}
-
-
-	private void generarReporte() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void cargarArticuloWeb() {
 		String url = JOptionPane.showInputDialog(ventana, ConstantesGUI.DIALOGO_IMPORTAR_TITULO_WEB,
 				ConstantesGUI.TITULO_CARGAR_WEB, JOptionPane.QUESTION_MESSAGE);
 		if (url != null) {
-			mostrarDialogoCargando();
+			mostrarDialogoCargandoArticulo();
 			SwingWorker<Void, Void> bWorker = new SwingWorker<Void, Void>() {
 				@Override
 				protected Void doInBackground() {
@@ -142,10 +157,10 @@ public class Controlador implements ActionListener {
 	public void cargarArticuloLocal() {
 		articulo = GestorArchivos.cargarArchivoArticulo(ventana);
 		if (articulo != null) {
-			mostrarDialogoCargando();
+			mostrarDialogoCargandoArticulo();
 			SwingWorker<Void, Void> aWorker = new SwingWorker<Void, Void>() {
 				@Override
-				protected Void doInBackground() throws Exception {
+				protected Void doInBackground() {
 					verificadorPalabrasClave = new VerificadorPalabrasClave(articulo);
 					return null;
 				}
@@ -156,6 +171,23 @@ public class Controlador implements ActionListener {
 			};
 			aWorker.execute();
 		}
+	}
+
+	public void mostrarAnalisisPalabraClave(String palabra, String palabraEnIngles) {
+		mostrarDialogoCargandoResultados();
+		SwingWorker<Void, Void> aWorker = new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				analizarPalabraClave(palabra, palabraEnIngles);
+				return null;
+			}
+			@Override
+			protected void done() {
+				actulizarPanelResultados(palabra, palabraEnIngles);
+				ocultarDialogoCargando();
+			}
+		};
+		aWorker.execute();
 	}
 
 	public void mostrarArticulo() {
@@ -216,14 +248,16 @@ public class Controlador implements ActionListener {
 				ConstantesGUI.TITULO_BUSCAR_PALABRA, JOptionPane.QUESTION_MESSAGE);
 		String palabraEnIngles = JOptionPane.showInputDialog(ventana, ConstantesGUI.DIALOGO_BUSCAR_PALABRA_EN,
 				ConstantesGUI.TITULO_BUSCAR_PALABRA, JOptionPane.QUESTION_MESSAGE);
-		analizarPalabraClave(palabra, palabraEnIngles);
+		mostrarAnalisisPalabraClave(palabra, palabraEnIngles);
 	}
 
 	public void analizarPalabraClaveLista() {
-		String palabra = panelResultados.obtenerPalabraSelecionada();
-		String palabraEnIngles = articulo.getListaPalabrasClaveIngles()
-				.get(panelResultados.obtenerIndicePalabraSelecionada());
-		analizarPalabraClave(palabra, palabraEnIngles);
+		if (articulo != null) {
+			String palabra = panelResultados.obtenerPalabraSelecionada();
+			String palabraEnIngles = articulo.getListaPalabrasClaveIngles()
+					.get(panelResultados.obtenerIndicePalabraSelecionada());
+			mostrarAnalisisPalabraClave(palabra, palabraEnIngles);
+		}
 	}
 
 	public void analizarPalabraClave(String palabra, String palabraEnIngles) {
@@ -231,28 +265,32 @@ public class Controlador implements ActionListener {
 			verificadorPalabrasClave.contarFrecuenciaPalabra(palabra);
 			verificadorPalabrasClave.contarFrecuenciaPalabrasLema(palabra);
 			verificadorPalabrasClave.contarFrecuenciaMejorSinonimo(palabra);
-			panelResultados.limpiarTabla();
-			for (ParteArticulo parteArticulo : verificadorPalabrasClave.getLista()) {
-				panelResultados.agregarResultado(parteArticulo.getZonaArticulo().toString(),
-						DECIMAL_FORMART.format(parteArticulo.getValorElemento()),
-						DECIMAL_FORMART.format(parteArticulo.getTotalElementos()),
-						DECIMAL_FORMART.format(parteArticulo.getNumeroElementosAnalizables()),
-						DECIMAL_FORMART.format(parteArticulo.getNumeroElementosLema()),
-						DECIMAL_FORMART.format(parteArticulo.getValorElementoLema()),
-						DECIMAL_FORMART.format(parteArticulo.getValorSinonimos()),
-						DECIMAL_FORMART.format(parteArticulo.calcularPorcentajeFrecuencia()));
-			}
-			panelResultados.modificarPanelTerminosAparecen(
-					VerificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IEEE),
-					VerificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IFAC));
-			ventana.getBarraEstado().setPalabraClave(palabra);
-			double porcentaje = verificadorPalabrasClave.calcularPuntajePalabra();
-			ventana.getBarraEstado().setInformacionEstadistica(DECIMAL_FORMART.format(porcentaje) + "%");
-			panelResultados.modificarNivelAfinidad(porcentaje);
+			verificadorPalabrasClave.verificarIndices(palabraEnIngles);
 		} else {
 			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_ARTICULO, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
+	}
+
+	private void actulizarPanelResultados(String palabra, String palabraEnIngles) {
+		panelResultados.limpiarTabla();
+		for (ParteArticulo parteArticulo : verificadorPalabrasClave.getLista()) {
+			panelResultados.agregarResultado(ZonaArticulo.toString(parteArticulo.getZona()),
+					DECIMAL_FORMART.format(parteArticulo.getValorElemento()),
+					DECIMAL_FORMART.format(parteArticulo.getTotalElementos()),
+					DECIMAL_FORMART.format(parteArticulo.getNumeroElementosAnalizables()),
+					DECIMAL_FORMART.format(parteArticulo.getNumeroElementosLema()),
+					DECIMAL_FORMART.format(parteArticulo.getValorElementoLema()),
+					DECIMAL_FORMART.format(parteArticulo.getValorSinonimos()),
+					DECIMAL_FORMART.format(parteArticulo.calcularPorcentajeFrecuencia()));
+		}
+		panelResultados.modificarPanelTerminosAparecen(verificadorPalabrasClave.isAparaceIEEE(),
+				verificadorPalabrasClave.isApareceIFAC());
+		ventana.getBarraEstado().setPalabraClave(palabra);
+		double porcentaje = verificadorPalabrasClave.calcularPuntajePalabra();
+		ventana.getBarraEstado().setInformacionEstadistica(DECIMAL_FORMART.format(porcentaje) + "%");
+		panelResultados.modificarNivelAfinidad(porcentaje);
+
 	}
 
 	public void actualizarListaSinonimos() {
@@ -271,8 +309,15 @@ public class Controlador implements ActionListener {
 		dialogoAcercaDe.setVisible(true);
 	}
 
-	public void mostrarDialogoCargando() {
+	public void mostrarDialogoCargandoArticulo() {
 		ventana.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		dialogoProgreso.configuarParaArticulo();
+		dialogoProgreso.setVisible(true);
+	}
+
+	public void mostrarDialogoCargandoResultados() {
+		ventana.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		dialogoProgreso.configuarParaResultados();
 		dialogoProgreso.setVisible(true);
 	}
 
@@ -291,6 +336,24 @@ public class Controlador implements ActionListener {
 
 	public void mostrarDialogoSinonimos() {
 		dialogoListaSinonimos.setVisible(true);
+	}
+
+	private void generarReporte() {
+		if (articulo != null && verificadorPalabrasClave.getPalabra() != null) {
+			dialogoReporte.setVisible(true);
+			dialogoReporte.agregarTexto(generadorReporte.generarReporte(verificadorPalabrasClave));
+		}
+	}
+
+	private void mostrarDialogoPonderado() {
+		try {
+			ZonaArticulo.actualizarPonderados(Files.readAllLines(Paths.get(ConstantesGUI.RUTA_PONDERADOS)));
+		} catch (IOException e1) {
+			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_LEER_PONDERADOS, ConstantesGUI.TITULO_ERROR,
+					JOptionPane.ERROR_MESSAGE);
+		}
+		dialogoPonderados.actualizarPonderados();
+		dialogoPonderados.setVisible(true);
 	}
 
 	public static void main(String[] args) {
