@@ -16,12 +16,12 @@ import vistas.ConstantesGUI;
  * @author Alexander Castro
  */
 public class LectorWeb {
-	
+
 	public static final String ERROR_URL = "Error al leer la URL del articulo.";
 	private static final String ERROR_CARGAR = "Error al cargar el articulo.";
 	private static final String ERROR_LECTURA = "Error al leer el texto del articulo.";
 	private static final String ERROR_CERRAR = "Error al cerrar el canal de datos.";
-	
+
 	/**
 	 * A partir de un URL retorna el contenido HTML de un pagina
 	 *
@@ -29,19 +29,17 @@ public class LectorWeb {
 	 * @return String con el HTML de la pagina
 	 */
 	public static String leerArticulo(String urlArticulo){
-		URL url;
+		URL url = null;
 		try {
 			url = new URL(urlArticulo);
 		} catch (MalformedURLException e) {
 			JOptionPane.showMessageDialog(null, ERROR_URL, ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
-			return ERROR_URL;
 		}
-		BufferedReader entrada;
+		BufferedReader entrada = null;
 		try {
 			entrada = new BufferedReader(new InputStreamReader(url.openStream()));
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, ERROR_CARGAR, ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
-			return ERROR_CARGAR;
 		}
 		String linea;
 		StringBuilder texto = new StringBuilder();
@@ -50,17 +48,15 @@ public class LectorWeb {
 				texto.append(linea);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, ERROR_LECTURA, ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
-			return ERROR_LECTURA;
 		}
 		try {
 			entrada.close();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, ERROR_CERRAR, ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
-			return ERROR_CERRAR;
 		}
 		return remplazarCaracteresHTML(texto.toString());
 	}
-	
+
 	/**
 	 * Resuelve problemas de internazionalización cambiando los caracteres
 	 * especiales de HTML a sus correspondientes valor para porder analizarlos
@@ -75,6 +71,6 @@ public class LectorWeb {
 				.replace("&oacute;", "ó").replace("&uacute;", "ú").replace("&Aacute;", "Á").replace("&Eacute;", "É")
 				.replace("&Iacute;", "Í").replace("&Oacute;", "Ó").replace("&Uacute;", "Ú").replace("&ntilde;", "ñ")
 				.replace("&Ntilde;", "Ñ").replace("&amp;", "&").replace("&nbsp;", " ").replace("&#91;", "[")
-				.replace("&#93;", "]");
+				.replace("&#93;", "]").replace("<sub>", "").replace("</Sub>", "");
 	}
 }

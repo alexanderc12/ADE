@@ -7,10 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 public class DialogoAcercaDe extends JDialog {
-	
-	/**
-	 *
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public DialogoAcercaDe(VentanaPrincipal ventanaPrincipal) {
@@ -18,7 +15,7 @@ public class DialogoAcercaDe extends JDialog {
 		setTitle(ConstantesGUI.T_TITULO_DIALOGO_ACERCA_DE);
 		setSize(ConstantesGUI.DIALOGO_ACERCA_DE_ANCHO, ConstantesGUI.DIALOGO_ACERCA_DE_ALTO);
 		setLocationRelativeTo(null);
-		JLabel progressBar = new JLabel(createImageIcon("/images/about.png"));
+		JLabel progressBar = new JLabel(createImageIcon(ConstantesGUI.RUTA_IMAGEN_ACERCA_DE));
 		add(progressBar);
 	}
 

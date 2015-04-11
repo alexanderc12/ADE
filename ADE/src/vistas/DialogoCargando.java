@@ -8,7 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 public class DialogoCargando extends JDialog {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public DialogoCargando(VentanaPrincipal ventanaPrincipal) {
@@ -20,6 +20,7 @@ public class DialogoCargando extends JDialog {
 		JLabel progressBar = new JLabel(createImageIcon(ConstantesGUI.IMAGEN_CARGANDO_ARTICULO));
 		add(progressBar);
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
 	}
 
 	protected ImageIcon createImageIcon(String path) {

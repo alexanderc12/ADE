@@ -15,11 +15,11 @@ public class BarraEstado extends JToolBar {
 		lbNombreArticulo = new JLabel();
 		add(lbNombreArticulo);
 		addSeparator();
-		
+
 		lbPlabraClave = new JLabel();
 		add(lbPlabraClave);
 		addSeparator();
-		
+
 		lbEstadisticas = new JLabel();
 		add(lbEstadisticas);
 	}
@@ -27,12 +27,12 @@ public class BarraEstado extends JToolBar {
 	public void setNombreArticulo(String nombre) {
 		lbNombreArticulo.setText(nombre);
 	}
-	
+
 	public void setPalabraClave(String palabra) {
 		lbPlabraClave.setText(palabra);
 	}
-	
-	public void setEstadisticas(String estaditica) {
-		lbEstadisticas.setText(estaditica);
+
+	public void setInformacionEstadistica(String informacionEstadistica) {
+		lbEstadisticas.setText(informacionEstadistica);
 	}
 }

@@ -33,26 +33,28 @@ public class ConversorTextoArticulo {
 	private static final String FIN_CABECERA = "<meta xmlns=\"\" name=\"citation_firstpage\"";
 	private static final String INICIO_CONTENIDO = "id=\"doi\"";
 	private static final String FIN_CONTENIDO = "<div class=\"footer\">";
-	private static final String INDICE_FECHAS = "Fecha de ";
 	private static final String INDICE_RESUMEN = "Resumen";
+	private static final String INDICE_PALABRAS_CLAVE = "Palabras clave";
+	private static final String INDICE_PALABRAS_CLAVE_INGLES = "Keywords";
 	private static final String ATRIBUTO_TITULO_CAPITULO = "size";
 	private static final String VALOR_TITULO_CAPITULO = "3";
-	private static final String INDICE_FIN_CAPITULOS = "<b>Referencias</b>";
+	private static final String INDICE_FIN_CAPITULOS = "Referencias</b>";
 	private static final String PARRAFO = "p";
 	private static final String INICIO_REFERENCIA = "[";
 	private static final String FIN_REFERENCIA = " [ Links ]";
 	private static final String EXP_REG_NO_HTML = "\\<[^>]*>";
 	private static final String EXP_REG_NO_ESPACIOS = "\\s+";
 
-
 	public ConversorTextoArticulo(String archivo) {
-		articulo = new ArticuloCientifico(archivo);
 		texto = LectorWeb.leerArticulo(archivo);
-		extraerMetadatosCabacera();
-		extraerMetadatosTexto();
-		extraerListaContenidos();
-		extraerContenidoCapitulos();
-		extraerReferencias();
+		if (texto != null) {
+			articulo = new ArticuloCientifico(archivo);
+			extraerMetadatosCabacera();
+			extraerMetadatosTexto();
+			extraerListaContenidos();
+			extraerContenidoCapitulos();
+			extraerReferencias();
+		}
 	}
 
 	private void extraerTextoArticulo(String textoInicio, String textoFin) {
@@ -90,35 +92,34 @@ public class ConversorTextoArticulo {
 	 */
 	private void extraerMetadatosTexto() {
 		extraerTextoArticulo(INICIO_CONTENIDO, FIN_CONTENIDO);
-		String textofechas = documento.getElementsContainingOwnText(INDICE_FECHAS).first().text();
-		articulo.setFechaRecepcion(
-				textofechas.substring(20, textofechas.indexOf("Fecha de Aprobación: ") - 1).replace(".", ""));
-		articulo.setFechaAprobacion(textofechas.substring(textofechas.indexOf("Fecha de Aprobación: ") + 21));
-		Element resumen = articulo.getNumero() == 36
-				? documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().parent().parent().nextElementSibling()
-						: documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().parent().nextElementSibling();
-				articulo.setResumen(resumen.ownText());
-				Element palabrasClaves = resumen.nextElementSibling();
-				String[] listaPalabras = palabrasClaves.ownText().split(",");
-				articulo.agregarPalabraClave(listaPalabras[0]);
-				for (int i = 1; i < listaPalabras.length - 1; i++) {
-					articulo.agregarPalabraClave(listaPalabras[i].substring(1));
-				}
-				articulo.agregarPalabraClave(listaPalabras[listaPalabras.length - 1]
-						.replace(".", "").substring(1));
-				
-				Element palabrasClaveIngles = documento
-						.getElementsContainingOwnText("Keywords:").first().parent();
-				String[] listaPalabrasClaveIngles = palabrasClaveIngles.ownText()
-						.split(",");
-
-				articulo.agregarPalabraClaveIngles(listaPalabrasClaveIngles[0]);
-				for (int i = 1; i < listaPalabrasClaveIngles.length - 1; i++) {
-					articulo.agregarPalabraClaveIngles(listaPalabrasClaveIngles[i].substring(1));
-				}
-				articulo.agregarPalabraClaveIngles(
+		Element resumen = documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().parent().nextElementSibling();
+		if (articulo.getNumero() == 36) {
+			resumen = documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().parent().parent()
+					.nextElementSibling();
+		}
+		if (resumen == null) {
+			resumen = documento.getElementsMatchingOwnText(INDICE_RESUMEN).first().nextElementSibling()
+					.nextElementSibling();
+		}
+		articulo.setResumen(resumen.ownText());
+		Element palabrasClaves = documento.getElementsContainingOwnText(INDICE_PALABRAS_CLAVE).first().parent();
+		String[] listaPalabras = palabrasClaves.ownText().replace(": ", "").split(",");
+		articulo.agregarPalabraClave(listaPalabras[0]);
+		for (int i = 1; i < listaPalabras.length - 1; i++) {
+			articulo.agregarPalabraClave(listaPalabras[i].substring(1));
+		}
+		articulo.agregarPalabraClave(listaPalabras[listaPalabras.length - 1]
+				.replace(".", "").substring(1));
+		Element palabrasClaveIngles = documento.getElementsContainingOwnText(INDICE_PALABRAS_CLAVE_INGLES).first()
+				.parent();
+		String[] listaPalabrasClaveIngles = palabrasClaveIngles.ownText().replace(": ", "")
+				.split(",");
+		articulo.agregarPalabraClaveIngles(listaPalabrasClaveIngles[0]);
+		for (int i = 1; i < listaPalabrasClaveIngles.length - 1; i++) {
+			articulo.agregarPalabraClaveIngles(listaPalabrasClaveIngles[i].substring(1));
+		}
+		articulo.agregarPalabraClaveIngles(
 				listaPalabrasClaveIngles[listaPalabrasClaveIngles.length - 1].replace(".", "").substring(1));
-				
 	}
 
 	/**
@@ -147,9 +148,7 @@ public class ConversorTextoArticulo {
 				finCapitulo = texto.indexOf(articulo.getListaTitulosCapitulos().get(i + 1));
 			}
 			articulo.agregarContenidoCapitulo(texto.substring(inicioCapitulo, finCapitulo)
-					.replaceAll(EXP_REG_NO_HTML, "")
-					.replaceAll(EXP_REG_NO_ESPACIOS, " ")
-					.substring(1));
+					.replaceAll(EXP_REG_NO_HTML, "").replaceAll(EXP_REG_NO_ESPACIOS, " ").substring(1));
 		}
 	}
 

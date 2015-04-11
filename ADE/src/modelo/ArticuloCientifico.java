@@ -21,8 +21,6 @@ public class ArticuloCientifico implements Serializable {
 	 */
 	private String url;
 	private String revista;
-	private String fechaRecepcion;
-	private String fechaAprobacion;
 	private int volumen;
 	private int numero;
 	private ArrayList<String> listaAutores;
@@ -107,22 +105,6 @@ public class ArticuloCientifico implements Serializable {
 
 	public void setRevista(String revista) {
 		this.revista = revista;
-	}
-
-	public String getFechaRecepcion() {
-		return fechaRecepcion;
-	}
-
-	public void setFechaRecepcion(String fechaRecepcion) {
-		this.fechaRecepcion = fechaRecepcion;
-	}
-
-	public String getFechaAprobacion() {
-		return fechaAprobacion;
-	}
-
-	public void setFechaAprobacion(String fechaAprobacion) {
-		this.fechaAprobacion = fechaAprobacion;
 	}
 
 	public int getVolumen() {

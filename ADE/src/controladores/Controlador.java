@@ -4,11 +4,13 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import modelo.ArticuloCientifico;
+import modelo.GestorSemantico;
 import modelo.ParteArticulo;
 import modelo.VerificadorPalabrasClave;
 import modelo.VerificadorTerminos;
@@ -16,6 +18,7 @@ import persistencia.GestorArchivos;
 import vistas.ConstantesGUI;
 import vistas.DialogoAcercaDe;
 import vistas.DialogoCargando;
+import vistas.DialogoListaSinonimos;
 import vistas.DialogoNuevoArticulo;
 import vistas.DialogoPalabrasVacias;
 import vistas.DialogoTopTerminos;
@@ -23,50 +26,52 @@ import vistas.PanelResultados;
 import vistas.VentanaPrincipal;
 
 public class Controlador implements ActionListener {
-	
+
 	private VentanaPrincipal ventana;
 	private DialogoCargando dialogoProgreso;
 	private DialogoPalabrasVacias dialogoPalabrasVacias;
 	private DialogoNuevoArticulo dialogoNuevoArticulo;
 	private DialogoAcercaDe dialogoAcercaDe;
 	private DialogoTopTerminos dialogoTopTerminos;
+	private DialogoListaSinonimos dialogoListaSinonimos;
 	private VerificadorPalabrasClave verificadorPalabrasClave;
 	private PanelResultados panelResultados;
 	private ArticuloCientifico articulo;
-	
+
 	public static final String A_VERIFICAR_PALABRAS_CLAVE = "VERIFICAR_PALABRAS_CLAVE";
 	public static final String A_CREAR_ARCHIVO = "CREAR_ARCHIVO";
 	public static final String A_CARGAR_ARCHIVO = "CARGAR_ARCHIVO";
 	public static final String A_EXPORTAR_ARCHIVO = "EXPORTAR_ARCHIVO";
 	public static final String A_CARGAR_ARCHIVO_WEB = "A_CARGAR_ARCHIVO_WEB";
 	public static final String A_EDITAR_PALABRAS_VACIAS = "A_EDITAR_PALABRAS_VACIAS";
-	public static final String A_BUSCAR_EN_LISTAS = "BUSCAR_EN_INDICES";
-	public static final String A_VER_ACERCA_DE = "VER_ACERCA_DE";
-	public static final String NL = System.getProperty("line.separator") + System.getProperty("line.separator");
-	public static final DecimalFormat DECIMAL_FORMART = new DecimalFormat("#0.00");
+	public static final String A_BUSCAR_NUEVA_PALABRA = "BUSCAR_NUEVA_PALABRA";
 	public static final String A_VER_TERMINOS_TOP = "VER_DIALOGO_TERMINOS_TOP";
 	public static final String A_ACTUALIZAR_LISTA_TERMINOS_TOP = "ACTUALIZAR_LISTA_TERMINOS_TOP";
-	
+	public static final String A_CONSULTAR_SINONIMOS = "CONSULTAR_SINONIMOS";
+	public static final String A_ACTUALIZAR_LISTA_SINONIMOS = "ACTUALIZAR_LISTA_SINONIMOS";
+	public static final String A_VER_ACERCA_DE = "VER_ACERCA_DE";
+	public static final String A_GENERAR_REPORTE = "GENERAR_REPORTE";
+	public static final String NL = System.getProperty("line.separator") + System.getProperty("line.separator");
+	public static final DecimalFormat DECIMAL_FORMART = new DecimalFormat("#0.00");
+
 	public void iniciar() {
 		this.ventana = new VentanaPrincipal();
-		ventana.setControlador(this);
-		ventana.init();
+		ventana.init(this);
 		dialogoProgreso = new DialogoCargando(ventana);
 		dialogoPalabrasVacias = new DialogoPalabrasVacias(ventana);
 		dialogoNuevoArticulo = new DialogoNuevoArticulo(ventana);
 		dialogoAcercaDe = new DialogoAcercaDe(ventana);
 		dialogoTopTerminos = new DialogoTopTerminos(ventana, this);
+		dialogoListaSinonimos = new DialogoListaSinonimos(ventana, this);
 		panelResultados = ventana.getPanelResultados();
 		ventana.setVisible(true);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
 			case A_VERIFICAR_PALABRAS_CLAVE:
-				if (articulo != null) {
-					analizarPalabraClave();
-				}
+				analizarPalabraClaveLista();
 				break;
 			case A_CREAR_ARCHIVO:
 				mostrarDialogoNuevoArticulo();
@@ -83,51 +88,44 @@ public class Controlador implements ActionListener {
 			case A_EDITAR_PALABRAS_VACIAS:
 				mostrarDialogoEditarPalabrasVacias();
 				break;
-			case A_BUSCAR_EN_LISTAS:
-				buscarEnIndices();
+			case A_BUSCAR_NUEVA_PALABRA:
+				analizarNuevaPalabraClave();
 				break;
 			case A_VER_ACERCA_DE:
 				mostrarDialogoAcercaDe();
 				break;
 			case A_VER_TERMINOS_TOP:
-				mostrarDialogoTopTerminos();
+				mostrarDialogoTerminosTop();
 				break;
 			case A_ACTUALIZAR_LISTA_TERMINOS_TOP:
 				actualizarListaTerminosTop();
 				break;
+			case A_CONSULTAR_SINONIMOS:
+				mostrarDialogoSinonimos();
+				break;
+			case A_ACTUALIZAR_LISTA_SINONIMOS:
+				actualizarListaSinonimos();
+				break;
+			case A_GENERAR_REPORTE:
+				generarReporte();
+				break;
 		}
 	}
-	
-	private void actualizarListaTerminosTop() {
-		dialogoTopTerminos.agregarLista(verificadorPalabrasClave
-				.obtenerTopPalabras(dialogoTopTerminos.obtenerParteSeleccionada(), dialogoTopTerminos.obtenerNumero()));
+
+
+	private void generarReporte() {
+		// TODO Auto-generated method stub
+
 	}
-	
-	private void mostrarDialogoTopTerminos() {
-		dialogoTopTerminos.setVisible(true);
-		dialogoTopTerminos.limpiarInterfaz();
-	}
-	
-	public void mostrarDialogoAcercaDe() {
-		dialogoAcercaDe.setVisible(true);
-	}
-	
-	public void buscarEnIndices() {
-		String palabra = articulo.getListaPalabrasClaveIngles()
-				.get(panelResultados.obtenerIndicePalabraSelecionada());
-		panelResultados.modificarPanelTerminosAparecen(
-				VerificadorTerminos.verificarTermino(palabra, ConstantesGUI.LISTA_TERMINOS_IEEE),
-				VerificadorTerminos.verificarTermino(palabra, ConstantesGUI.LISTA_TERMINOS_IFAC));
-	}
-	
+
 	public void cargarArticuloWeb() {
-		String url = JOptionPane.showInputDialog(ventana, "Ingrese la URL corta del articulo", "Cargar Articulo Web",
-				JOptionPane.QUESTION_MESSAGE);
+		String url = JOptionPane.showInputDialog(ventana, ConstantesGUI.DIALOGO_IMPORTAR_TITULO_WEB,
+				ConstantesGUI.TITULO_CARGAR_WEB, JOptionPane.QUESTION_MESSAGE);
 		if (url != null) {
 			mostrarDialogoCargando();
 			SwingWorker<Void, Void> bWorker = new SwingWorker<Void, Void>() {
 				@Override
-				protected Void doInBackground() throws Exception {
+				protected Void doInBackground() {
 					verificadorPalabrasClave = new VerificadorPalabrasClave(url);
 					articulo = verificadorPalabrasClave.getArticulo();
 					return null;
@@ -140,7 +138,7 @@ public class Controlador implements ActionListener {
 			bWorker.execute();
 		}
 	}
-	
+
 	public void cargarArticuloLocal() {
 		articulo = GestorArchivos.cargarArchivoArticulo(ventana);
 		if (articulo != null) {
@@ -159,96 +157,142 @@ public class Controlador implements ActionListener {
 			aWorker.execute();
 		}
 	}
-	
+
 	public void mostrarArticulo() {
-		ventana.limpiarPanelArticulo();
-		ventana.agregarTexto(ConstantesGUI.T_REVISTA + articulo.getRevista()
-		+ "\t" + ConstantesGUI.T_VOLUMEN + articulo.getVolumen() + "\t"
-		+ ConstantesGUI.T_NUMERO + articulo.getNumero() + NL,
-		VentanaPrincipal.ESTILO_NORMAL);
-		ventana.agregarTexto(articulo.getTitulo() + NL, VentanaPrincipal.ESTILO_TITULO);
-		for (String autor : articulo.getListaAutores()) {
-			ventana.agregarTexto(autor + "\t", VentanaPrincipal.ESTILO_NORMAL);
+		if (articulo != null) {
+			ventana.limpiarPanelArticulo();
+			ventana.agregarTexto(
+					ConstantesGUI.T_REVISTA + articulo.getRevista() + "\t" + ConstantesGUI.T_VOLUMEN
+					+ articulo.getVolumen() + "\t" + ConstantesGUI.T_NUMERO + articulo.getNumero() + NL,
+					ConstantesGUI.ESTILO_NORMAL);
+			ventana.agregarTexto(articulo.getTitulo() + NL, ConstantesGUI.ESTILO_TITULO);
+			for (String autor : articulo.getListaAutores()) {
+				ventana.agregarTexto(autor + "\t", ConstantesGUI.ESTILO_NORMAL);
+			}
+			ventana.agregarTexto(NL + ConstantesGUI.T_RESUMEN + "\n" + articulo.getResumen() + NL,
+					ConstantesGUI.ESTILO_NORMAL);
+			ventana.agregarTexto(ConstantesGUI.T_PALABRAS_CLAVE + "\n", ConstantesGUI.ESTILO_NORMAL);
+			for (String palabra : articulo.getListaPalabrasClave()) {
+				ventana.agregarTexto(palabra + "\t", ConstantesGUI.ESTILO_NORMAL);
+			}
+			ventana.agregarTexto(NL, ConstantesGUI.ESTILO_NORMAL);
+			for (int i = 0; i < articulo.getListaTitulosCapitulos().size(); i++) {
+				ventana.agregarTexto(articulo.getListaTitulosCapitulos().get(i) + NL,
+						ConstantesGUI.ESTILO_TITULO_CAPITULO);
+				ventana.agregarTexto(articulo.getListaContenidoCapitulos().get(i) + NL, ConstantesGUI.ESTILO_NORMAL);
+			}
+			ventana.agregarTexto("\n" + ConstantesGUI.T_REFERENCIAS + "\n", ConstantesGUI.ESTILO_TITULO_CAPITULO);
+			ventana.agregarTexto(articulo.getListaReferencias(), ConstantesGUI.ESTILO_NORMAL);
+			ventana.getBarraEstado().setNombreArticulo(articulo.getTitulo());
+			panelResultados.limpiarInterfaz();
+			cargarPalabrasClave();
+			ventana.mostrarInicioArticulo();
+			ocultarDialogoCargando();
+		} else {
+			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_ARTICULO, ConstantesGUI.TITULO_ERROR,
+					JOptionPane.ERROR_MESSAGE);
 		}
-		ventana.agregarTexto(
-				NL + ConstantesGUI.T_FECHA_RECEPCION
-				+ articulo.getFechaRecepcion() + "\t"
-				+ ConstantesGUI.T_FECHA_RECEPCION
-				+ articulo.getFechaAprobacion() + NL,
-				VentanaPrincipal.ESTILO_NORMAL);
-		ventana.agregarTexto(
-				ConstantesGUI.T_RESUMEN + "\n" + articulo.getResumen() + NL,
-				VentanaPrincipal.ESTILO_NORMAL);
-		ventana.agregarTexto(ConstantesGUI.T_PALABRAS_CLAVE + "\n",
-				VentanaPrincipal.ESTILO_NORMAL);
-		for (String palabra : articulo.getListaPalabrasClave()) {
-			ventana.agregarTexto(palabra + "\t", VentanaPrincipal.ESTILO_NORMAL);
-		}
-		ventana.agregarTexto(NL, VentanaPrincipal.ESTILO_NORMAL);
-		for (int i = 0; i < articulo.getListaTitulosCapitulos().size(); i++) {
-			ventana.agregarTexto(articulo.getListaTitulosCapitulos().get(i) + NL,
-					VentanaPrincipal.ESTILO_TITULO_CAPITULO);
-			ventana.agregarTexto(articulo.getListaContenidoCapitulos().get(i) + NL,
-					VentanaPrincipal.ESTILO_NORMAL);
-		}
-		ventana.agregarTexto("\n" + ConstantesGUI.T_REFERENCIAS + "\n",
-				VentanaPrincipal.ESTILO_TITULO_CAPITULO);
-		ventana.agregarTexto(articulo.getListaReferencias(), VentanaPrincipal.ESTILO_NORMAL);
-		ventana.getBarraEstado().setNombreArticulo(articulo.getTitulo());
-		cargarPalabrasClave();
-		ventana.mostrarInicioArticulo();
-		panelResultados.limiparTabla();
-		panelResultados.limpiarResultadosIndices();
-		ocultarDialogoCargando();
 	}
-	
+
 	public void cargarPalabrasClave() {
-		panelResultados.limpiarLista();
 		for (String palabra : articulo.getListaPalabrasClave()) {
 			panelResultados.agregarPalabraClave(palabra);
 		}
 		panelResultados.activarSeleccion();
 	}
-	
-	public void analizarPalabraClave(){
-		String palabra = panelResultados.obtenerPalabraSelecionada();
-		verificadorPalabrasClave.contarPalabras(palabra);
-		verificadorPalabrasClave.contarPalabrasLema(palabra);
-		panelResultados.limiparTabla();
-		for (ParteArticulo parteArticulo : verificadorPalabrasClave.getLista()) {
-			panelResultados.agregarResultado(
-					parteArticulo.getZonaArticulo().toString(),
-					DECIMAL_FORMART.format(parteArticulo.getValorElemento()),
-					DECIMAL_FORMART.format(parteArticulo.getTotalElementos()),
-					DECIMAL_FORMART.format(parteArticulo.getNumeroElementosAnalizables()),
-					DECIMAL_FORMART.format(parteArticulo.getNumeroElementosLema()),
-					DECIMAL_FORMART.format(parteArticulo.getValorElementoLema()),
-					DECIMAL_FORMART.format(parteArticulo.calcularPorcentajeFrecuencia()));
+
+	private void actualizarListaTerminosTop() {
+		if (articulo != null) {
+			dialogoTopTerminos.actualizarTablaTop(verificadorPalabrasClave.obtenerTopPalabras(
+					dialogoTopTerminos.obtenerParteSeleccionada(), dialogoTopTerminos.obtenerNumero()));
+		} else {
+			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_ARTICULO, ConstantesGUI.TITULO_ERROR,
+					JOptionPane.ERROR_MESSAGE);
 		}
-		ventana.getBarraEstado().setPalabraClave(palabra);
-		double porcentaje = verificadorPalabrasClave.calcularPuntajePalabra();
-		ventana.getBarraEstado().setEstadisticas(DECIMAL_FORMART.format(porcentaje) + "%");
-		panelResultados.modificarNivelAfinidad(porcentaje);
 	}
-	
+
+	public void analizarNuevaPalabraClave() {
+		String palabra = JOptionPane.showInputDialog(ventana, ConstantesGUI.DIALOGO_BUSCAR_PALABRA_ES,
+				ConstantesGUI.TITULO_BUSCAR_PALABRA, JOptionPane.QUESTION_MESSAGE);
+		String palabraEnIngles = JOptionPane.showInputDialog(ventana, ConstantesGUI.DIALOGO_BUSCAR_PALABRA_EN,
+				ConstantesGUI.TITULO_BUSCAR_PALABRA, JOptionPane.QUESTION_MESSAGE);
+		analizarPalabraClave(palabra, palabraEnIngles);
+	}
+
+	public void analizarPalabraClaveLista() {
+		String palabra = panelResultados.obtenerPalabraSelecionada();
+		String palabraEnIngles = articulo.getListaPalabrasClaveIngles()
+				.get(panelResultados.obtenerIndicePalabraSelecionada());
+		analizarPalabraClave(palabra, palabraEnIngles);
+	}
+
+	public void analizarPalabraClave(String palabra, String palabraEnIngles) {
+		if (articulo != null) {
+			verificadorPalabrasClave.contarFrecuenciaPalabra(palabra);
+			verificadorPalabrasClave.contarFrecuenciaPalabrasLema(palabra);
+			verificadorPalabrasClave.contarFrecuenciaMejorSinonimo(palabra);
+			panelResultados.limpiarTabla();
+			for (ParteArticulo parteArticulo : verificadorPalabrasClave.getLista()) {
+				panelResultados.agregarResultado(parteArticulo.getZonaArticulo().toString(),
+						DECIMAL_FORMART.format(parteArticulo.getValorElemento()),
+						DECIMAL_FORMART.format(parteArticulo.getTotalElementos()),
+						DECIMAL_FORMART.format(parteArticulo.getNumeroElementosAnalizables()),
+						DECIMAL_FORMART.format(parteArticulo.getNumeroElementosLema()),
+						DECIMAL_FORMART.format(parteArticulo.getValorElementoLema()),
+						DECIMAL_FORMART.format(parteArticulo.getValorSinonimos()),
+						DECIMAL_FORMART.format(parteArticulo.calcularPorcentajeFrecuencia()));
+			}
+			panelResultados.modificarPanelTerminosAparecen(
+					VerificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IEEE),
+					VerificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IFAC));
+			ventana.getBarraEstado().setPalabraClave(palabra);
+			double porcentaje = verificadorPalabrasClave.calcularPuntajePalabra();
+			ventana.getBarraEstado().setInformacionEstadistica(DECIMAL_FORMART.format(porcentaje) + "%");
+			panelResultados.modificarNivelAfinidad(porcentaje);
+		} else {
+			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_ARTICULO, ConstantesGUI.TITULO_ERROR,
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	public void actualizarListaSinonimos() {
+		ArrayList<String> listaSinonimos = GestorSemantico.buscarSinonimos(dialogoListaSinonimos.obtenerTermino());
+		for (String sinonimo : listaSinonimos) {
+			dialogoListaSinonimos.actualizarListaSinonimos(sinonimo);
+		}
+	}
+
+	private void mostrarDialogoTerminosTop() {
+		dialogoTopTerminos.setVisible(true);
+		dialogoTopTerminos.limpiarInterfaz();
+	}
+
+	public void mostrarDialogoAcercaDe() {
+		dialogoAcercaDe.setVisible(true);
+	}
+
 	public void mostrarDialogoCargando() {
 		ventana.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		dialogoProgreso.setVisible(true);
 	}
-	
+
 	public void ocultarDialogoCargando() {
 		ventana.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		dialogoProgreso.setVisible(false);
 	}
-	
+
 	public void mostrarDialogoEditarPalabrasVacias() {
 		dialogoPalabrasVacias.setVisible(true);
 	}
-	
+
 	public void mostrarDialogoNuevoArticulo() {
 		dialogoNuevoArticulo.setVisible(true);
 	}
-	
+
+	public void mostrarDialogoSinonimos() {
+		dialogoListaSinonimos.setVisible(true);
+	}
+
 	public static void main(String[] args) {
 		Controlador c = new Controlador();
 		c.iniciar();

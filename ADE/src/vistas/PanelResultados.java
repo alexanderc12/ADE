@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
 import controladores.Controlador;
 
 public class PanelResultados extends JPanel {
-	
+
 	private static final long serialVersionUID = 1L;
 	private JList<String> listaPalabrasClave;
 	private DefaultListModel<String> modeloPalabrasClave;
@@ -29,43 +29,44 @@ public class PanelResultados extends JPanel {
 	private JLabel lbApareceIEEE;
 	private JLabel lbApareceIFAC;
 	private JProgressBar barraNivelAfinidad;
-	
+
 	public PanelResultados() {
-		
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBackground(Color.WHITE);
 		setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_PANEL_RESULTADOS));
+
+		JPanel panelListaEIndices = new JPanel(new GridLayout(1, 2));
+
 		modeloPalabrasClave = new DefaultListModel<String>();
 		listaPalabrasClave = new JList<String>(modeloPalabrasClave);
 		listaPalabrasClave.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_LISTA_PALABRAS));
-		add(listaPalabrasClave);
-		
-		JPanel panelApareceListaTerminos = new JPanel();
+		JScrollPane panelLista = new JScrollPane(listaPalabrasClave);
+		panelListaEIndices.add(panelLista);
+
+		JPanel panelApareceListaTerminos = new JPanel(new GridLayout(2, 1));
 		panelApareceListaTerminos.setBackground(Color.WHITE);
-		
+
 		lbApareceIEEE = new JLabel(createImageIcon(ConstantesGUI.ICONO_SIN_ANALIZAR));
-		lbApareceIEEE.setPreferredSize(new Dimension(150, 50));
-		lbApareceIEEE.setBorder(BorderFactory
-				.createTitledBorder("Aparece en el indice IEEE"));
+		lbApareceIEEE.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_INDICE_IEEE));
 		panelApareceListaTerminos.add(lbApareceIEEE);
-		
+
 		lbApareceIFAC = new JLabel(createImageIcon(ConstantesGUI.ICONO_SIN_ANALIZAR));
-		lbApareceIFAC.setPreferredSize(new Dimension(150, 50));
-		lbApareceIFAC.setBorder(BorderFactory
-				.createTitledBorder("Aparece en el indice IFAC"));
+		lbApareceIFAC.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_INDICE_IFAC));
 		panelApareceListaTerminos.add(lbApareceIFAC);
-		
-		add(panelApareceListaTerminos);
-		
+
+		panelListaEIndices.add(panelApareceListaTerminos);
+
+		add(panelListaEIndices);
+
 		modeloTablaResultados = new DefaultTableModel(ConstantesGUI.T_COLUMNAS_TABLA_RESULTADOS, 0);
 		tablaResultados = new JTable(modeloTablaResultados);
-		tablaResultados.setBackground(Color.WHITE);
 		tablaResultados.getTableHeader()
 		.setPreferredSize(new Dimension(tablaResultados.getColumnModel().getTotalColumnWidth(), 70));
 		JScrollPane panelTabla = new JScrollPane(tablaResultados);
 		panelTabla.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_TABLA_RESULTADOS));
 		add(panelTabla);
-		
+
 		JPanel panelBarraAfinidad = new JPanel(new GridLayout(1, 1));
 		panelBarraAfinidad.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_BARRA_AFINIDAD));
 		barraNivelAfinidad = new JProgressBar(0, 100);
@@ -74,67 +75,61 @@ public class PanelResultados extends JPanel {
 		panelBarraAfinidad.add(barraNivelAfinidad);
 		add(panelBarraAfinidad);
 	}
-	
+
 	public void modificarNivelAfinidad(double nivel) {
 		barraNivelAfinidad.setValue((int) nivel);
 		barraNivelAfinidad.setString(Controlador.DECIMAL_FORMART.format(nivel) + "%");
 	}
-	
-	public void modificarPanelTerminosAparecen(boolean apareceIEEE,
-			boolean aparceIFAC) {
+
+	public void modificarPanelTerminosAparecen(boolean apareceIEEE, boolean aparceIFAC) {
 		if (apareceIEEE) {
-			lbApareceIEEE
-			.setIcon(createImageIcon(ConstantesGUI.ICONO_CORRECTO));
+			lbApareceIEEE.setIcon(createImageIcon(ConstantesGUI.ICONO_CORRECTO));
 		} else {
-			lbApareceIEEE
-			.setIcon(createImageIcon(ConstantesGUI.ICONO_INCORRECTO));
+			lbApareceIEEE.setIcon(createImageIcon(ConstantesGUI.ICONO_INCORRECTO));
 		}
 		if (aparceIFAC) {
-			lbApareceIFAC
-			.setIcon(createImageIcon(ConstantesGUI.ICONO_CORRECTO));
+			lbApareceIFAC.setIcon(createImageIcon(ConstantesGUI.ICONO_CORRECTO));
 		} else {
-			lbApareceIFAC
-			.setIcon(createImageIcon(ConstantesGUI.ICONO_INCORRECTO));
+			lbApareceIFAC.setIcon(createImageIcon(ConstantesGUI.ICONO_INCORRECTO));
 		}
 	}
-	
+
 	public void agregarPalabraClave(String palabra) {
 		modeloPalabrasClave.addElement(palabra);
 	}
-	
+
 	public String obtenerPalabraSelecionada() {
 		return listaPalabrasClave.getSelectedValue();
 	}
-	
+
 	public int obtenerIndicePalabraSelecionada() {
 		return listaPalabrasClave.getSelectedIndex();
 	}
-	public void agregarResultado(String parteArticulo,
-			String numeroIncidencias, String numeroElementos,
+
+	public void agregarResultado(String parteArticulo, String numeroIncidencias, String numeroElementos,
 			String numeroElementosAnalizables, String numeroLemas, String numeroIncidenciasLemas,
-			String porcentajeIncidencias) {
+			String numeroSinonimos, String porcentajeIncidencias) {
 		modeloTablaResultados.addRow(new String[] { parteArticulo, numeroElementos, numeroElementosAnalizables,
-				numeroIncidencias, numeroLemas, numeroIncidenciasLemas,
-				porcentajeIncidencias });
+				numeroIncidencias, numeroLemas, numeroIncidenciasLemas, numeroSinonimos, porcentajeIncidencias });
 	}
-	
-	public void limiparTabla() {
+
+	public void limpiarTabla() {
 		modeloTablaResultados.setRowCount(0);
 	}
-	
+
 	public void limpiarLista() {
 		modeloPalabrasClave.clear();
 	}
-	
+
 	public void activarSeleccion() {
 		listaPalabrasClave.setSelectedIndex(0);
 	}
-	
+
 	public void limpiarResultadosIndices() {
 		lbApareceIEEE.setIcon(createImageIcon(ConstantesGUI.ICONO_SIN_ANALIZAR));
 		lbApareceIFAC.setIcon(createImageIcon(ConstantesGUI.ICONO_SIN_ANALIZAR));
-		
 	}
+
 	protected ImageIcon createImageIcon(String path) {
 		URL imgURL = getClass().getResource(path);
 		if (imgURL != null) {
@@ -142,5 +137,11 @@ public class PanelResultados extends JPanel {
 		} else {
 			return null;
 		}
+	}
+
+	public void limpiarInterfaz() {
+		limpiarTabla();
+		limpiarLista();
+		limpiarResultadosIndices();
 	}
 }

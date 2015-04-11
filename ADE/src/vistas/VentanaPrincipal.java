@@ -7,6 +7,7 @@ import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -24,28 +25,22 @@ public class VentanaPrincipal extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTextPane panelArticulo;
 	private PanelResultados panelResultados;
+	private BarraDeMenu jMenuBar;
+	private BarraDeHerramientas jToolBar;
+	private BarraEstado barraEstado;
 	private StyledDocument documento;
 	private SimpleAttributeSet estiloSimple;
 	private SimpleAttributeSet estiloTitulo;
 	private SimpleAttributeSet estiloTituloCapitulo;
-	public static final String ESTILO_NORMAL = "NORMAL";
-	public static final String ESTILO_TITULO = "TITULO";
-	public static final String ESTILO_TITULO_CAPITULO = "TITULO_CAPITULO";
-	
-	private BarraDeMenu jMenuBar;
-	private BarraDeHerramientas jToolBar;
-	private BarraEstado barraEstado;
 
-	private Controlador controlador;
 
-	public void init() {
-
+	public void init(Controlador controlador) {
 		jMenuBar = new BarraDeMenu(controlador);
 		setJMenuBar(jMenuBar);
 
 		jToolBar = new BarraDeHerramientas(controlador);
 		add(jToolBar, BorderLayout.PAGE_START);
-		
+
 		JPanel panelPrincipal = new JPanel(new GridLayout(1, 2));
 
 		panelArticulo = new JTextPane();
@@ -58,7 +53,6 @@ public class VentanaPrincipal extends JFrame {
 		estiloSimple = new SimpleAttributeSet();
 		estiloSimple.addAttribute(StyleConstants.FontSize, 12);
 		estiloSimple.addAttribute(StyleConstants.FontFamily, "Arial");
-		estiloSimple.addAttribute(StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
 		estiloTitulo = new SimpleAttributeSet();
 		estiloTitulo.addAttribute(StyleConstants.FontSize, 20);
@@ -74,7 +68,7 @@ public class VentanaPrincipal extends JFrame {
 
 		panelResultados = new PanelResultados();
 		panelPrincipal.add(panelResultados);
-		
+
 		add(panelPrincipal, BorderLayout.CENTER);
 
 		barraEstado = new BarraEstado();
@@ -99,39 +93,34 @@ public class VentanaPrincipal extends JFrame {
 		setLayout(new BorderLayout());
 		setIconImage(createImageIcon(ConstantesGUI.ICONO_VENTANA).getImage());
 		setLocationRelativeTo(null);
-
 	}
 
 	public void agregarTexto(String texto, String estilo) {
 		SimpleAttributeSet estiloTexto = null;
 		switch (estilo) {
-			case ESTILO_NORMAL:
+			case ConstantesGUI.ESTILO_NORMAL:
 				estiloTexto = estiloSimple;
 				break;
-			case ESTILO_TITULO:
+			case ConstantesGUI.ESTILO_TITULO:
 				estiloTexto = estiloTitulo;
 				break;
-			case ESTILO_TITULO_CAPITULO:
+			case ConstantesGUI.ESTILO_TITULO_CAPITULO:
 				estiloTexto = estiloTituloCapitulo;
 				break;
 		}
 		try {
 			documento.insertString(documento.getLength(), texto, estiloTexto);
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage(), ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+
 	public void mostrarInicioArticulo() {
 		panelArticulo.setCaretPosition(0);
 	}
 
 	public void limpiarPanelArticulo() {
 		panelArticulo.setText("");
-	}
-	
-	public void setControlador(Controlador controlador) {
-		this.controlador = controlador;
 	}
 
 	public PanelResultados getPanelResultados() {
@@ -140,6 +129,18 @@ public class VentanaPrincipal extends JFrame {
 
 	public BarraEstado getBarraEstado() {
 		return barraEstado;
+	}
+
+	public SimpleAttributeSet getEstiloSimple() {
+		return estiloSimple;
+	}
+
+	public SimpleAttributeSet getEstiloTitulo() {
+		return estiloTitulo;
+	}
+
+	public SimpleAttributeSet getEstiloTituloCapitulo() {
+		return estiloTituloCapitulo;
 	}
 
 	protected ImageIcon createImageIcon(String path) {
