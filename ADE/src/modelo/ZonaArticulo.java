@@ -1,6 +1,6 @@
 package modelo;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class ZonaArticulo {
 
@@ -37,9 +37,8 @@ public class ZonaArticulo {
 				return ponderadoConclusiones;
 			case REFERENCIAS:
 				return ponderadoReferencias;
-			default:
-				return 0;
 		}
+		return 0;
 	}
 
 	public static String toString(String parte) {
@@ -50,7 +49,7 @@ public class ZonaArticulo {
 		return lista;
 	}
 
-	public static void actualizarPonderados(List<String> list) {
+	public static void actualizarPonderados(ArrayList<String> list) {
 		ponderadoTitulo = Integer.parseInt(list.get(0));
 		ponderadoResumen = Integer.parseInt(list.get(1));
 		ponderadoIntroduccion = Integer.parseInt(list.get(2));

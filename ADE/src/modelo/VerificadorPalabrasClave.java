@@ -1,8 +1,8 @@
 package modelo;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -42,6 +42,8 @@ public class VerificadorPalabrasClave {
 	private static final int INDEX_LEMA = 1;
 	private String palabra;
 	private String palabraEnIngles;
+	private VerificadorTerminos verificadorTerminos;
+	private GestorSemantico gestorSemantico;
 
 	/**
 	 * Se carga el articulo y luego sus partes son pasadas a texto plano, se
@@ -66,16 +68,25 @@ public class VerificadorPalabrasClave {
 			directoryNormal = new RAMDirectory();
 			directoryLema = new RAMDirectory();
 			cargarArticulo(articulo);
-			try {
-				for (String palabra : Files.readAllLines(Paths.get(ConstantesGUI.RUTA_PALABRAS_VACIAS))) {
-					listaPalabrasVacias.add(palabra);
-				}
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_LEER_PALABRAS_VACIAS,
-						ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
-			}
+			cargarPalabrasVacias();
 			crearDocumento(INDEX_NORMAL);
 			crearDocumento(INDEX_LEMA);
+			verificadorTerminos = new VerificadorTerminos();
+			gestorSemantico = new GestorSemantico();
+		}
+	}
+
+	public void cargarPalabrasVacias() {
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(getClass().getResourceAsStream(ConstantesGUI.RUTA_PALABRAS_VACIAS)));
+		String texto = null;
+		try {
+			while ((texto = reader.readLine()) != null) {
+				listaPalabrasVacias.add(texto);
+			}
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_LEER_PALABRAS_VACIAS, ConstantesGUI.TITULO_ERROR,
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -212,8 +223,8 @@ public class VerificadorPalabrasClave {
 
 	public void verificarIndices(String palabraEnIngles){
 		this.palabraEnIngles = palabraEnIngles;
-		aparaceIEEE = VerificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IEEE);
-		apareceIFAC = VerificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IFAC);
+		aparaceIEEE = verificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IEEE);
+		apareceIFAC = verificadorTerminos.verificarTermino(palabraEnIngles, ConstantesGUI.RUTA_LISTA_TERMINOS_IFAC);
 	}
 
 	/**
@@ -253,7 +264,7 @@ public class VerificadorPalabrasClave {
 
 	public void contarFrecuenciaMejorSinonimo(String termino) {
 		DirectoryReader ireader = abrirIndice(directoryNormal);
-		ArrayList<String> listaSinonimos = GestorSemantico.buscarSinonimos(termino);
+		ArrayList<String> listaSinonimos = gestorSemantico.buscarSinonimos(termino);
 		long numeroMayorIncidencias = 0;
 		for (String sinonimo : listaSinonimos) {
 			String listaPalabras[] = sinonimo.split(" ");
@@ -300,7 +311,14 @@ public class VerificadorPalabrasClave {
 	public double calcularPuntajePalabra() {
 		double totalPuntos = 0;
 		for (ParteArticulo parteArticulo : lista) {
-			totalPuntos += parteArticulo.calcularPuntos() * ZonaArticulo.valueOf(parteArticulo.getZona());
+			totalPuntos += parteArticulo.generarPuntaje()
+					* ((double) ZonaArticulo.valueOf(parteArticulo.getZona()) / 100);
+		}
+		if (aparaceIEEE) {
+			totalPuntos += 2;
+		}
+		if (apareceIFAC) {
+			totalPuntos += 2;
 		}
 		return totalPuntos;
 	}
@@ -345,4 +363,7 @@ public class VerificadorPalabrasClave {
 		return totalelementos;
 	}
 
+	public GestorSemantico getGestorSemantico() {
+		return gestorSemantico;
+	}
 }

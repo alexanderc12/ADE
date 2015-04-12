@@ -102,7 +102,7 @@ public class DialogoTopTerminos extends JDialog {
 	}
 
 	public String obtenerParteSeleccionada() {
-		return (String) bxPartesArticulo.getSelectedItem();
+		return ZonaArticulo.values()[bxPartesArticulo.getSelectedIndex()];
 	}
 
 	public int obtenerNumero() {

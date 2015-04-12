@@ -1,8 +1,8 @@
 package modelo;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
 
 import javax.swing.JOptionPane;
 
@@ -20,13 +20,16 @@ import org.tartarus.snowball.ext.SpanishStemmer;
 import vistas.ConstantesGUI;
 
 public class Analizador extends Analyzer {
-	
+
 	private CharArraySet listaPalabrasVacias = new CharArraySet(0, true);
-	
+
 	public Analizador() {
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(getClass().getResourceAsStream(ConstantesGUI.RUTA_PALABRAS_VACIAS)));
+		String texto = null;
 		try {
-			for (String palabra : Files.readAllLines(Paths.get(ConstantesGUI.RUTA_PALABRAS_VACIAS))) {
-				listaPalabrasVacias.add(palabra);
+			while ((texto = reader.readLine()) != null) {
+				listaPalabrasVacias.add(texto);
 			}
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_LEER_PALABRAS_VACIAS, ConstantesGUI.TITULO_ERROR,

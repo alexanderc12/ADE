@@ -15,7 +15,7 @@ import modelo.ArticuloCientifico;
 import vistas.ConstantesGUI;
 
 public class GestorArchivos {
-	
+
 	public static void guardarArchivoArticulo(ArticuloCientifico articuloCientifico, JFrame ventana) {
 		JFileChooser dialogoGuardar = new JFileChooser(ConstantesGUI.RUTA_PERSISTENCIA);
 		dialogoGuardar.setDialogTitle(ConstantesGUI.DIALOGO_EXPORTAR_TITULO);

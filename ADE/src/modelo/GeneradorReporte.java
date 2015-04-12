@@ -9,12 +9,10 @@ public class GeneradorReporte {
 	public String generarReporte(VerificadorPalabrasClave verificador) {
 		ArticuloCientifico articulo = verificador.getArticulo();
 		StringBuilder htmlBuilder = new StringBuilder();
-		htmlBuilder.append("<html>");
-		htmlBuilder.append("<body>");
+		htmlBuilder.append("<html><body>");
 		htmlBuilder.append("<h5>REPORTE ANALISIS DE TERMINO CLAVE: " + verificador.getPalabra().toUpperCase() + " - "
 				+ verificador.getPalabraEnIngles().toUpperCase() + " EN EL ARTICULO : "
 				+ articulo.getTitulo().toUpperCase() + " </h5>");
-
 		htmlBuilder.append("<h6>Resumen:</h6>");
 		htmlBuilder.append("<small> Luego de analizar <strong>" + verificador.calcularTotalElementos()
 		+ "</strong> palabras de las cuales <strong>" + verificador.calcularTotalElementosAnalizables()
@@ -44,29 +42,52 @@ public class GeneradorReporte {
 
 		htmlBuilder.append("<ul class=\"list-group\">");
 		if (verificador.isAparaceIEEE()) {
-			htmlBuilder.append(
-					"<li class=\"list-group-item\"> <p class=\"bg-success\">La palabra clave aparece en el indice de terminos de la IEEE :), esto permite una mejor indexación.</li> </p>");
+			htmlBuilder
+			.append("<li class=\"list-group-item\"> <p class=\"bg-success\">La palabra clave aparece en el indice de "
+					+ "terminos de la IEEE :), esto permite una mejor indexación.</li> </p>");
 		}else{
 			htmlBuilder.append(
-					"<li class=\"list-group-item\"> <p class=\"bg-danger\">La palabra clave NO aparece en el indice de terminos de la IEEE :(, esto no permite que se indexe correctamente.</li> </p>");
+					"<li class=\"list-group-item\"> <p class=\"bg-danger\">La palabra clave NO aparece en el indice de "
+							+ "terminos de la IEEE :(, esto no permite que se indexe correctamente.</li> </p>");
 		}
 		if (verificador.isApareceIFAC()) {
 			htmlBuilder.append(
-					"<li class=\"list-group-item\"> <p class=\"bg-success\">La palabra clave aparece en el indice de terminos de la IFAC :), esto permite una mejor indexación.</li> </p>");
+					"<li class=\"list-group-item\"> <p class=\"bg-success\">La palabra clave aparece en el indice de "
+							+ "terminos de la IFAC :), esto permite una mejor indexación.</li> </p>");
 		}else{
 			htmlBuilder.append(
-					"<li class=\"list-group-item\"> <p class=\"bg-danger\"> La palabra clave NO aparece en el indice de terminos de la IFAC :(, esto no permite que se indexe correctamente.</li></p>");
+					"<li class=\"list-group-item\"> <p class=\"bg-danger\"> La palabra clave NO aparece en el indice de"
+							+ " terminos de la IFAC :(, esto no permite que se indexe correctamente.</li></p>");
 		}
 		htmlBuilder.append("</ul>");
 
-		htmlBuilder
-		.append("<p><small>Esta es la puntuación recibida en cada una de las partes, recuerde que este valor se "
-				+ "pondera con el valor asignado a la parte del articulo para dar el puntaje total. </small></p>");
+		htmlBuilder.append(
+				"<p><small>Esta es el puntaje obtenido por la frecuencia con la que aparace el termino en el articulo "
+						+ "analizando sus partes, este dato es uno de los más importantes para determinar el puntaje final "
+						+ "del articulo (lo idel es una frecuencia de 2,5%, si es mayor a 5% se considera  keyword stuffing.) </small></p>");
+
+		for (ParteArticulo parte : verificador.getLista()) {
+			htmlBuilder.append("<div class=\"panel panel-default\">  <small>" + ZonaArticulo.toString(parte.getZona())
+			+ "</small>");
+			double puntaje = parte.calcularPuntosFrecuencia(parte.calcularPorcentajeFrecuenciaRegular());
+			htmlBuilder
+			.append("<div class=\"progress\" style =\"border-style: solid; border-color:#dddddd\"> "
+					+ "<div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\""
+					+ puntaje
+					+ "\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"background-color: #5cb85c; width: "
+					+ (int) puntaje + "%;\">"
+					+ DECIMAL_FORMART.format(puntaje) + "% </div> </div>");
+			htmlBuilder.append("</div>");
+		}
+
+		htmlBuilder.append("<p><small>Esta es la puntuación recibida en cada una de las partes(teniendo en cuenta "
+				+ "terminos regulares, lemas, sinonimos e indices), recuerde que este valor se pondera con el valor "
+				+ "asignado a la parte del articulo para dar el puntaje total. </small></p>");
 		for (ParteArticulo parte : verificador.getLista()) {
 			htmlBuilder.append("<div class=\"panel panel-default\">  <small>"
 					+ ZonaArticulo.toString(parte.getZona())
 					+ " - Ponderado: " + DECIMAL_FORMART.format(ZonaArticulo.valueOf(parte.getZona())) + "</small>");
-			double puntaje = parte.calcularPorcentajeFrecuencia();
+			double puntaje = parte.generarPuntaje();
 			htmlBuilder
 			.append("<div class=\"progress\" style =\" border-style: solid; border-color:#dddddd\"> "
 					+ "<div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"" + puntaje

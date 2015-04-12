@@ -3,9 +3,11 @@ package vistas;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -108,12 +110,17 @@ public class DialogoPonderados extends JDialog {
 					+ (int) jspIntroduccion.getValue() + "\n" + (int) jspTitulosCapitulos.getValue() + "\n"
 					+ (int) jspContenidos.getValue() + "\n" + (int) jspConclusiones.getValue() + "\n"
 					+ (int) jspReferencias.getValue();
+			URL resourceUrl = getClass().getResource(ConstantesGUI.RUTA_PONDERADOS);
+			File file = null;
 			try {
-				Files.write(Paths.get(ConstantesGUI.RUTA_PONDERADOS), listaPonderados.getBytes());
-				return true;
+				file = new File(resourceUrl.toURI());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+			try {
+				new FileOutputStream(file).write(listaPonderados.getBytes());
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_GUARDAR_PALABRAS_VACIAS,
-						ConstantesGUI.TITULO_ERROR, JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_GUARDAR_PONDERADOS, ConstantesGUI.TITULO_ERROR,

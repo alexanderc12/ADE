@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controladores.Controlador;
@@ -61,6 +63,11 @@ public class PanelResultados extends JPanel {
 
 		modeloTablaResultados = new DefaultTableModel(ConstantesGUI.T_COLUMNAS_TABLA_RESULTADOS, 0);
 		tablaResultados = new JTable(modeloTablaResultados);
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+		for (int i = 1; i < 9; i++) {
+			tablaResultados.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
+		}
 		tablaResultados.getTableHeader().setEnabled(false);
 		tablaResultados.setEnabled(false);
 		tablaResultados.setRowHeight(25);
@@ -110,10 +117,12 @@ public class PanelResultados extends JPanel {
 	}
 
 	public void agregarResultado(String parteArticulo, String numeroIncidencias, String numeroElementos,
-			String numeroElementosAnalizables, String numeroLemas, String numeroIncidenciasLemas,
+			String numeroElementosAnalizables, String frecuenciaTermino, String numeroLemas,
+			String numeroIncidenciasLemas,
 			String numeroSinonimos, String porcentajeIncidencias) {
 		modeloTablaResultados.addRow(new String[] { parteArticulo, numeroElementos, numeroElementosAnalizables,
-				numeroIncidencias, numeroLemas, numeroIncidenciasLemas, numeroSinonimos, porcentajeIncidencias });
+				numeroIncidencias, frecuenciaTermino, numeroLemas, numeroIncidenciasLemas, numeroSinonimos,
+				porcentajeIncidencias });
 	}
 
 	public void limpiarTabla() {
@@ -146,5 +155,6 @@ public class PanelResultados extends JPanel {
 		limpiarTabla();
 		limpiarLista();
 		limpiarResultadosIndices();
+		barraNivelAfinidad.setValue(0);
 	}
 }

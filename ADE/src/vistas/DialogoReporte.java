@@ -3,9 +3,8 @@ package vistas;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -47,7 +46,9 @@ public class DialogoReporte extends JDialog {
 
 		StyleSheet styleSheet = editorHTML.getStyleSheet();
 		try {
-			styleSheet.loadRules(new BufferedReader(new FileReader(new File("src/data/bootstrap.css"))), null);
+			styleSheet.loadRules(
+					new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(ConstantesGUI.RUTA_CSS))),
+					null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

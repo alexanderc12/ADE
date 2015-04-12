@@ -3,9 +3,9 @@ package controladores;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -14,7 +14,6 @@ import javax.swing.SwingWorker;
 
 import modelo.ArticuloCientifico;
 import modelo.GeneradorReporte;
-import modelo.GestorSemantico;
 import modelo.ParteArticulo;
 import modelo.VerificadorPalabrasClave;
 import modelo.ZonaArticulo;
@@ -66,12 +65,7 @@ public class Controlador implements ActionListener {
 	public static final String A_SALIR = "SALIR";
 
 	public void iniciar() {
-		try {
-			ZonaArticulo.actualizarPonderados(Files.readAllLines(Paths.get(ConstantesGUI.RUTA_PONDERADOS)));
-		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_LEER_PONDERADOS, ConstantesGUI.TITULO_ERROR,
-					JOptionPane.ERROR_MESSAGE);
-		}
+		actualizarPonderados();
 		this.ventana = new VentanaPrincipal();
 		ventana.init(this);
 		dialogoProgreso = new DialogoCargando(ventana);
@@ -286,10 +280,11 @@ public class Controlador implements ActionListener {
 					DECIMAL_FORMART.format(parteArticulo.getValorElemento()),
 					DECIMAL_FORMART.format(parteArticulo.getTotalElementos()),
 					DECIMAL_FORMART.format(parteArticulo.getNumeroElementosAnalizables()),
+					DECIMAL_FORMART.format(parteArticulo.calcularPorcentajeFrecuenciaRegular()) + "%",
 					DECIMAL_FORMART.format(parteArticulo.getNumeroElementosLema()),
 					DECIMAL_FORMART.format(parteArticulo.getValorElementoLema()),
 					DECIMAL_FORMART.format(parteArticulo.getValorSinonimos()),
-					DECIMAL_FORMART.format(parteArticulo.calcularPorcentajeFrecuencia()));
+					DECIMAL_FORMART.format(parteArticulo.generarPuntaje()));
 		}
 		panelResultados.modificarPanelTerminosAparecen(verificadorPalabrasClave.isAparaceIEEE(),
 				verificadorPalabrasClave.isApareceIFAC());
@@ -301,7 +296,8 @@ public class Controlador implements ActionListener {
 	}
 
 	public void actualizarListaSinonimos() {
-		ArrayList<String> listaSinonimos = GestorSemantico.buscarSinonimos(dialogoListaSinonimos.obtenerTermino());
+		ArrayList<String> listaSinonimos = verificadorPalabrasClave.getGestorSemantico()
+				.buscarSinonimos(dialogoListaSinonimos.obtenerTermino());
 		for (String sinonimo : listaSinonimos) {
 			dialogoListaSinonimos.actualizarListaSinonimos(sinonimo);
 		}
@@ -352,13 +348,24 @@ public class Controlador implements ActionListener {
 		}
 	}
 
-	private void mostrarDialogoPonderado() {
+	public void actualizarPonderados() {
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(getClass().getResourceAsStream(ConstantesGUI.RUTA_PONDERADOS)));
+		String texto = null;
+		ArrayList<String> lista = new ArrayList<>();
 		try {
-			ZonaArticulo.actualizarPonderados(Files.readAllLines(Paths.get(ConstantesGUI.RUTA_PONDERADOS)));
-		} catch (IOException e1) {
+			while ((texto = reader.readLine()) != null) {
+				lista.add(texto);
+			}
+		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_LEER_PONDERADOS, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
+		ZonaArticulo.actualizarPonderados(lista);
+	}
+
+	private void mostrarDialogoPonderado() {
+		actualizarPonderados();
 		dialogoPonderados.actualizarPonderados();
 		dialogoPonderados.setVisible(true);
 	}

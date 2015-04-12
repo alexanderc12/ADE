@@ -115,9 +115,10 @@ public class ConstantesGUI {
 	public static final String T_PANEL_RESULTADOS = "Resultados";
 	public static final String T_LISTA_PALABRAS = "Lista palabras clave:";
 	public static final String T_TABLA_RESULTADOS = "Estadisticas:";
-	public static final String[] T_COLUMNAS_TABLA_RESULTADOS = { "<html>Parte<br>Articulo", "<html>Elementos",
-		"<html>Elementos<br>Analizables", "<html>Incidencias<br>Regulares", "<html>Elementos<br>Lema",
-		"<html>Incidencias<br>Lema", "<html>Incidencias<br>Sinonimos", "Puntuación" };
+	public static final String[] T_COLUMNAS_TABLA_RESULTADOS = { "<html><b>Parte<br>Articulo</b>",
+		"<html><b>Elementos</b>", "<html><b>Elementos<br>Analizables</b>", "<html><b>Incidencias<br>Regulares</b>",
+		"<html><b>Frecuencia<br>Termino</b>", "<html><b>Elementos<br>Lema</b>", "<html><b>Incidencias<br>Lema</b>",
+		"<html><b>Incidencias<br>Sinonimos</b>", "<html><b>Puntuación</b>" };
 	public static final String ICONO_CORRECTO = "/images/correct.png";
 	public static final String ICONO_INCORRECTO = "/images/incorrect.png";
 	public static final String ICONO_SIN_ANALIZAR = "/images/no_analize.png";
@@ -188,10 +189,11 @@ public class ConstantesGUI {
 	 */
 	public static final String RUTA_PERSISTENCIA = "./articulos";
 	public static final String EXTENSION_ARCHIVO = ".ade";
-	public static final String RUTA_PALABRAS_VACIAS = "src/data/listaPalabrasVacias.txt";
-	public static final String RUTA_LISTA_TERMINOS_IEEE = "src/data/IEEE_Terms.txt";
-	public static final String RUTA_LISTA_TERMINOS_IFAC = "src/data/IFAC_Keyword_List.txt";
-	public static final String RUTA_TESAURO_UNESCO = "src/data/tesauro.rdf";
-	public static final String RUTA_PONDERADOS = "src/data/ponderados.txt";
+	public static final String RUTA_PALABRAS_VACIAS = "/data/listaPalabrasVacias.txt";
+	public static final String RUTA_LISTA_TERMINOS_IEEE = "/data/IEEE_Terms.txt";
+	public static final String RUTA_LISTA_TERMINOS_IFAC = "/data/IFAC_Keyword_List.txt";
+	public static final String RUTA_TESAURO_UNESCO = "/data/tesauro.rdf";
+	public static final String RUTA_PONDERADOS = "/data/ponderados.txt";
+	public static final String RUTA_CSS = "/data/bootstrap.css";
 
 }

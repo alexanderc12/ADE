@@ -1,8 +1,5 @@
 package modelo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,14 +25,10 @@ public class GestorSemantico {
 
 	public static final String CONSULTA_SINONIMOS_FIN = "\", \"i\")) FILTER(lang(?altLabel) =\"es\")}";
 
-	public static ArrayList<String> buscarSinonimos(String termino) {
+	public ArrayList<String> buscarSinonimos(String termino) {
 		ArrayList<String> listaSinonimos = new ArrayList<>();
 		InputStream in = null;
-		try {
-			in = new FileInputStream(new File(ConstantesGUI.RUTA_TESAURO_UNESCO));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		in = getClass().getResourceAsStream(ConstantesGUI.RUTA_TESAURO_UNESCO);
 		Model model = ModelFactory.createMemModelMaker().createDefaultModel();
 		model.read(in, null);
 		try {
@@ -49,12 +42,11 @@ public class GestorSemantico {
 		ResultSet results = qe.execSelect();
 		while (results.hasNext()) {
 			QuerySolution row = results.nextSolution();
-			listaSinonimos.add(row.getLiteral("altLabel").getString());
+			if (!row.getLiteral("altLabel").getString().equalsIgnoreCase(termino)) {
+				listaSinonimos.add(row.getLiteral("altLabel").getString());
+			}
 		}
 		qe.close();
-		if (listaSinonimos.contains(termino)) {
-			listaSinonimos.remove(termino);
-		}
 		return listaSinonimos;
 	}
 }

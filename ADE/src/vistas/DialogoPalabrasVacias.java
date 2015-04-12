@@ -2,9 +2,14 @@ package vistas;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -44,24 +49,38 @@ public class DialogoPalabrasVacias extends JDialog{
 	}
 
 	private void cargarPalabrasVacias() {
-		StringBuilder texto = new StringBuilder();
+		StringBuilder lista = new StringBuilder();
+		BufferedReader reader = null;
 		try {
-			for (String palabra : Files.readAllLines(Paths.get(ConstantesGUI.RUTA_PALABRAS_VACIAS))) {
-				texto.append(palabra + "\n");
+			reader = new BufferedReader(
+					new InputStreamReader(getClass().getResourceAsStream(ConstantesGUI.RUTA_PALABRAS_VACIAS), "UTF8"));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		String texto = null;
+		try {
+			while ((texto = reader.readLine()) != null) {
+				lista.append(texto);
 			}
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_LEER_PALABRAS_VACIAS, ConstantesGUI.TITULO_ERROR,
 					JOptionPane.ERROR_MESSAGE);
 		}
-		txPalabrasVacias.setText(texto.toString());
+		txPalabrasVacias.setText(lista.toString());
 	}
 
 	public void guardarPalabrasVacias() {
+		URL resourceUrl = getClass().getResource(ConstantesGUI.RUTA_PALABRAS_VACIAS);
+		File file = null;
 		try {
-			Files.write(Paths.get(ConstantesGUI.RUTA_PALABRAS_VACIAS), txPalabrasVacias.getText().getBytes());
+			file = new File(resourceUrl.toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		try {
+			new FileOutputStream(file).write(txPalabrasVacias.getText().getBytes());
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, ConstantesGUI.ERROR_GUARDAR_PALABRAS_VACIAS, ConstantesGUI.TITULO_ERROR,
-					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 	}
 }

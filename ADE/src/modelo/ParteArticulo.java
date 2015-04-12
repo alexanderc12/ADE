@@ -21,8 +21,16 @@ public class ParteArticulo {
 	 * @return con que frecuencia aparace el termino dependiendo de los
 	 *         elementos analizables
 	 */
-	public double calcularPorcentajeFrecuencia() {
+	public double calcularPorcentajeFrecuenciaRegular() {
 		return ((valorElementos * 100) / numeroElementosAnalizables);
+	}
+
+	public double calcularPorcentajeFrecuenciaLema() {
+		return ((valorElementosLema * 100) / numeroElementosLema);
+	}
+
+	public double calcularPorcentajeFrecuenciaSinonimo() {
+		return ((valorSinonimos * 100) / numeroElementosAnalizables);
 	}
 
 	/**
@@ -31,16 +39,21 @@ public class ParteArticulo {
 	 *
 	 * @return
 	 */
-	public double calcularPuntos() {
+	public double calcularPuntosFrecuencia(double frecuencia) {
 		double totalPuntos = 0;
-		double porcentajeFrecuencia = calcularPorcentajeFrecuencia();
-		if (porcentajeFrecuencia <= 5) {
-			if (porcentajeFrecuencia >= 2.5) {
-				porcentajeFrecuencia = 5 - porcentajeFrecuencia;
+		if (frecuencia <= 5) {
+			if (frecuencia >= 2.5) {
+				frecuencia = 5 - frecuencia;
 			}
-			totalPuntos = porcentajeFrecuencia * 40;
+			totalPuntos = frecuencia * 40;
 		}
 		return totalPuntos;
+	}
+
+	public double generarPuntaje() {
+		return calcularPuntosFrecuencia(calcularPorcentajeFrecuenciaRegular()) * 0.7
+				+ calcularPuntosFrecuencia(calcularPorcentajeFrecuenciaLema()) * 0.25
+				+ calcularPuntosFrecuencia(calcularPorcentajeFrecuenciaSinonimo()) * 0.5;
 	}
 
 	public double getNumeroElementosAnalizables() {
