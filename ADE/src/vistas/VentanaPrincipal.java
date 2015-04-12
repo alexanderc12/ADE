@@ -1,7 +1,8 @@
 package vistas;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
@@ -41,7 +42,8 @@ public class VentanaPrincipal extends JFrame {
 		jToolBar = new BarraDeHerramientas(controlador);
 		add(jToolBar, BorderLayout.PAGE_START);
 
-		JPanel panelPrincipal = new JPanel(new GridLayout(1, 2));
+		JPanel panelPrincipal = new JPanel(new GridBagLayout());
+		GridBagConstraints cBagConstraints = new GridBagConstraints();
 
 		panelArticulo = new JTextPane();
 		JScrollPane panel = new JScrollPane(panelArticulo);
@@ -64,10 +66,19 @@ public class VentanaPrincipal extends JFrame {
 		estiloTituloCapitulo.addAttribute(StyleConstants.FontFamily, "Arial");
 		estiloTituloCapitulo.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
 
-		panelPrincipal.add(panel);
+		cBagConstraints.fill = GridBagConstraints.BOTH;
+		cBagConstraints.weightx = 0.5;
+		cBagConstraints.weighty = 2.0;
+		cBagConstraints.gridx = 0;
+		cBagConstraints.gridy = 0;
+		panelPrincipal.add(panel, cBagConstraints);
 
 		panelResultados = new PanelResultados();
-		panelPrincipal.add(panelResultados);
+		cBagConstraints.weightx = 1;
+		cBagConstraints.weighty = 1.0;
+		cBagConstraints.gridx = 1;
+		cBagConstraints.gridy = 0;
+		panelPrincipal.add(panelResultados, cBagConstraints);
 
 		add(panelPrincipal, BorderLayout.CENTER);
 

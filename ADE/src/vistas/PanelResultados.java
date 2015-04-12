@@ -61,8 +61,11 @@ public class PanelResultados extends JPanel {
 
 		modeloTablaResultados = new DefaultTableModel(ConstantesGUI.T_COLUMNAS_TABLA_RESULTADOS, 0);
 		tablaResultados = new JTable(modeloTablaResultados);
+		tablaResultados.getTableHeader().setEnabled(false);
+		tablaResultados.setEnabled(false);
+		tablaResultados.setRowHeight(25);
 		tablaResultados.getTableHeader()
-		.setPreferredSize(new Dimension(tablaResultados.getColumnModel().getTotalColumnWidth(), 70));
+		.setPreferredSize(new Dimension(tablaResultados.getColumnModel().getTotalColumnWidth(), 60));
 		JScrollPane panelTabla = new JScrollPane(tablaResultados);
 		panelTabla.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_TABLA_RESULTADOS));
 		add(panelTabla);
@@ -70,7 +73,7 @@ public class PanelResultados extends JPanel {
 		JPanel panelBarraAfinidad = new JPanel(new GridLayout(1, 1));
 		panelBarraAfinidad.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_BARRA_AFINIDAD));
 		barraNivelAfinidad = new JProgressBar(0, 100);
-		barraNivelAfinidad.setPreferredSize(new Dimension(getWidth(), 50));
+		barraNivelAfinidad.setPreferredSize(new Dimension(getWidth(), 100));
 		barraNivelAfinidad.setStringPainted(true);
 		panelBarraAfinidad.add(barraNivelAfinidad);
 		add(panelBarraAfinidad);

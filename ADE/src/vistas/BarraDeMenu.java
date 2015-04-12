@@ -17,6 +17,7 @@ public class BarraDeMenu extends JMenuBar {
 	private JMenuItem itemCrearArticulo;
 	private JMenuItem itemExportarArticulo;
 	private JMenuItem itemCargarArticuloADE;
+	private JMenuItem itemSalir;
 	private JMenu menuHerramientas;
 	private JMenuItem itemAnalizarPalabraClave;
 	private JMenuItem itemAnalizarNuevaPalabraClave;
@@ -57,6 +58,11 @@ public class BarraDeMenu extends JMenuBar {
 		itemExportarArticulo.setActionCommand(Controlador.A_EXPORTAR_ARCHIVO);
 		menuArchivo.add(itemExportarArticulo);
 
+		itemSalir = new JMenuItem(ConstantesGUI.T_ITEM_SALIR, createImageIcon(ConstantesGUI.ICONO_SALIR));
+		itemSalir.addActionListener(controlador);
+		itemSalir.setActionCommand(Controlador.A_SALIR);
+		menuArchivo.add(itemSalir);
+
 		add(menuArchivo);
 
 		menuHerramientas = new JMenu(ConstantesGUI.T_MENU_HERRAMIENTAS);
@@ -78,6 +84,8 @@ public class BarraDeMenu extends JMenuBar {
 		itemGenerarReporte.setActionCommand(Controlador.A_GENERAR_REPORTE);
 		itemGenerarReporte.addActionListener(controlador);
 		menuHerramientas.add(itemGenerarReporte);
+
+		menuHerramientas.addSeparator();
 
 		itemMostarTerminosTop = new JMenuItem(ConstantesGUI.T_ITEM_VER_TERMINOS_TOP,
 				createImageIcon(ConstantesGUI.ICONO_VER_TERMINOS_TOP));

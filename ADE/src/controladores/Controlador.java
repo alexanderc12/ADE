@@ -63,6 +63,7 @@ public class Controlador implements ActionListener {
 	public static final String NL = System.getProperty("line.separator") + System.getProperty("line.separator");
 	public static final DecimalFormat DECIMAL_FORMART = new DecimalFormat("#0.00");
 	public static final String A_EDITAR_PONDERADOS = "EDITAR_PONDERADOS";
+	public static final String A_SALIR = "SALIR";
 
 	public void iniciar() {
 		try {
@@ -89,6 +90,9 @@ public class Controlador implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
+			case A_SALIR:
+				System.exit(0);
+				break;
 			case A_VERIFICAR_PALABRAS_CLAVE:
 				analizarPalabraClaveLista();
 				break;
@@ -127,6 +131,7 @@ public class Controlador implements ActionListener {
 				break;
 			case A_GENERAR_REPORTE:
 				generarReporte();
+				break;
 			case A_EDITAR_PONDERADOS:
 				mostrarDialogoPonderado();
 				break;
@@ -244,11 +249,13 @@ public class Controlador implements ActionListener {
 	}
 
 	public void analizarNuevaPalabraClave() {
-		String palabra = JOptionPane.showInputDialog(ventana, ConstantesGUI.DIALOGO_BUSCAR_PALABRA_ES,
-				ConstantesGUI.TITULO_BUSCAR_PALABRA, JOptionPane.QUESTION_MESSAGE);
-		String palabraEnIngles = JOptionPane.showInputDialog(ventana, ConstantesGUI.DIALOGO_BUSCAR_PALABRA_EN,
-				ConstantesGUI.TITULO_BUSCAR_PALABRA, JOptionPane.QUESTION_MESSAGE);
-		mostrarAnalisisPalabraClave(palabra, palabraEnIngles);
+		if (articulo != null) {
+			String palabra = JOptionPane.showInputDialog(ventana, ConstantesGUI.DIALOGO_BUSCAR_PALABRA_ES,
+					ConstantesGUI.TITULO_BUSCAR_PALABRA, JOptionPane.QUESTION_MESSAGE);
+			String palabraEnIngles = JOptionPane.showInputDialog(ventana, ConstantesGUI.DIALOGO_BUSCAR_PALABRA_EN,
+					ConstantesGUI.TITULO_BUSCAR_PALABRA, JOptionPane.QUESTION_MESSAGE);
+			mostrarAnalisisPalabraClave(palabra, palabraEnIngles);
+		}
 	}
 
 	public void analizarPalabraClaveLista() {

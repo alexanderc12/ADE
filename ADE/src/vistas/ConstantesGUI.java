@@ -10,6 +10,7 @@ public class ConstantesGUI {
 	public static final String T_ITEM_EXPORTAR_ARTICULO = "Exportar Articulo a ADE";
 	public static final String T_ITEM_CARGAR_ARTICULO_WEB = "Importar Articulo Web";
 	public static final String T_ITEM_CARGAR_ARTICULO_ADE = "Importar Articulo ADE";
+	public static final String T_ITEM_SALIR = "Salir";
 	public static final String T_MENU_HERRAMIENTAS = "Herramientas";
 	public static final String T_ITEM_ANALIZAR_PALABRA_CLAVE = "Analizar Palabra Clave";
 	public static final String T_ITEM_ANALIZAR_NUEVA_PALABRA = "Analizar Nueva Palabra Clave";
@@ -28,8 +29,8 @@ public class ConstantesGUI {
 	public static final String ICONO_VENTANA = "/images/icon.png";
 	public static final String T_VENTANA_TITULO = "ADE - ANALIZADOR DE ETIQUETAS";
 	public static final String T_PANEL_ARTICULO = "Articulo:";
-	public static final int VENTANA_ANCHO = 1100;
-	public static final int VENTANA_ALTO = 650;
+	public static final int VENTANA_ANCHO = 1300;
+	public static final int VENTANA_ALTO = 600;
 	public static final String ESTILO_NORMAL = "NORMAL";
 	public static final String ESTILO_TITULO = "TITULO";
 	public static final String ESTILO_TITULO_CAPITULO = "TITULO_CAPITULO";
@@ -37,19 +38,19 @@ public class ConstantesGUI {
 	/**
 	 * Constantes BarraHerramientas
 	 */
-
 	public static final String ICONO_CREAR = "/images/new.png";
 	public static final String ICONO_CARGAR = "/images/open.png";
 	public static final String ICONO_CARGAR_WEB = "/images/open_web.png";
 	public static final String ICONO_EXPORTAR = "/images/export.png";
+	public static final String ICONO_SALIR = "/images/exit.png";
 	public static final String ICONO_ANALIZAR_PALABRA_CLAVE = "/images/search.png";
-	public static final String ICONO_EDITAR_PALABRAS_VACIAS = "/images/stop_words.png";
-	public static final String ICONO_ACERCA_DE = "/images/help.png";
 	public static final String ICONO_ANALIZAR_NUEVA_PALABRA_CLAVE = "/images/search_new.png";
+	public static final String ICONO_GENERAR_REPORTE = "/images/report.png";
 	public static final String ICONO_VER_TERMINOS_TOP = "/images/top.png";
 	public static final String ICONO_CONSULTAR_SINONIMOS = "/images/tesauro.png";
-	public static final String ICONO_GENERAR_REPORTE = "/images/report.png";
+	public static final String ICONO_EDITAR_PALABRAS_VACIAS = "/images/stop_words.png";
 	public static final String ICONO_EDITAR_PONDERADOS = "/images/edit_p.png";
+	public static final String ICONO_ACERCA_DE = "/images/help.png";
 
 	/**
 	 * Constantes DialogoCargando
@@ -179,6 +180,7 @@ public class ConstantesGUI {
 	/**
 	 * DialogoPonderados
 	 */
+	public static final String T_TITULO_DIALOGO_PONDERADOS = "Tabla de ponderados";
 	public static final String T_INTRODUCCION = "Introducción:";
 	public static final String T_CONCLUSIONES = "Conclusiones:";
 	/**
@@ -191,4 +193,5 @@ public class ConstantesGUI {
 	public static final String RUTA_LISTA_TERMINOS_IFAC = "src/data/IFAC_Keyword_List.txt";
 	public static final String RUTA_TESAURO_UNESCO = "src/data/tesauro.rdf";
 	public static final String RUTA_PONDERADOS = "src/data/ponderados.txt";
+
 }

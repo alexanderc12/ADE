@@ -31,7 +31,7 @@ public class DialogoPonderados extends JDialog {
 	public DialogoPonderados(VentanaPrincipal ventanaPrincipal) {
 		super(ventanaPrincipal);
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-		setTitle(ConstantesGUI.T_TITULO_DIALOGO_TOP_TERMINOS);
+		setTitle(ConstantesGUI.T_TITULO_DIALOGO_PONDERADOS);
 		setSize(ConstantesGUI.DIALOGO_TOP_TERMINOS_ANCHO, ConstantesGUI.DIALOGO_TOP_TERMINOS_ALTO);
 		setLocationRelativeTo(null);
 		setBackground(Color.WHITE);

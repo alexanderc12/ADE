@@ -55,6 +55,22 @@ public class BarraDeHerramientas extends JToolBar {
 
 		addSeparator();
 
+		btnMostarTerminosTop = new JButton(createImageIcon(ConstantesGUI.ICONO_VER_TERMINOS_TOP));
+		btnMostarTerminosTop.setFocusable(false);
+		btnMostarTerminosTop.setToolTipText(ConstantesGUI.T_ITEM_VER_TERMINOS_TOP);
+		btnMostarTerminosTop.addActionListener(controlador);
+		btnMostarTerminosTop.setActionCommand(Controlador.A_VER_TERMINOS_TOP);
+		add(btnMostarTerminosTop);
+
+		btnBuscarSinonimos = new JButton(createImageIcon(ConstantesGUI.ICONO_CONSULTAR_SINONIMOS));
+		btnBuscarSinonimos.setFocusable(false);
+		btnBuscarSinonimos.setToolTipText(ConstantesGUI.T_ITEM_CONSULTAR_SINONIMOS);
+		btnBuscarSinonimos.addActionListener(controlador);
+		btnBuscarSinonimos.setActionCommand(Controlador.A_CONSULTAR_SINONIMOS);
+		add(btnBuscarSinonimos);
+
+		addSeparator();
+
 		btnVerificarPalabrasClave = new JButton(createImageIcon(ConstantesGUI.ICONO_ANALIZAR_PALABRA_CLAVE));
 		btnVerificarPalabrasClave.setFocusable(false);
 		btnVerificarPalabrasClave.setToolTipText(ConstantesGUI.T_ITEM_ANALIZAR_PALABRA_CLAVE);
@@ -69,19 +85,6 @@ public class BarraDeHerramientas extends JToolBar {
 		btnBuscarNuevaPalabra.setActionCommand(Controlador.A_BUSCAR_NUEVA_PALABRA);
 		add(btnBuscarNuevaPalabra);
 
-		btnMostarTerminosTop = new JButton(createImageIcon(ConstantesGUI.ICONO_VER_TERMINOS_TOP));
-		btnMostarTerminosTop.setFocusable(false);
-		btnMostarTerminosTop.setToolTipText(ConstantesGUI.T_ITEM_VER_TERMINOS_TOP);
-		btnMostarTerminosTop.addActionListener(controlador);
-		btnMostarTerminosTop.setActionCommand(Controlador.A_VER_TERMINOS_TOP);
-		add(btnMostarTerminosTop);
-
-		btnBuscarSinonimos = new JButton(createImageIcon(ConstantesGUI.ICONO_CONSULTAR_SINONIMOS));
-		btnBuscarSinonimos.setFocusable(false);
-		btnBuscarSinonimos.setToolTipText(ConstantesGUI.T_ITEM_CONSULTAR_SINONIMOS);
-		btnBuscarSinonimos.addActionListener(controlador);
-		btnBuscarSinonimos.setActionCommand(Controlador.A_CONSULTAR_SINONIMOS);
-		add(btnBuscarSinonimos);
 
 		btnGenerarReporte = new JButton(createImageIcon(ConstantesGUI.ICONO_GENERAR_REPORTE));
 		btnGenerarReporte.setFocusable(false);

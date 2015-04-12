@@ -52,7 +52,10 @@ public class DialogoTopTerminos extends JDialog {
 		lbPartesArticulo = new JLabel(ConstantesGUI.T_LISTA_PARTES_ARTICULO);
 		panelFormulario.add(lbPartesArticulo);
 
-		bxPartesArticulo = new JComboBox<>(ZonaArticulo.values());
+		bxPartesArticulo = new JComboBox<>();
+		for (String parte : ZonaArticulo.values()) {
+			bxPartesArticulo.addItem(ZonaArticulo.toString(parte));
+		}
 		panelFormulario.add(bxPartesArticulo);
 
 		lbNumeroTerminos = new JLabel(ConstantesGUI.T_NUMERO_TERMINOS);
