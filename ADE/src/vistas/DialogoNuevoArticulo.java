@@ -37,6 +37,7 @@ public class DialogoNuevoArticulo extends JDialog {
 	private JTextField txTitulo;
 	private JTextField txAutores;
 	private JTextField txPalabrasClave;
+	private JTextField txPalabrasClaveIngles;
 	private JTextArea txResumen;
 	private JTextArea txReferencias;
 	private JTable tablaContenidos;
@@ -91,6 +92,10 @@ public class DialogoNuevoArticulo extends JDialog {
 		txPalabrasClave = new JTextField();
 		txPalabrasClave.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_PALABRAS_CLAVE));
 		panelDatosArticulo.add(txPalabrasClave);
+		
+		txPalabrasClaveIngles = new JTextField();
+		txPalabrasClaveIngles.setBorder(BorderFactory.createTitledBorder(ConstantesGUI.T_PALABRAS_CLAVE_INGLES));
+		panelDatosArticulo.add(txPalabrasClaveIngles);
 
 		txResumen = new JTextArea(2, 5);
 		txResumen.setLineWrap(true);
@@ -208,6 +213,8 @@ public class DialogoNuevoArticulo extends JDialog {
 		articulo.setTitulo(txTitulo.getText());
 		articulo.setListaAutores(new ArrayList<String>(Arrays.asList(txAutores.getText().split(","))));
 		articulo.setListaPalabrasClave(new ArrayList<String>(Arrays.asList(txPalabrasClave.getText().split(","))));
+		articulo.setListaPalabrasClaveIngles(new ArrayList<String>(Arrays.asList(txPalabrasClaveIngles.getText().split(
+				","))));
 		articulo.setResumen(txResumen.getText());
 		for (int i = 0; i < modeloTablaContenidos.getRowCount(); i++) {
 			articulo.agregarTituloCapitulo((String) modeloTablaContenidos.getValueAt(i, 0));

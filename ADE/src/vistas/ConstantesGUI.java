@@ -100,7 +100,7 @@ public class ConstantesGUI {
 	public static final String T_ELIMINAR_CAPITULO = "Remover Capitulo";
 	public static final String T_CREAR_ARTICULO = "Guardar articulo";
 	public static final String T_CANCELAR = "Cancelar";
-
+	public static final String T_PALABRAS_CLAVE_INGLES = "Palabras clave ingles";
 	/**
 	 * Constantes DialogoAcercaDe
 	 */
@@ -195,5 +195,4 @@ public class ConstantesGUI {
 	public static final String RUTA_TESAURO_UNESCO = "/data/tesauro.rdf";
 	public static final String RUTA_PONDERADOS = "/data/ponderados.txt";
 	public static final String RUTA_CSS = "/data/bootstrap.css";
-
 }
